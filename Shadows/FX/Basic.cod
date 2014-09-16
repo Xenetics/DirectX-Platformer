@@ -125,7 +125,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -251,7 +251,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 9
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -309,7 +309,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -352,7 +352,7 @@ fxgroup
                 movc r1.xyz, r2.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r2.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -454,7 +454,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -580,7 +580,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 12
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -638,7 +638,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -681,7 +681,7 @@ fxgroup
                 movc r6.xyz, r2.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r2.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -731,7 +731,7 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -833,7 +833,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -959,7 +959,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -1017,7 +1017,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -1060,7 +1060,7 @@ fxgroup
                 movc r6.xyz, r2.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r2.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -1110,7 +1110,7 @@ fxgroup
                 movc r9.xyz, r1.wwww, r9.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r8.xyz, r8.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r9.xyz, r9.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r10.xyz, r10.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -1160,7 +1160,7 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -1262,7 +1262,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -1364,7 +1364,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 113 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 113 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
                 #line 128
@@ -1455,7 +1455,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -1586,7 +1586,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -1647,7 +1647,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -1690,7 +1690,7 @@ fxgroup
                 movc r1.xyz, r3.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r3.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -1792,7 +1792,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -1923,7 +1923,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -1984,7 +1984,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -2027,7 +2027,7 @@ fxgroup
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r3.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -2077,7 +2077,7 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -2179,7 +2179,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -2310,7 +2310,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -2371,7 +2371,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -2414,7 +2414,7 @@ fxgroup
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r3.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -2464,7 +2464,7 @@ fxgroup
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r1.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -2514,7 +2514,7 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -2616,7 +2616,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -2718,7 +2718,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 113 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 113 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
                 #line 120
@@ -2815,7 +2815,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -2946,7 +2946,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -3013,7 +3013,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -3056,7 +3056,7 @@ fxgroup
                 movc r1.xyz, r3.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r3.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -3158,7 +3158,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -3289,7 +3289,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -3356,7 +3356,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -3399,7 +3399,7 @@ fxgroup
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r3.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -3449,7 +3449,7 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -3551,7 +3551,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -3682,7 +3682,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -3749,7 +3749,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -3792,7 +3792,7 @@ fxgroup
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r3.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -3842,7 +3842,7 @@ fxgroup
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r1.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -3892,7 +3892,7 @@ fxgroup
                 movc r0.xyz, r1.wwww, r0.yzwy, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r1.xyz, r1.wwww, r1.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r0.xyz, r0.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r1.xyz, r1.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -3994,7 +3994,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -4120,7 +4120,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 9
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -4178,7 +4178,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -4221,7 +4221,7 @@ fxgroup
                 movc r1.xyz, r3.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r3.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -4336,7 +4336,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -4462,7 +4462,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 12
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -4520,7 +4520,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -4563,7 +4563,7 @@ fxgroup
                 movc r6.xyz, r3.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -4613,7 +4613,7 @@ fxgroup
                 movc r1.xyz, r2.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r2.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -4728,7 +4728,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -4854,7 +4854,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -4912,7 +4912,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -4955,7 +4955,7 @@ fxgroup
                 movc r6.xyz, r3.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -5005,7 +5005,7 @@ fxgroup
                 movc r9.xyz, r2.wwww, r9.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r10.xyz, r2.wwww, r10.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r8.xyz, r8.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r9.xyz, r9.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r10.xyz, r10.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -5055,7 +5055,7 @@ fxgroup
                 movc r1.xyz, r2.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r2.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -5170,7 +5170,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -5295,7 +5295,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 100 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 100 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, -v1.xyzx
                 add r0.xyz, r0.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
@@ -5407,7 +5407,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -5538,7 +5538,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -5599,7 +5599,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -5642,7 +5642,7 @@ fxgroup
                 movc r1.xyz, r4.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r4.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -5757,7 +5757,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -5888,7 +5888,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -5949,7 +5949,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -5992,7 +5992,7 @@ fxgroup
                 movc r7.xyz, r4.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r4.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -6042,7 +6042,7 @@ fxgroup
                 movc r1.xyz, r3.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r3.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -6157,7 +6157,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -6288,7 +6288,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -6349,7 +6349,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -6392,7 +6392,7 @@ fxgroup
                 movc r7.xyz, r4.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r4.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -6442,7 +6442,7 @@ fxgroup
                 movc r10.xyz, r3.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r3.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -6492,7 +6492,7 @@ fxgroup
                 movc r1.xyz, r3.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r3.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -6607,7 +6607,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -6732,7 +6732,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 100 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 100 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, -v1.xyzx
                 add r0.xyz, r0.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
@@ -6850,7 +6850,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -6981,7 +6981,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -7048,7 +7048,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -7091,7 +7091,7 @@ fxgroup
                 movc r1.xyz, r4.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r4.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -7206,7 +7206,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -7337,7 +7337,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -7404,7 +7404,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -7447,7 +7447,7 @@ fxgroup
                 movc r7.xyz, r4.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r4.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -7497,7 +7497,7 @@ fxgroup
                 movc r1.xyz, r3.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r3.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -7612,7 +7612,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -7743,7 +7743,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -7810,7 +7810,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -7853,7 +7853,7 @@ fxgroup
                 movc r7.xyz, r4.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r4.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -7903,7 +7903,7 @@ fxgroup
                 movc r10.xyz, r3.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r3.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -7953,7 +7953,7 @@ fxgroup
                 movc r1.xyz, r3.wwww, r1.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r0.xyz, r3.wwww, r0.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r1.xyz, r1.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r0.xyz, r0.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -8068,7 +8068,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -8198,7 +8198,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 9
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -8256,7 +8256,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -8299,7 +8299,7 @@ fxgroup
                 movc r3.xyz, r2.wwww, r3.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r4.xyz, r2.wwww, r4.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r3.xyz, r3.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r4.xyz, r4.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -8413,7 +8413,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -8543,7 +8543,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 12
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -8601,7 +8601,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -8644,7 +8644,7 @@ fxgroup
                 movc r6.xyz, r2.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r2.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -8694,7 +8694,7 @@ fxgroup
                 movc r3.xyz, r1.wwww, r3.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r4.xyz, r1.wwww, r4.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r3.xyz, r3.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r4.xyz, r4.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -8808,7 +8808,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -8938,7 +8938,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -8996,7 +8996,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -9039,7 +9039,7 @@ fxgroup
                 movc r6.xyz, r2.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r2.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -9089,7 +9089,7 @@ fxgroup
                 movc r9.xyz, r1.wwww, r9.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r8.xyz, r8.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r9.xyz, r9.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r10.xyz, r10.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -9139,7 +9139,7 @@ fxgroup
                 movc r3.xyz, r1.wwww, r3.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r4.xyz, r1.wwww, r4.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r3.xyz, r3.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r4.xyz, r4.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -9253,7 +9253,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -9355,7 +9355,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 1
                 
-                #line 113 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 113 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
                 #line 128
@@ -9446,7 +9446,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -9579,7 +9579,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -9640,7 +9640,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -9683,7 +9683,7 @@ fxgroup
                 movc r4.xyz, r3.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r3.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -9797,7 +9797,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -9930,7 +9930,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -9991,7 +9991,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -10034,7 +10034,7 @@ fxgroup
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r3.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -10084,7 +10084,7 @@ fxgroup
                 movc r4.xyz, r1.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r1.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -10198,7 +10198,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -10331,7 +10331,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -10392,7 +10392,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -10435,7 +10435,7 @@ fxgroup
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r3.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -10485,7 +10485,7 @@ fxgroup
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r1.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -10535,7 +10535,7 @@ fxgroup
                 movc r4.xyz, r1.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r1.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -10649,7 +10649,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -10751,7 +10751,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 113 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 113 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v3.xyxx, t0.xyzw, s0  // texColor<0:Inf,1:Inf,2:Inf,3:Inf>
                 
                 #line 120
@@ -10848,7 +10848,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -10981,7 +10981,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -11048,7 +11048,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -11091,7 +11091,7 @@ fxgroup
                 movc r4.xyz, r3.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r3.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -11205,7 +11205,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -11338,7 +11338,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -11405,7 +11405,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -11448,7 +11448,7 @@ fxgroup
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r3.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -11498,7 +11498,7 @@ fxgroup
                 movc r4.xyz, r1.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r1.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -11612,7 +11612,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -11745,7 +11745,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -11812,7 +11812,7 @@ fxgroup
                 #line 256
                 div r0.w, r0.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -11855,7 +11855,7 @@ fxgroup
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r3.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -11905,7 +11905,7 @@ fxgroup
                 movc r10.xyz, r1.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r1.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -11955,7 +11955,7 @@ fxgroup
                 movc r4.xyz, r1.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r1.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -12069,7 +12069,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -12199,7 +12199,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 9
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -12257,7 +12257,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -12300,7 +12300,7 @@ fxgroup
                 movc r3.xyz, r3.wwww, r3.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r4.xyz, r3.wwww, r4.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r3.xyz, r3.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r4.xyz, r4.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -12427,7 +12427,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -12557,7 +12557,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 12
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -12615,7 +12615,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -12658,7 +12658,7 @@ fxgroup
                 movc r6.xyz, r3.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -12708,7 +12708,7 @@ fxgroup
                 movc r3.xyz, r2.wwww, r3.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r4.xyz, r2.wwww, r4.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r3.xyz, r3.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r4.xyz, r4.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -12835,7 +12835,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -12965,7 +12965,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -13023,7 +13023,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r2.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r3.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -13066,7 +13066,7 @@ fxgroup
                 movc r6.xyz, r3.wwww, r6.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r7.xyz, r3.wwww, r7.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r5.xyz, r5.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r6.xyz, r6.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r7.xyz, r7.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -13116,7 +13116,7 @@ fxgroup
                 movc r9.xyz, r2.wwww, r9.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r10.xyz, r2.wwww, r10.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r8.xyz, r8.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r9.xyz, r9.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r10.xyz, r10.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -13166,7 +13166,7 @@ fxgroup
                 movc r3.xyz, r2.wwww, r3.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r4.xyz, r2.wwww, r4.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r2.xyz, r2.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r3.xyz, r3.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r4.xyz, r4.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -13293,7 +13293,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -13418,7 +13418,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 100 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 100 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, -v1.xyzx
                 add r0.xyz, r0.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
@@ -13530,7 +13530,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -13663,7 +13663,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -13724,7 +13724,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -13767,7 +13767,7 @@ fxgroup
                 movc r4.xyz, r4.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r4.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -13894,7 +13894,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -14027,7 +14027,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -14088,7 +14088,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -14131,7 +14131,7 @@ fxgroup
                 movc r7.xyz, r4.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r4.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -14181,7 +14181,7 @@ fxgroup
                 movc r4.xyz, r3.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r3.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -14308,7 +14308,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -14441,7 +14441,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -14502,7 +14502,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -14545,7 +14545,7 @@ fxgroup
                 movc r7.xyz, r4.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r4.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -14595,7 +14595,7 @@ fxgroup
                 movc r10.xyz, r3.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r3.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -14645,7 +14645,7 @@ fxgroup
                 movc r4.xyz, r3.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r3.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -14772,7 +14772,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -14897,7 +14897,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 2
                 
-                #line 100 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 100 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, -v1.xyzx
                 add r0.xyz, r0.xyzx, cb0[12].xyzx  // toEye<0:Inf,1:Inf,2:Inf>
                 
@@ -15015,7 +15015,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -15148,7 +15148,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 10
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -15215,7 +15215,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -15258,7 +15258,7 @@ fxgroup
                 movc r4.xyz, r4.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r4.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -15385,7 +15385,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -15518,7 +15518,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 13
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -15585,7 +15585,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -15628,7 +15628,7 @@ fxgroup
                 movc r7.xyz, r4.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r4.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -15678,7 +15678,7 @@ fxgroup
                 movc r4.xyz, r3.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r3.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -15805,7 +15805,7 @@ fxgroup
                 dcl_output o4.xyzw
                 dcl_temps 6
                 
-                #line 74 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 74 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[0].xyzw  // vout<4:NaN:Inf>
@@ -15938,7 +15938,7 @@ fxgroup
                 dcl_output o0.xyzw
                 dcl_temps 14
                 
-                #line 97 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 97 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 dp3 r0.x, v2.xyzx, v2.xyzx
                 rsq r0.x, r0.x
                 mul r0.xyz, r0.xxxx, v2.xyzx  // pin<7:NaN:Inf,8:NaN:Inf,9:NaN:Inf>
@@ -16005,7 +16005,7 @@ fxgroup
                 #line 256
                 div r1.w, r1.w, l(9.000000)  // percentLit<0:[0f,1f]>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 nop 
                 mov r3.xyz, cb1[20].xyzx  // mat<0,1,2>
                 mov r4.xyz, cb1[21].xyzx  // mat<4,5,6>
@@ -16048,7 +16048,7 @@ fxgroup
                 movc r7.xyz, r4.wwww, r7.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r8.xyz, r4.wwww, r8.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r6.xyz, r6.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r7.xyz, r7.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r8.xyz, r8.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -16098,7 +16098,7 @@ fxgroup
                 movc r10.xyz, r3.wwww, r10.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r11.xyz, r3.wwww, r11.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r9.xyz, r9.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r10.xyz, r10.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r11.xyz, r11.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
@@ -16148,7 +16148,7 @@ fxgroup
                 movc r4.xyz, r3.wwww, r4.xyzx, l(0,0,0,0)  // diffuse<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 movc r5.xyz, r3.wwww, r5.xyzx, l(0,0,0,0)  // spec<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 
-                #line 145 "C:\Users\Alex\Documents\GitHub\DirectX-Platformer\Shadows\FX\Basic.fx"
+                #line 145 "C:\code\DirectX\Textbook stuff\DVD\Code\Chapter 21 Shadow Mapping\Shadows\FX\Basic.fx"
                 mov r3.xyz, r3.xyzx  // A<0:Inf,1:Inf,2:Inf>
                 mov r4.xyz, r4.xyzx  // D<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
                 mov r5.xyz, r5.xyzx  // S<0:NaN:Inf,1:NaN:Inf,2:NaN:Inf>
