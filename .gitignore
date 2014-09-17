@@ -231,4 +231,6 @@ $RECYCLE.BIN/
 #DirectX Compiled Files
 *.cod
 *.fxo
+MeshView\FX\*.cod
+MeshView\FX\*.fxo
 
