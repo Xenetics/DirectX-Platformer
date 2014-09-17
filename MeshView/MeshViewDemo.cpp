@@ -176,7 +176,7 @@ bool MeshViewApp::Init()
 
 	BuildScreenQuadGeometryBuffers();
 
-	testModel = new BasicModel(md3dDevice, mTexMgr, "Models\\farm.obj", L"Textures\\");
+	testModel = new BasicModel(md3dDevice, mTexMgr, "Models\\testMap.obj", L"Textures\\");
 
 	BasicModelInstance testInstance;
 	
