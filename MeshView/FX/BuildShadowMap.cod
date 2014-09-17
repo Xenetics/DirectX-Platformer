@@ -104,7 +104,7 @@ fxgroup
                 dcl_output o1.xy
                 dcl_temps 3
                 
-                #line 60 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 60 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[12].xyzw  // vout<0:NaN:Inf>
@@ -184,7 +184,7 @@ fxgroup
                 dcl_output o1.xy
                 dcl_temps 3
                 
-                #line 60 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 60 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb0[12].xyzw  // vout<0:NaN:Inf>
@@ -236,7 +236,7 @@ fxgroup
                 dcl_input_ps linear v1.xy
                 dcl_temps 1
                 
-                #line 197 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 197 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.x, v1.xyxx, t0.wxyz, s0
                 mov r0.x, r0.x  // diffuse<3:Inf>
                 
@@ -330,7 +330,7 @@ fxgroup
                 dcl_output o2.z
                 dcl_temps 4
                 
-                #line 78 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 78 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb1[0].xyzw  // vout<0:NaN:Inf>
@@ -421,7 +421,7 @@ fxgroup
                 dcl_tessellator_output_primitive output_triangle_cw
                 dcl_globalFlags refactoringAllowed
                 
-                #line 139 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 139 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 hs_control_point_phase 
                 dcl_input vOutputControlPointID
                 dcl_input v[3][0].xyz
@@ -564,7 +564,7 @@ fxgroup
                 dcl_output o3.xy
                 dcl_temps 5
                 
-                #line 164 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 164 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 mul r0.xyz, vDomain.xxxx, vicp[0][0].xyzx
                 mul r1.xyz, vDomain.yyyy, vicp[1][0].xyzx
                 add r0.xyz, r0.xyzx, r1.xyzx
@@ -703,7 +703,7 @@ fxgroup
                 dcl_output o2.z
                 dcl_temps 4
                 
-                #line 78 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 78 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 mov r0.xyz, v0.xyzx
                 mov r0.w, l(1.000000)
                 dp4 r1.x, r0.xyzw, cb1[0].xyzw  // vout<0:NaN:Inf>
@@ -794,7 +794,7 @@ fxgroup
                 dcl_tessellator_output_primitive output_triangle_cw
                 dcl_globalFlags refactoringAllowed
                 
-                #line 139 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 139 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 hs_control_point_phase 
                 dcl_input vOutputControlPointID
                 dcl_input v[3][0].xyz
@@ -937,7 +937,7 @@ fxgroup
                 dcl_output o3.xy
                 dcl_temps 5
                 
-                #line 164 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 164 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 mul r0.xyz, vDomain.xxxx, vicp[0][0].xyzx
                 mul r1.xyz, vDomain.yyyy, vicp[1][0].xyzx
                 add r0.xyz, r0.xyzx, r1.xyzx
@@ -1031,7 +1031,7 @@ fxgroup
                 dcl_input_ps linear v3.xy
                 dcl_temps 1
                 
-                #line 208 "C:\Trios\Course Development\DirectX\3DGameProg\DVD\Code\Chapter 23 Meshes\MeshView\FX\BuildShadowMap.fx"
+                #line 208 "C:\Users\Damian\Documents\GitHub\DirectX-Platformer\MeshView\FX\BuildShadowMap.fx"
                 sample_indexable(texture2d)(float,float,float,float) r0.x, v3.xyxx, t0.wxyz, s0
                 mov r0.x, r0.x  // diffuse<3:Inf>
                 

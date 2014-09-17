@@ -41,11 +41,21 @@ public:
 	bool Init();
 	void OnResize();
 	void UpdateScene(float dt);
-	void DrawScene(); 
+	void UpdateWhilePlaying(float dt);
+	void DrawScene();
+	void DrawGameScene();
+	void DrawMenuScene();
 
 	void OnMouseDown(WPARAM btnState, int x, int y);
 	void OnMouseUp(WPARAM btnState, int x, int y);
 	void OnMouseMove(WPARAM btnState, int x, int y);
+
+	enum class GAME_STATE
+	{
+		menuState = 1,
+		playingState,
+		pauseState
+	};
 
 private:
 	void DrawSceneToSsaoNormalDepthMap();
@@ -245,19 +255,41 @@ void MeshViewApp::OnResize()
 
 void MeshViewApp::UpdateScene(float dt)
 {
+
+	GAME_STATE gameState = GAME_STATE::playingState;
+
+	switch (gameState)
+	{
+	case GAME_STATE::menuState:
+		break;
+
+	case GAME_STATE::playingState:
+		UpdateWhilePlaying(dt);
+		break;
+
+	case GAME_STATE::pauseState:
+		break;
+
+	}
+	
+
+}
+
+void MeshViewApp::UpdateWhilePlaying(float dt)
+{
 	//
 	// Control the camera.
 	//
-	if( GetAsyncKeyState('W') & 0x8000 )
+	if (GetAsyncKeyState('W') & 0x8000)
 		mCam.Walk(10.0f*dt);
 
-	if( GetAsyncKeyState('S') & 0x8000 )
+	if (GetAsyncKeyState('S') & 0x8000)
 		mCam.Walk(-10.0f*dt);
 
-	if( GetAsyncKeyState('A') & 0x8000 )
+	if (GetAsyncKeyState('A') & 0x8000)
 		mCam.Strafe(-10.0f*dt);
 
-	if( GetAsyncKeyState('D') & 0x8000 )
+	if (GetAsyncKeyState('D') & 0x8000)
 		mCam.Strafe(10.0f*dt);
 
 	//
@@ -271,6 +303,27 @@ void MeshViewApp::UpdateScene(float dt)
 
 void MeshViewApp::DrawScene()
 {
+
+	GAME_STATE gameState = GAME_STATE::playingState;
+
+	switch (gameState)
+	{
+		case GAME_STATE::menuState:
+			break;
+
+		case GAME_STATE::playingState:
+			DrawGameScene();
+			break;
+
+		case GAME_STATE::pauseState:
+			break;
+
+	}
+
+}
+
+void MeshViewApp::DrawGameScene()
+{
 	//
 	// Render the scene to the shadow map.
 	//
@@ -282,7 +335,7 @@ void MeshViewApp::DrawScene()
 	md3dImmediateContext->RSSetState(0);
 
 
-	md3dImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
+	md3dImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	md3dImmediateContext->RSSetViewports(1, &mScreenViewport);
 	mSsao->SetNormalDepthRenderTarget(mDepthStencilView);
 
@@ -298,12 +351,12 @@ void MeshViewApp::DrawScene()
 	//
 	// Restore the back and depth buffer and viewport to the OM stage.
 	//
-	ID3D11RenderTargetView* renderTargets[1] = {mRenderTargetView};
+	ID3D11RenderTargetView* renderTargets[1] = { mRenderTargetView };
 	md3dImmediateContext->OMSetRenderTargets(1, renderTargets, mDepthStencilView);
 	md3dImmediateContext->RSSetViewports(1, &mScreenViewport);//maybe does not work?
 
 	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView, reinterpret_cast<const float*>(&Colors::Silver));
- 
+
 	// We already laid down scene depth to the depth buffer in the Normal/Depth map pass,
 	// so we can set the depth comparison test to “EQUALS.”  This prevents any overdraw
 	// in this rendering pass, as only the nearest visible pixels will pass this depth
@@ -312,11 +365,11 @@ void MeshViewApp::DrawScene()
 	//may notdo anything or just break it
 	md3dImmediateContext->OMSetDepthStencilState(RenderStates::EqualsDSS, 0);
 
-	XMMATRIX view     = mCam.View();
-	XMMATRIX proj     = mCam.Proj();
+	XMMATRIX view = mCam.View();
+	XMMATRIX proj = mCam.Proj();
 	XMMATRIX viewProj = mCam.ViewProj();
 
-	float blendFactor[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	// Set per frame constants.
 	Effects::BasicFX->SetDirLights(mDirLights);
@@ -346,21 +399,21 @@ void MeshViewApp::DrawScene()
 	XMMATRIX shadowTransform = XMLoadFloat4x4(&mShadowTransform);
 
 	UINT stride = sizeof(Vertex::PosNormalTexTan);
-    UINT offset = 0;
+	UINT offset = 0;
 
 	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
-     
-	if( GetAsyncKeyState('1') & 0x8000 )
+
+	if (GetAsyncKeyState('1') & 0x8000)
 		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
 
 	//
 	// Draw opaque objects.
 	//
-    D3DX11_TECHNIQUE_DESC techDesc;
-    tech->GetDesc( &techDesc );
-    for(UINT p = 0; p < techDesc.Passes; ++p)
-    {
-		for(UINT modelIndex = 0; modelIndex < mModelInstances.size(); ++modelIndex)
+	D3DX11_TECHNIQUE_DESC techDesc;
+	tech->GetDesc(&techDesc);
+	for (UINT p = 0; p < techDesc.Passes; ++p)
+	{
+		for (UINT modelIndex = 0; modelIndex < mModelInstances.size(); ++modelIndex)
 		{
 			world = XMLoadFloat4x4(&mModelInstances[modelIndex].World);
 			worldInvTranspose = MathHelper::InverseTranspose(world);
@@ -373,7 +426,7 @@ void MeshViewApp::DrawScene()
 			Effects::BasicFX->SetShadowTransform(world*shadowTransform);
 			Effects::BasicFX->SetTexTransform(XMMatrixScaling(1.0f, 1.0f, 1.0f));
 
-			for(UINT subset = 0; subset < mModelInstances[modelIndex].Model->SubsetCount; ++subset)
+			for (UINT subset = 0; subset < mModelInstances[modelIndex].Model->SubsetCount; ++subset)
 			{
 				Effects::BasicFX->SetMaterial(mModelInstances[modelIndex].Model->Mat[subset]);
 				Effects::BasicFX->SetDiffuseMap(mModelInstances[modelIndex].Model->DiffuseMapSRV[subset]);
@@ -383,7 +436,7 @@ void MeshViewApp::DrawScene()
 				mModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
 			}
 		}
-    }
+	}
 	// Turn off wireframe.
 	md3dImmediateContext->RSSetState(0);
 
