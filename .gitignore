@@ -227,3 +227,8 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+#DirectX Compiled Files
+*.cod
+*.fxo
+
