@@ -91,11 +91,13 @@
     <ClCompile Include="..\..\Common\Waves.cpp" />
     <ClCompile Include="..\..\Common\xnacollision.cpp" />
     <ClCompile Include="BasicModel.cpp" />
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="Effects.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
     <ClCompile Include="LoadOBJ.cpp" />
     <ClCompile Include="MeshGeometry.cpp" />
     <ClCompile Include="MeshViewDemo.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderStates.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Sky.cpp" />
@@ -115,10 +117,12 @@
     <ClInclude Include="..\..\Common\Waves.h" />
     <ClInclude Include="..\..\Common\xnacollision.h" />
     <ClInclude Include="BasicModel.h" />
+    <ClInclude Include="Box.h" />
     <ClInclude Include="Effects.h" />
     <ClInclude Include="LoadM3d.h" />
     <ClInclude Include="LoadOBJ.h" />
     <ClInclude Include="MeshGeometry.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RenderStates.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="Sky.h" />

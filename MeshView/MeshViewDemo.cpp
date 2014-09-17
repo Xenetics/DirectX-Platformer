@@ -17,7 +17,7 @@
 #include "LightHelper.h"
 #include "Effects.h"
 #include "Vertex.h"
-#include "Camera.h"
+#include "Player.h"
 #include "Sky.h"
 #include "RenderStates.h"
 #include "ShadowMap.h"
@@ -107,9 +107,16 @@ private:
 	XMFLOAT3 mOriginalLightDir[3];
 	DirectionalLight mDirLights[3];
 
-	Camera mCam;
+	Player mPlayer;
 
 	POINT mLastMousePos;
+
+	//key bools
+	bool wKey = false;
+	bool aKey = false;
+	bool sKey = false;
+	bool dKey = false;
+	bool space = false;
 };
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
@@ -140,7 +147,7 @@ MeshViewApp::MeshViewApp(HINSTANCE hInstance)
 	mLastMousePos.x = 0;
 	mLastMousePos.y = 0;
 
-	mCam.SetPosition(0.0f, 2.0f, -15.0f);
+	mPlayer.SetPosition(0.0f, 2.0f, -15.0f);
  
 	mDirLights[0].Ambient  = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[0].Diffuse  = XMFLOAT4(0.8f, 0.7f, 0.7f, 1.0f);
@@ -195,8 +202,8 @@ bool MeshViewApp::Init()
 	mSky  = new Sky(md3dDevice, L"Textures/desertcube1024.dds", 5000.0f);
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
-	mCam.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
-	mSsao = new Ssao(md3dDevice, md3dImmediateContext, mClientWidth, mClientHeight, mCam.GetFovY(), mCam.GetFarZ());
+	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
+	mSsao = new Ssao(md3dDevice, md3dImmediateContext, mClientWidth, mClientHeight, mPlayer.GetFovY(), mPlayer.GetFarZ());
 
 	BuildScreenQuadGeometryBuffers();
 
@@ -259,11 +266,11 @@ void MeshViewApp::OnResize()
 {
 	D3DApp::OnResize();
 
-	mCam.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
+	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
 
 	if( mSsao )
 	{
-		mSsao->OnSize(mClientWidth, mClientHeight, mCam.GetFovY(), mCam.GetFarZ());
+		mSsao->OnSize(mClientWidth, mClientHeight, mPlayer.GetFovY(), mPlayer.GetFarZ());
 	}
 }
 
@@ -297,16 +304,113 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	// Control the camera.
 	//
 	if (GetAsyncKeyState('W') & 0x8000)
-		mCam.Walk(10.0f*dt);
+	{
+		if (wKey == false)
+		{
+			//key down
+
+		}
+		//key pressed
+		mPlayer.Walk(10.0f*dt);
+		wKey = true;
+	}
+	else
+	{
+		if (wKey == true)
+		{
+			//on key up
+			mPlayer.Stop();
+		}
+		wKey = false;
+	}
+
 
 	if (GetAsyncKeyState('S') & 0x8000)
-		mCam.Walk(-10.0f*dt);
+	{
+		if (sKey == false)
+		{
+			//key down
+
+		}
+		//key pressed
+		mPlayer.Walk(-10.0f * dt);
+		sKey = true;
+	}
+	else
+	{
+		if (sKey == true)
+		{
+			//on key up
+			mPlayer.Stop();
+		}
+		sKey = false;
+	}
+
 
 	if (GetAsyncKeyState('A') & 0x8000)
-		mCam.Strafe(-10.0f*dt);
+	{
+		if (aKey == false)
+		{
+			//key down
+		}
+		//key pressed
+		mPlayer.Strafe(-10.0f * dt);
+		aKey = true;
+	}
+	else
+	{
+		if (aKey == true)
+		{
+			//on key up
+			mPlayer.Stop();
+		}
+		aKey = false;
+	}
+
 
 	if (GetAsyncKeyState('D') & 0x8000)
-		mCam.Strafe(10.0f*dt);
+	{
+		if (dKey == false)
+		{
+			//key down
+		}
+		//key pressed
+		mPlayer.Strafe(10.0f * dt);
+		dKey = true;
+	}
+	else
+	{
+		if (dKey == true)
+		{
+			//on key up
+			mPlayer.Stop();
+		}
+		dKey = false;
+	}
+
+
+
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		if (space == false)
+		{
+			//key down
+			mPlayer.Jump();
+		}
+		//key pressed
+
+		space = true;
+	}
+	else
+	{
+		if (space == true)
+		{
+			//on key up
+		}
+		space = false;
+	}
+
+	mPlayer.Update(dt);
 
 	//
 	// Animate the lights (and hence shadows).
@@ -314,7 +418,7 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 
 	BuildShadowTransform();
 
-	mCam.UpdateViewMatrix();
+	mPlayer.UpdateViewMatrix();
 }
 
 void MeshViewApp::DrawScene()
@@ -361,7 +465,7 @@ void MeshViewApp::DrawWhilePlaying()
 	// Now compute the ambient occlusion.
 	// may not work
 
-	mSsao->ComputeSsao(mCam);
+	mSsao->ComputeSsao(mPlayer);
 	mSsao->BlurAmbientMap(2);
 
 	//
@@ -381,15 +485,15 @@ void MeshViewApp::DrawWhilePlaying()
 	//may notdo anything or just break it
 	md3dImmediateContext->OMSetDepthStencilState(RenderStates::EqualsDSS, 0);
 
-	XMMATRIX view = mCam.View();
-	XMMATRIX proj = mCam.Proj();
-	XMMATRIX viewProj = mCam.ViewProj();
+	XMMATRIX view = mPlayer.View();
+	XMMATRIX proj = mPlayer.Proj();
+	XMMATRIX viewProj = mPlayer.ViewProj();
 
 	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	// Set per frame constants.
 	Effects::BasicFX->SetDirLights(mDirLights);
-	Effects::BasicFX->SetEyePosW(mCam.GetPosition());
+	Effects::BasicFX->SetEyePosW(mPlayer.GetPosition());
 	Effects::BasicFX->SetCubeMap(mSky->CubeMapSRV());
 	Effects::BasicFX->SetShadowMap(mSmap->DepthMapSRV());
 	Effects::BasicFX->SetSsaoMap(mSsao->AmbientSRV());
@@ -462,7 +566,7 @@ void MeshViewApp::DrawWhilePlaying()
 	// Debug view SSAO map.
 	//DrawScreenQuad(mSsao->AmbientSRV());
 
-	mSky->Draw(md3dImmediateContext, mCam);
+	mSky->Draw(md3dImmediateContext, mPlayer);
 
 	// restore default states, as the SkyFX changes them in the effect file.
 	md3dImmediateContext->RSSetState(0);
@@ -497,8 +601,8 @@ void MeshViewApp::OnMouseMove(WPARAM btnState, int x, int y)
 		float dx = XMConvertToRadians(0.25f*static_cast<float>(x - mLastMousePos.x));
 		float dy = XMConvertToRadians(0.25f*static_cast<float>(y - mLastMousePos.y));
 
-		mCam.Pitch(dy);
-		mCam.RotateY(dx);
+		mPlayer.Pitch(dy);
+		mPlayer.RotateY(dx);
 	}
 
 	mLastMousePos.x = x;
@@ -507,8 +611,8 @@ void MeshViewApp::OnMouseMove(WPARAM btnState, int x, int y)
 
 void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
 {
-	XMMATRIX view     = mCam.View();
-	XMMATRIX proj     = mCam.Proj();
+	XMMATRIX view     = mPlayer.View();
+	XMMATRIX proj     = mPlayer.Proj();
 	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
 
 	ID3DX11EffectTechnique* tech = Effects::SsaoNormalDepthFX->NormalDepthTech;
@@ -588,7 +692,7 @@ void MeshViewApp::DrawSceneToShadowMap()
 	XMMATRIX proj     = XMLoadFloat4x4(&mLightProj);
 	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
 
-	Effects::BuildShadowMapFX->SetEyePosW(mCam.GetPosition());
+	Effects::BuildShadowMapFX->SetEyePosW(mPlayer.GetPosition());
 	Effects::BuildShadowMapFX->SetViewProj(viewProj);
 
 	ID3DX11EffectTechnique* tech = Effects::BuildShadowMapFX->BuildShadowMapTech;

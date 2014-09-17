@@ -106,37 +106,6 @@ void Player::Update(float dt)
 	//record player pos
 	mPrevPos = mPosition;
 
-	if (isCollidingFloor)
-	{
-		isOnWall = false;
-		hasBeenOnWall = false;
-		//vel.x = 0;
-		//vel.z = 0;
-		vel.y = 0;
-	}
-
-	if (!isCollidingWall)
-	{
-		isOnWall = false;
-	}
-
-	if (isCollidingWall && !hasBeenOnWall && wallTimer == 0)
-	{
-		wallTimer = 1.1f;
-		isOnWall = true;
-		hasBeenOnWall = true;
-	}
-
-	if (wallTimer <= 0)
-	{
-		wallTimer = 0;
-		isOnWall = false;
-	}
-	else
-	{
-		wallTimer -= dt;
-	}
-
 	//velocity and acceleration stuff
 	vel.x += acc.x * dt;
 	vel.z += acc.z * dt;
