@@ -26,8 +26,8 @@ BasicModel::BasicModel(ID3D11Device* device, TextureMgr& texMgr,  const std::str
 			texMgr.CreateTexture(texturePath + mats[i].DiffuseMapName);
 		DiffuseMapSRV.push_back(diffuseMapSRV);
 
-		//ID3D11ShaderResourceView* normalMapSRV = texMgr.CreateTexture(texturePath + mats[i].NormalMapName);
-		//NormalMapSRV.push_back(normalMapSRV);
+		ID3D11ShaderResourceView* normalMapSRV = texMgr.CreateTexture(texturePath + mats[i].NormalMapName);
+		NormalMapSRV.push_back(normalMapSRV);
 	}
 }
 

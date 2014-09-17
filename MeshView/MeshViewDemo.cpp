@@ -43,7 +43,7 @@ public:
 	void UpdateScene(float dt);
 	void UpdateWhilePlaying(float dt);
 	void DrawScene();
-	void DrawGameScene();
+	void DrawWhilePlaying();
 	void DrawMenuScene();
 
 	void OnMouseDown(WPARAM btnState, int x, int y);
@@ -312,7 +312,7 @@ void MeshViewApp::DrawScene()
 			break;
 
 		case GAME_STATE::playingState:
-			DrawGameScene();
+			DrawWhilePlaying();
 			break;
 
 		case GAME_STATE::pauseState:
@@ -322,7 +322,7 @@ void MeshViewApp::DrawScene()
 
 }
 
-void MeshViewApp::DrawGameScene()
+void MeshViewApp::DrawWhilePlaying()
 {
 	//
 	// Render the scene to the shadow map.
@@ -330,7 +330,7 @@ void MeshViewApp::DrawGameScene()
 
 	mSmap->BindDsvAndSetNullRenderTarget(md3dImmediateContext);
 
-	DrawSceneToShadowMap();//his may not work
+	//DrawSceneToShadowMap();//his may not work
 
 	md3dImmediateContext->RSSetState(0);
 
@@ -401,9 +401,9 @@ void MeshViewApp::DrawGameScene()
 	UINT stride = sizeof(Vertex::PosNormalTexTan);
 	UINT offset = 0;
 
-	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
-
-	if (GetAsyncKeyState('1') & 0x8000)
+	md3dImmediateContext->IASetInputLayout(InputLayouts::PosNormalTexTan);
+     
+	if( GetAsyncKeyState('1') & 0x8000 )
 		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
 
 	//
