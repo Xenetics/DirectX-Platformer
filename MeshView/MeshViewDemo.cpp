@@ -277,7 +277,7 @@ void MeshViewApp::DrawScene()
 
 	mSmap->BindDsvAndSetNullRenderTarget(md3dImmediateContext);
 
-	DrawSceneToShadowMap();//his may not work
+	//DrawSceneToShadowMap();//his may not work
 
 	md3dImmediateContext->RSSetState(0);
 
@@ -348,7 +348,7 @@ void MeshViewApp::DrawScene()
 	UINT stride = sizeof(Vertex::PosNormalTexTan);
     UINT offset = 0;
 
-	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
+	md3dImmediateContext->IASetInputLayout(InputLayouts::PosNormalTexTan);
      
 	if( GetAsyncKeyState('1') & 0x8000 )
 		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
