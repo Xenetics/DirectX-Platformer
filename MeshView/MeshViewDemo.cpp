@@ -176,7 +176,7 @@ bool MeshViewApp::Init()
 
 	BuildScreenQuadGeometryBuffers();
 
-	testModel = new BasicModel(md3dDevice, mTexMgr, "Models\\testMap.obj", L"Textures\\");
+	testModel = new BasicModel(md3dDevice, mTexMgr, "Models\\testMap.alx", L"Textures\\");
 
 	BasicModelInstance testInstance;
 	
@@ -277,19 +277,41 @@ void MeshViewApp::DrawScene()
 
 	mSmap->BindDsvAndSetNullRenderTarget(md3dImmediateContext);
 
+	DrawSceneToShadowMap();//his may not work
+
 	md3dImmediateContext->RSSetState(0);
+
+
 	md3dImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1.0f, 0);
 	md3dImmediateContext->RSSetViewports(1, &mScreenViewport);
 	mSsao->SetNormalDepthRenderTarget(mDepthStencilView);
+
+	DrawSceneToSsaoNormalDepthMap();//could be broken
+
+	//
+	// Now compute the ambient occlusion.
+	// may not work
+
+	mSsao->ComputeSsao(mCam);
+	mSsao->BlurAmbientMap(2);
 
 	//
 	// Restore the back and depth buffer and viewport to the OM stage.
 	//
 	ID3D11RenderTargetView* renderTargets[1] = {mRenderTargetView};
 	md3dImmediateContext->OMSetRenderTargets(1, renderTargets, mDepthStencilView);
+	md3dImmediateContext->RSSetViewports(1, &mScreenViewport);//maybe does not work?
 
 	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView, reinterpret_cast<const float*>(&Colors::Silver));
  
+	// We already laid down scene depth to the depth buffer in the Normal/Depth map pass,
+	// so we can set the depth comparison test to “EQUALS.”  This prevents any overdraw
+	// in this rendering pass, as only the nearest visible pixels will pass this depth
+	// comparison test.
+
+	//may notdo anything or just break it
+	md3dImmediateContext->OMSetDepthStencilState(RenderStates::EqualsDSS, 0);
+
 	XMMATRIX view     = mCam.View();
 	XMMATRIX proj     = mCam.Proj();
 	XMMATRIX viewProj = mCam.ViewProj();
@@ -304,6 +326,10 @@ void MeshViewApp::DrawScene()
 	Effects::BasicFX->SetSsaoMap(mSsao->AmbientSRV());
 
 	ID3DX11EffectTechnique* tech = Effects::BasicFX->Light3TexTech;
+
+	//may not work/do anything
+	ID3DX11EffectTechnique* alphaClippedTech = Effects::NormalMapFX->Light3TexAlphaClipTech;
+
 	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	XMMATRIX world;

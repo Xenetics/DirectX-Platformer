@@ -2,20 +2,15 @@
 #include "LoadM3d.h"
 #include "LoadOBJ.h"
 
-BasicModel::BasicModel(ID3D11Device* device, TextureMgr& texMgr, 
-					   const std::string& modelFilename, 
-					   const std::wstring& texturePath, 
-					   MeshGeometry::Type type)
-	:
-	ModelMesh(type)
+BasicModel::BasicModel(ID3D11Device* device, TextureMgr& texMgr,  const std::string& modelFilename,  const std::wstring& texturePath,  MeshGeometry::Type type):ModelMesh(type)
 {
 	std::vector<M3dMaterial> mats;
 	//M3DLoader m3dLoader;
 	//m3dLoader.LoadM3d(modelFilename, Vertices, Indices, Subsets, mats);
 	//test code
 	OBJLoader objLoader;
-	objLoader.LoadOBJ(device, modelFilename, BasicVertices, 
-					  Indices, Subsets, mats, true, true);
+	objLoader.LoadOBJ(device, modelFilename, BasicVertices,  Indices, Subsets, mats, true, true);
+
 	ModelMesh.SetVertices(device, &BasicVertices[0], BasicVertices.size());
 	ModelMesh.SetIndices(device, &Indices[0], Indices.size());
 	ModelMesh.SetSubsetTable(Subsets);
