@@ -24,6 +24,8 @@
 #include "Ssao.h"
 #include "TextureMgr.h"
 #include "BasicModel.h"
+#include <fmod.hpp>
+#include <fmod_errors.h>
 
 struct BoundingSphere
 {
@@ -49,6 +51,16 @@ public:
 	void OnMouseDown(WPARAM btnState, int x, int y);
 	void OnMouseUp(WPARAM btnState, int x, int y);
 	void OnMouseMove(WPARAM btnState, int x, int y);
+
+	//FMOD stuff
+	FMOD::System *system;
+	FMOD_RESULT result;
+	FMOD::Sound		*sound1, *sound2, *sound3, *music;
+	FMOD::Channel	*channel1, *channel2, *channel3, *musicChannel;
+	int		key;
+	unsigned int	version;
+	void InitFMOD();
+	void UpdateSound();
 
 	enum class GAME_STATE
 	{
@@ -176,6 +188,8 @@ bool MeshViewApp::Init()
 	InputLayouts::InitAll(md3dDevice);
 	RenderStates::InitAll(md3dDevice);
 
+	InitFMOD();
+
 	mTexMgr.Init(md3dDevice);
 
 	mSky  = new Sky(md3dDevice, L"Textures/desertcube1024.dds", 5000.0f);
@@ -257,6 +271,8 @@ void MeshViewApp::UpdateScene(float dt)
 {
 
 	GAME_STATE gameState = GAME_STATE::playingState;
+
+	UpdateSound();
 
 	switch (gameState)
 	{
@@ -751,4 +767,146 @@ void MeshViewApp::BuildScreenQuadGeometryBuffers()
     D3D11_SUBRESOURCE_DATA iinitData;
     iinitData.pSysMem = &quad.Indices[0];
     HR(md3dDevice->CreateBuffer(&ibd, &iinitData, &mScreenQuadIB));
+}
+
+void MeshViewApp::InitFMOD()
+{
+	result = FMOD::System_Create(&system);
+
+	//ERRCHECK(result);
+
+	result = system->getVersion(&version);
+	//ERRCHECK(result);
+
+	if (version < FMOD_VERSION)
+	{
+		printf("Error! You are using an old version of FMOD %08x.");
+		return;
+	}
+
+	int numdrivers = 0;
+
+	char name[256];
+	FMOD_CAPS caps;
+	FMOD_SPEAKERMODE speakermode;
+
+	result = system->getNumDrivers(&numdrivers);
+	//ERRCHECK(result);
+	if (numdrivers == 0)
+	{
+		result == system->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
+		//ERRCHECK(result);
+	}
+	else
+	{
+		result = system->getDriverCaps(0, &caps, 0, &speakermode);
+		//ERRCHECK(result);
+		/*
+		set the user selected speaker mode.
+		*/
+		result = system->setSpeakerMode(speakermode);
+		//ERRCHECK(result);
+
+		if (caps & FMOD_CAPS_HARDWARE_EMULATED)
+		{
+			/*
+			The user has the 'Acceleration' slider set to off! This is really bad for latency! You might want to warn the user about this.
+			*/
+			result = system->setDSPBufferSize(1024, 10);
+			//ERRCHECK(result);
+		}
+		result = system->getDriverInfo(0, name, 256, 0);
+		//ERRCHECK(result);
+		if (strstr(name, "SigmaTel"))
+		{
+			/*
+			Sigmatel sound devices crackel for some reason if the format is PCM 16bit.
+			PCM floating point outout seems to solve it.
+			*/
+			result = system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0, 0, FMOD_DSP_RESAMPLER_LINEAR);
+			//ERRCHECK(result);
+		}
+	}
+	result = system->init(100, FMOD_INIT_NORMAL, 0);
+	if (result == FMOD_ERR_OUTPUT_CREATEBUFFER)
+	{
+		/*
+		ok, the speaker mode selected isn't supported by this soundcard. Switch it back to stereo...
+		*/
+		result = system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
+		//ERRCHECK(result);
+		/*
+		...and re-init.
+		*/
+		result = system->init(100, FMOD_INIT_NORMAL, 0);
+	}
+	//ERRCHECK(result);
+
+	result = system->createSound("sounds/dsnoway.wav", FMOD_HARDWARE, 0, &sound1);
+	//ERRCHECK(result);
+
+	result = sound1->setMode(FMOD_LOOP_OFF);
+	//ERRCHECK(result);
+
+	result = system->createSound("sounds/FOOT2.wav", FMOD_HARDWARE, 0, &sound2);
+	//ERRCHECK(result);
+
+	result = sound2->setMode(FMOD_LOOP_OFF);
+	//ERRCHECK(result);
+
+	result = system->createSound("sounds/line_start.wav", FMOD_HARDWARE, 0, &sound3);
+	//ERRCHECK(result);
+
+	result = sound3->setMode(FMOD_LOOP_OFF);
+	//ERRCHECK(result);
+
+	result = system->createStream("sounds/CoolRide.mp3", FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D, 0, &music);
+	//ERRCHECK(result);
+
+	result = system->playSound(FMOD_CHANNEL_FREE, music, false, &musicChannel);
+	//ERRCHECK(result);
+
+	//Set valume on the channel.
+	result = musicChannel->setVolume(0.05f);
+	//ERRCHECK(result);
+
+	channel1 = 0;
+	channel2 = 0;
+	channel3 = 0;
+}
+void MeshViewApp::UpdateSound()
+{
+	bool channelPlaying = false;
+	if (channel1)
+	{
+		result = channel1->isPlaying(&channelPlaying);
+	}
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000 && !channelPlaying)
+	{
+		result = system->playSound(FMOD_CHANNEL_FREE, sound1, false, &channel1);
+		//ERRCHECK(result);
+	}
+
+	channelPlaying = false;
+	if (channel2)
+	{
+		result = channel2->isPlaying(&channelPlaying);
+	}
+	if (GetAsyncKeyState('W') & 0x8000 && !channelPlaying)
+	{
+		result = system->playSound(FMOD_CHANNEL_FREE, sound2, false, &channel2);
+		//ERRCHECK(result);
+	}
+	channelPlaying = false;
+	if (channel3)
+	{
+		result = channel3->isPlaying(&channelPlaying);
+	}
+	if (GetAsyncKeyState('S') & 0x8000 && !channelPlaying)
+	{
+		result = system->playSound(FMOD_CHANNEL_FREE, sound3, false, &channel3);
+		//ERRCHECK(result);
+
+	}
+	system->update();
 }
