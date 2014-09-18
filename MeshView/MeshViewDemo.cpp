@@ -29,6 +29,7 @@
 #include "Ssao.h"
 #include "TextureMgr.h"
 #include "BasicModel.h"
+#include "LevelModel.h"
 #include <fmod.hpp>
 #include <fmod_errors.h>
 
@@ -93,6 +94,7 @@ private:
 	Sky* mSky;
 
 	BasicModel* testModel;
+	LevelModel* currLevel;
 
 	std::vector<BasicModelInstance> mModelInstances;
 	std::vector<BasicModelInstance> mAlphaClippedModelInstances;
@@ -147,7 +149,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
  
 
 MeshViewApp::MeshViewApp(HINSTANCE hInstance)
-: D3DApp(hInstance), mSky(0), testModel(0),
+: D3DApp(hInstance), mSky(0), testModel(0), currLevel(0),
   mScreenQuadVB(0), mScreenQuadIB(0),
   mSmap(0), mSsao(0),
   mLightRotationAngle(0.0f)
@@ -157,7 +159,7 @@ MeshViewApp::MeshViewApp(HINSTANCE hInstance)
 	mLastMousePos.x = 0;
 	mLastMousePos.y = 0;
 
-	mPlayer.SetPosition(0.0f, 2.0f, -15.0f);
+	mPlayer.SetPosition(-120.0f, 300.0f, 20.0f);
  
 	mDirLights[0].Ambient  = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[0].Diffuse  = XMFLOAT4(0.8f, 0.7f, 0.7f, 1.0f);
@@ -182,6 +184,7 @@ MeshViewApp::MeshViewApp(HINSTANCE hInstance)
 MeshViewApp::~MeshViewApp()
 {
 	SafeDelete(testModel);
+	SafeDelete(currLevel);
 
 	SafeDelete(mSky);
 	SafeDelete(mSmap);
@@ -217,11 +220,11 @@ bool MeshViewApp::Init()
 
 	BuildScreenQuadGeometryBuffers();
 
-	testModel = new BasicModel(md3dDevice, mTexMgr, "Models\\testMap.alx", L"Textures\\");
+	currLevel = new LevelModel(md3dDevice, mTexMgr, "Models\\testMap.alx", L"Textures\\");
 
 	BasicModelInstance testInstance;
 	
-	testInstance.Model = testModel;
+	testInstance.Model = currLevel;
 
 	XMMATRIX modelScale = XMMatrixScaling(1.0f, 1.0f, -1.0f);
 	XMMATRIX modelRot   = XMMatrixRotationY(0.0f);
@@ -326,12 +329,13 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	mPlayer.isCollidingFloor = false;//reset the collsiion status
 
 	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
+
 	for (UINT i = 0; i < mModelInstances.size(); ++i)
 	{
 		//get the vector of indices and Vertices and store them
 		std::vector<Vertex::Basic32> cVertices = mModelInstances[i].Model->BasicVertices;
 		std::vector<USHORT> cIndices = mModelInstances[i].Model->Indices;
-		for (UINT j = 0; j < cIndices.size(); j += 3)
+		for (int j = 0; j < mModelInstances[i].Model->BasicVertices.size(); j += 3)
 		{
 			XMVECTOR P0 = XMLoadFloat3(&cVertices[cIndices[j]].Pos);
 			XMVECTOR P1 = XMLoadFloat3(&cVertices[cIndices[j + 1]].Pos);
@@ -340,7 +344,6 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 			if (mPlayer.isCollidingFloor == false)
 			{
 				mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P0, P1, P2, &pSphere);
-				//break; //we hit something so nothing else matters. Err I think...?
 			}
 		}
 	}
@@ -626,6 +629,16 @@ void MeshViewApp::KeyHandler(float dt)
 			//on key up
 		}
 		space = false;
+	}
+
+	//for debugging
+	//reseting the player
+	if ((GetAsyncKeyState('R') & 0x8000))
+	{
+		mPlayer.SetPosition(0.0f, 8.0f, -12.0f);
+		mPlayer.vel.y = 0;
+		mPlayer.vel.x = 0;
+		mPlayer.vel.z = 0;
 	}
 }
 

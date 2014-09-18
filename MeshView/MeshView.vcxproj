@@ -93,6 +93,7 @@
     <ClCompile Include="BasicModel.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Effects.cpp" />
+    <ClCompile Include="LevelModel.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
     <ClCompile Include="LoadOBJ.cpp" />
     <ClCompile Include="MeshGeometry.cpp" />
@@ -119,6 +120,7 @@
     <ClInclude Include="BasicModel.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Effects.h" />
+    <ClInclude Include="LevelModel.h" />
     <ClInclude Include="LoadM3d.h" />
     <ClInclude Include="LoadOBJ.h" />
     <ClInclude Include="MeshGeometry.h" />
