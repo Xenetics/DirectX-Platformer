@@ -1007,7 +1007,7 @@ void MeshViewApp::InitFMOD()
 	result = sound2->setMode(FMOD_LOOP_OFF);
 	//ERRCHECK(result);
 
-	result = system->createSound("sounds/line_start.wav", FMOD_HARDWARE, 0, &sound3);
+	result = system->createSound("sounds/pl_step2.wav", FMOD_HARDWARE, 0, &sound3);
 	//ERRCHECK(result);
 
 	result = sound3->setMode(FMOD_LOOP_OFF);
