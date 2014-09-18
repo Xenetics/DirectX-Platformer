@@ -58,6 +58,10 @@ LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::stri
 		tData.P0 = P0;
 		tData.P1 = P1;
 		tData.P2 = P2;
+		
+		//add it to yhe vector
+		data.push_back(tData);
+		
 	}
 }
 

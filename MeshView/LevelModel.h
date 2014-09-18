@@ -20,5 +20,7 @@ class LevelModel : public BasicModel
 public:
 	LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::string& modelFilename, const std::wstring& texturePath, MeshGeometry::Type type = MeshGeometry::NORMAL_DIFFUSE);
 	~LevelModel();
+
+	std::vector<TriData> data;
 };
 

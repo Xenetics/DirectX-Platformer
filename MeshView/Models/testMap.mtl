@@ -1,9 +1,9 @@
-# Blender MTL File: 'None'
+# Blender MTL File: 'testMap.blend'
 # Material Count: 1
 
 newmtl Material
 Ns 96.078431
-Ka 1.000000 1.000000 1.000000
+Ka 1.500000 1.500000 1.500000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000

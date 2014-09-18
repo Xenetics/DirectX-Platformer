@@ -1,8 +1,8 @@
 #include "Player.h"
 
-#define WALK_SPEED 600.0
+#define WALK_SPEED 60.0
 #define RUN_SPEED  2.0
-#define JUMP_POWER 60.0
+#define JUMP_POWER 10.0
 
 Player::Player() : Camera(), isCollidingWall(false), isCollidingFloor(false), vel(0.0f, 0.0f, 0.0f), acc(0.0f, -20.0f, 0.0f), wallTimer(0), walking(0)
 {

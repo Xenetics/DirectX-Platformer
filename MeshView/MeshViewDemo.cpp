@@ -323,21 +323,17 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 
 	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
 
-	for (UINT i = 0; i < mModelInstances.size(); ++i)
+	//get the vector of indices and Vertices and store them
+	std::vector<TriData> tData = currLevel->data;
+	for (int j = 0; j < tData.size(); j++)
 	{
-		//get the vector of indices and Vertices and store them
-		std::vector<Vertex::Basic32> cVertices = mModelInstances[i].Model->BasicVertices;
-		std::vector<USHORT> cIndices = mModelInstances[i].Model->Indices;
-		for (int j = 0; j < mModelInstances[i].Model->BasicVertices.size(); j += 3)
-		{
-			XMVECTOR P0 = XMLoadFloat3(&cVertices[cIndices[j]].Pos);
-			XMVECTOR P1 = XMLoadFloat3(&cVertices[cIndices[j + 1]].Pos);
-			XMVECTOR P2 = XMLoadFloat3(&cVertices[cIndices[j + 2]].Pos);
+		XMVECTOR P0 = tData[j].P0;
+		XMVECTOR P1 = tData[j].P1;
+		XMVECTOR P2 = tData[j].P2;
 			
-			if (mPlayer.isCollidingFloor == false)
-			{
-				mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P0, P1, P2, &pSphere);
-			}
+		if (mPlayer.isCollidingFloor == false)
+		{
+			mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P0, P1, P2, &pSphere);
 		}
 	}
 
@@ -637,7 +633,7 @@ void MeshViewApp::KeyHandler(float dt)
 	//reseting the player
 	if ((GetAsyncKeyState('R') & 0x8000))
 	{
-		mPlayer.SetPosition(0.0f, 8.0f, -12.0f);
+		mPlayer.SetPosition(0.0f, 8.0f, 0.0f);
 		mPlayer.vel.y = 0;
 		mPlayer.vel.x = 0;
 		mPlayer.vel.z = 0;
