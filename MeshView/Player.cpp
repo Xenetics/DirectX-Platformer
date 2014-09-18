@@ -1,10 +1,10 @@
 #include "Player.h"
 
-#define WALK_SPEED 1.0
+#define WALK_SPEED 600.0
 #define RUN_SPEED  2.0
 #define JUMP_POWER 10.0
 
-Player::Player() : Camera(), isCollidingWall(false), isCollidingFloor(false), vel(0.0f, 0.0f, 0.0f), acc(0.0f, -20.0f, 0.0f), wallTimer(0)
+Player::Player() : Camera(), isCollidingWall(false), isCollidingFloor(false), vel(0.0f, 0.0f, 0.0f), acc(0.0f, -20.0f, 0.0f), wallTimer(0), walking(0)
 {
 	wallDir = 'z';
 	XMFLOAT3 temp = mPosition;
@@ -49,7 +49,6 @@ void Player::Walk(float d)
 		if (wallDir == 'z')
 		{
 			//make it so you can only move in the xz plane
-			// mPosition += d*mLook
 			XMVECTOR s = XMVectorReplicate(d * WALK_SPEED);
 			XMFLOAT3 temp1 = mLook;
 			temp1.x = 0.0f;
@@ -64,7 +63,6 @@ void Player::Walk(float d)
 		else
 		{
 			//make it so you can only move in the xz plane
-			// mPosition += d*mLook
 			XMVECTOR s = XMVectorReplicate(d * WALK_SPEED);
 			XMFLOAT3 temp1 = mLook;
 			temp1.z = 0.0f;
@@ -80,15 +78,14 @@ void Player::Walk(float d)
 	else
 	{
 		//make it so you can only move in the xz plane
-		// mPosition += d*mLook
-		XMVECTOR s = XMVectorReplicate(d * WALK_SPEED);
 		XMFLOAT3 temp1 = mLook;
 		temp1.y = vel.y;
+		temp1.z *= d * WALK_SPEED;
+		temp1.x *= d * WALK_SPEED;
 
-		XMVECTOR l = XMLoadFloat3(&temp1);
-		XMVECTOR p = XMLoadFloat3(&vel);
-		l = XMVector3Normalize(l);
-		XMStoreFloat3(&vel, XMVectorMultiplyAdd(s, l, p));
+		XMStoreFloat3(&vel, XMLoadFloat3(&temp1));
+
+		walking = true;
 	}
 }
 
@@ -106,6 +103,24 @@ void Player::Update(float dt)
 	//record player pos
 	mPrevPos = mPosition;
 
+	if (isCollidingFloor)
+	{
+		isOnWall = false;
+		hasBeenOnWall = false;
+		vel.y = 0;
+	}
+
+	if (walking = true)
+	{
+		
+	}
+
+	//this is a horrible way to do this.
+	XMVECTOR s = XMVectorReplicate(dt);//gravity?
+	XMVECTOR l = XMLoadFloat3(&vel);
+	XMVECTOR p = XMLoadFloat3(&mPosition);
+	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
+
 	//velocity and acceleration stuff
 	vel.x += acc.x * dt;
 	vel.z += acc.z * dt;
@@ -118,15 +133,7 @@ void Player::Update(float dt)
 	if (vel.z > 2000000)
 		vel.z = 2000000;
 
-	if (!isCollidingFloor && !isOnWall)
-	{
-		//this is a horrible way to do this.
-		XMVECTOR s = XMVectorReplicate(dt);//gravity?
-		XMVECTOR l = XMLoadFloat3(&vel);
-		XMVECTOR p = XMLoadFloat3(&mPosition);
-		XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
-	}
-
+	//this is not right?
 	if ((isCollidingFloor && isCollidingWall)) //|| (!isOnWall && isCollidingWall) ) //this last part in not too sure
 	{
 		mPosition = mPrevPos;
@@ -148,6 +155,7 @@ void Player::Stop()
 	{
 		XMVECTOR zeroXZ = XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f));
 		XMStoreFloat3(&vel, XMVectorMultiply(zeroXZ, XMLoadFloat3(&vel)));
+		walking = false;
 	}
 }
 

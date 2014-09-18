@@ -1,13 +1,18 @@
 //***************************************************************************************
-// MeshViewDemo.cpp by Frank Luna (C) 2011 All Rights Reserved.
-//
-// Demonstrates loading and rendering meshes.
-//
-// Controls:
-//		Hold the left mouse button down and move the mouse to rotate.
-//      Hold the right mouse button down to zoom in and out.
-//      Press '1' for wireframe
-//
+//TO DO 
+
+		//I (Alex) Need to add a struct that contains all the collision data for the object and then i need to make an array of them. 
+		//the struck will consist of the triangles center and a bounds sphere for the triangle (maybe this depends on if doing a proximity check on triangles to not do some colllsion testing is faster then just doing it)
+		//The normal of the triangle, and the plane the triangle sits on.
+		//this should all be calculated when the model is loaded in and stored in the model class.
+		
+
+		//Sound Needs to be moved too a class and additinal functinatly added to it.
+
+		//menus
+
+		//level switching and picking(menus)
+
 //***************************************************************************************
 
 #include "d3dApp.h"
@@ -43,16 +48,13 @@ public:
 	bool Init();
 	void OnResize();
 	void UpdateScene(float dt);
-	void UpdateWhilePlaying(float dt);
 	void DrawScene();
-	void DrawWhilePlaying();
-	void DrawMenuScene();
 
 	void OnMouseDown(WPARAM btnState, int x, int y);
 	void OnMouseUp(WPARAM btnState, int x, int y);
 	void OnMouseMove(WPARAM btnState, int x, int y);
 
-	//FMOD stuff
+	//FMOD stuff(for sound, Move to a sperate class)
 	FMOD::System *system;
 	FMOD_RESULT result;
 	FMOD::Sound		*sound1, *sound2, *sound3, *music;
@@ -75,6 +77,14 @@ private:
 	void DrawScreenQuad(ID3D11ShaderResourceView* srv);
 	void BuildShadowTransform();
 	void BuildScreenQuadGeometryBuffers();
+
+	//states
+	void UpdateWhilePlaying(float dt);
+	void DrawWhilePlaying();
+	void DrawMenuScene();
+
+	//misc functions
+	void KeyHandler(float dt);
 
 private:
 
@@ -300,116 +310,42 @@ void MeshViewApp::UpdateScene(float dt)
 
 void MeshViewApp::UpdateWhilePlaying(float dt)
 {
-	//
-	// Control the camera.
-	//
-	if (GetAsyncKeyState('W') & 0x8000)
-	{
-		if (wKey == false)
-		{
-			//key down
-
-		}
-		//key pressed
-		mPlayer.Walk(10.0f*dt);
-		wKey = true;
-	}
-	else
-	{
-		if (wKey == true)
-		{
-			//on key up
-			mPlayer.Stop();
-		}
-		wKey = false;
-	}
+	//deal with keypresses
+	KeyHandler(dt);
 
 
-	if (GetAsyncKeyState('S') & 0x8000)
-	{
-		if (sKey == false)
-		{
-			//key down
+	//I (Alex) Need to add a struct that contains all the collision data for the object and then i need to make an array of them. 
+	//the struck will consist of the triangles center and a bounds sphere for the triangle (maybe this depends on if doing a proximity check on triangles to not do some colllsion testing is faster then just doing it)
+	//The normal of the triangle, and the plane the triangle sits on.
+	//this should all be calculated when the model is loaded in and stored in the model class.
 
-		}
-		//key pressed
-		mPlayer.Walk(-10.0f * dt);
-		sKey = true;
-	}
-	else
+	//for now whats below should do the trick
+
+	//Do player collisions: this will go through all models in the game(maybe not what we want)
+
+	mPlayer.isCollidingFloor = false;//reset the collsiion status
+
+	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
+	for (UINT i = 0; i < mModelInstances.size(); ++i)
 	{
-		if (sKey == true)
+		//get the vector of indices and Vertices and store them
+		std::vector<Vertex::Basic32> cVertices = mModelInstances[i].Model->BasicVertices;
+		std::vector<USHORT> cIndices = mModelInstances[i].Model->Indices;
+		for (UINT j = 0; j < cIndices.size(); j += 3)
 		{
-			//on key up
-			mPlayer.Stop();
+			XMVECTOR P0 = XMLoadFloat3(&cVertices[cIndices[j]].Pos);
+			XMVECTOR P1 = XMLoadFloat3(&cVertices[cIndices[j + 1]].Pos);
+			XMVECTOR P2 = XMLoadFloat3(&cVertices[cIndices[j + 2]].Pos);
+			
+			if (mPlayer.isCollidingFloor == false)
+			{
+				mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P0, P1, P2, &pSphere);
+				//break; //we hit something so nothing else matters. Err I think...?
+			}
 		}
-		sKey = false;
 	}
 
-
-	if (GetAsyncKeyState('A') & 0x8000)
-	{
-		if (aKey == false)
-		{
-			//key down
-		}
-		//key pressed
-		mPlayer.Strafe(-10.0f * dt);
-		aKey = true;
-	}
-	else
-	{
-		if (aKey == true)
-		{
-			//on key up
-			mPlayer.Stop();
-		}
-		aKey = false;
-	}
-
-
-	if (GetAsyncKeyState('D') & 0x8000)
-	{
-		if (dKey == false)
-		{
-			//key down
-		}
-		//key pressed
-		mPlayer.Strafe(10.0f * dt);
-		dKey = true;
-	}
-	else
-	{
-		if (dKey == true)
-		{
-			//on key up
-			mPlayer.Stop();
-		}
-		dKey = false;
-	}
-
-
-
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
-	{
-		if (space == false)
-		{
-			//key down
-			mPlayer.Jump();
-		}
-		//key pressed
-
-		space = true;
-	}
-	else
-	{
-		if (space == true)
-		{
-			//on key up
-		}
-		space = false;
-	}
-
+	//update player
 	mPlayer.Update(dt);
 
 	//
@@ -578,6 +514,119 @@ void MeshViewApp::DrawWhilePlaying()
 	md3dImmediateContext->PSSetShaderResources(0, 16, nullSRV);
 
 	HR(mSwapChain->Present(0, 0));
+}
+
+void MeshViewApp::KeyHandler(float dt)
+{
+	//
+	// Control the  Player
+	//
+	if (GetAsyncKeyState('W') & 0x8000)
+	{
+		if (wKey == false)
+		{
+			//key down
+
+		}
+		//key pressed
+		mPlayer.Walk(10.0f*dt);
+		wKey = true;
+	}
+	else
+	{
+		if (wKey == true)
+		{
+			//on key up
+			mPlayer.Stop();
+		}
+		wKey = false;
+	}
+
+
+	if (GetAsyncKeyState('S') & 0x8000)
+	{
+		if (sKey == false)
+		{
+			//key down
+
+		}
+		//key pressed
+		mPlayer.Walk(-10.0f * dt);
+		sKey = true;
+	}
+	else
+	{
+		if (sKey == true)
+		{
+			//on key up
+			mPlayer.Stop();
+		}
+		sKey = false;
+	}
+
+
+	if (GetAsyncKeyState('A') & 0x8000)
+	{
+		if (aKey == false)
+		{
+			//key down
+		}
+		//key pressed
+		mPlayer.Strafe(-10.0f * dt);
+		aKey = true;
+	}
+	else
+	{
+		if (aKey == true)
+		{
+			//on key up
+			mPlayer.Stop();
+		}
+		aKey = false;
+	}
+
+
+	if (GetAsyncKeyState('D') & 0x8000)
+	{
+		if (dKey == false)
+		{
+			//key down
+		}
+		//key pressed
+		mPlayer.Strafe(10.0f * dt);
+		dKey = true;
+	}
+	else
+	{
+		if (dKey == true)
+		{
+			//on key up
+			mPlayer.Stop();
+		}
+		dKey = false;
+	}
+
+
+
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		if (space == false)
+		{
+			//key down
+			mPlayer.Jump();
+		}
+		//key pressed
+
+		space = true;
+	}
+	else
+	{
+		if (space == true)
+		{
+			//on key up
+		}
+		space = false;
+	}
 }
 
 void MeshViewApp::OnMouseDown(WPARAM btnState, int x, int y)

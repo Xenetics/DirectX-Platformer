@@ -24,7 +24,7 @@ public:
 	void Jump();
 
 	//accessors
-	XNA::Sphere GetBoundingBox()
+	XNA::Sphere GetBoundingSphere()
 	{
 		return boundingSphere;
 	}
@@ -33,6 +33,8 @@ private:
 	XNA::Sphere boundingSphere;
 	char wallDir;
 	float wallTimer;
+
+	bool walking;
 
 	XMFLOAT3 mPrevPos;
 	float height = 1.0;
