@@ -102,6 +102,7 @@
     <ClCompile Include="RenderStates.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Sky.cpp" />
+    <ClCompile Include="SoundMgr.cpp" />
     <ClCompile Include="Ssao.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
@@ -128,6 +129,7 @@
     <ClInclude Include="RenderStates.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="Sky.h" />
+    <ClInclude Include="SoundMgr.h" />
     <ClInclude Include="Ssao.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
