@@ -151,7 +151,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 	mLastMousePos.x = 0;
 	mLastMousePos.y = 0;
 
-	mPlayer.SetPosition(-120.0f, 300.0f, 20.0f);
+	mPlayer.SetPosition(0.0f, 10.0f, 0.0f);
  
 	mDirLights[0].Ambient  = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[0].Diffuse  = XMFLOAT4(0.8f, 0.7f, 0.7f, 1.0f);
@@ -202,7 +202,7 @@ bool MeshViewApp::Init()
 
 	mTexMgr.Init(md3dDevice);
 
-	mSky  = new Sky(md3dDevice, L"Textures/desertcube1024.dds", 5000.0f);
+	mSky  = new Sky(md3dDevice, L"Textures/rainy.dds", 5000.0f);
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
 	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
@@ -210,7 +210,7 @@ bool MeshViewApp::Init()
 
 	BuildScreenQuadGeometryBuffers();
 
-	currLevel = new LevelModel(md3dDevice, mTexMgr, "Models\\testMap.alx", L"Textures\\");
+	currLevel = new LevelModel(md3dDevice, mTexMgr, "Models\\testMap2.alx", L"Textures\\");
 
 	BasicModelInstance testInstance;
 	
@@ -310,15 +310,8 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	KeyHandler(dt);
 	// screaming while falling 
 
-	//I (Alex) Need to add a struct that contains all the collision data for the object and then i need to make an array of them. 
-	//the struck will consist of the triangles center and a bounds sphere for the triangle (maybe this depends on if doing a proximity check on triangles to not do some colllsion testing is faster then just doing it)
-	//The normal of the triangle, and the plane the triangle sits on.
-	//this should all be calculated when the model is loaded in and stored in the model class.
 
-	//for now whats below should do the trick
-
-	//Do player collisions: this will go through all models in the game(maybe not what we want)
-
+	//Do player collisions: loops throiugh the current levels triangls and does a bunch of stuff
 	mPlayer.isCollidingFloor = false;//reset the collsiion status
 
 	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
@@ -333,9 +326,15 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 			
 		if (mPlayer.isCollidingFloor == false)
 		{
-			mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P0, P1, P2, &pSphere);
+			
+			mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
 		}
 	}
+
+	if (mPlayer.isCollidingFloor)
+		OutputDebugString(L"Colliding \n");
+	else
+		OutputDebugString(L"Not \n");
 
 	//update player
 	mPlayer.Update(dt);

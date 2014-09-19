@@ -1,10 +1,10 @@
 #include "Player.h"
 
-#define WALK_SPEED 60.0
+#define WALK_SPEED 400.0
 #define RUN_SPEED  2.0
-#define JUMP_POWER 10.0
+#define JUMP_POWER 18.0
 
-Player::Player() : Camera(), isCollidingWall(false), isCollidingFloor(false), vel(0.0f, 0.0f, 0.0f), acc(0.0f, -20.0f, 0.0f), wallTimer(0), walking(0)
+Player::Player() : Camera(), isCollidingWall(false), isCollidingFloor(false), isOnWall(false), vel(0.0f, 0.0f, 0.0f), acc(0.0f, -20.0f, 0.0f), wallTimer(0)
 {
 	wallDir = 'z';
 	XMFLOAT3 temp = mPosition;
@@ -84,8 +84,6 @@ void Player::Walk(float d)
 		temp1.x *= d * WALK_SPEED;
 
 		XMStoreFloat3(&vel, XMLoadFloat3(&temp1));
-
-		walking = true;
 	}
 }
 
@@ -110,11 +108,6 @@ void Player::Update(float dt)
 		vel.y = 0;
 	}
 
-	if (walking = true)
-	{
-		
-	}
-
 	//this is a horrible way to do this.
 	XMVECTOR s = XMVectorReplicate(dt);//gravity?
 	XMVECTOR l = XMLoadFloat3(&vel);
@@ -132,6 +125,12 @@ void Player::Update(float dt)
 		vel.y = 2000000;
 	if (vel.z > 2000000)
 		vel.z = 2000000;
+	//after movment
+	//update bounding box
+	XMFLOAT3 temp = mPosition;
+	temp.y -= height;
+	boundingSphere.Center = temp;
+
 
 	//this is not right?
 	if ((isCollidingFloor && isCollidingWall)) //|| (!isOnWall && isCollidingWall) ) //this last part in not too sure
@@ -139,10 +138,7 @@ void Player::Update(float dt)
 		mPosition = mPrevPos;
 	}
 
-	//update bounding box
-	XMFLOAT3 temp = mPosition;
-	temp.y -= height;
-	boundingSphere.Center = temp;
+	
 }
 
 void Player::Stop()
@@ -155,7 +151,6 @@ void Player::Stop()
 	{
 		XMVECTOR zeroXZ = XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f));
 		XMStoreFloat3(&vel, XMVectorMultiply(zeroXZ, XMLoadFloat3(&vel)));
-		walking = false;
 	}
 }
 

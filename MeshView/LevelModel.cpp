@@ -4,7 +4,7 @@
 LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::string& modelFilename, const std::wstring& texturePath, MeshGeometry::Type type) :
 	BasicModel(device, texMgr, modelFilename, texturePath, type)
 {
-	for (int j = 0; j < BasicVertices.size(); j += 3)
+	for (int j = 0; j < Indices.size(); j += 3)
 	{
 		//make new triData object
 		TriData tData;
