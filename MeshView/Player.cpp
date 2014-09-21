@@ -78,26 +78,18 @@ void Player::Walk(float d)
 	}
 	else if (isCollidingFloor)
 	{
-		//make it so you can only move on the plane of the triangle you are colliding with
-		XMVECTOR angle = XMVector3AngleBetweenVectors(XMLoadFloat3(&mUp), currCollision.Normal);
-		XMFLOAT3 direction = mLook;
+		//Project the look vector on to the plane you are colliding with.
+		XMVECTOR U, V, N;
+		XMFLOAT3 direction;
+		V = XMLoadFloat3(&mLook);
+		N = XMVector3Normalize(currCollision.Normal);
 
-		//pitch
-		XMMATRIX R = XMMatrixRotationAxis(XMLoadFloat3(&mRight), XMVectorGetX(angle));
-		XMStoreFloat3(&direction, XMVector3TransformNormal(XMLoadFloat3(&direction), R));
+		U = V - XMVectorScale(N, XMVectorGetX(XMVector3Dot(V, N)));
 
+		//using projection
+		XMStoreFloat3(&direction, XMVector3Normalize(U)); //normilizing sucks?
 
-		direction.y = 0;
-		
-
-		// to world space
-		angle = XMVector3AngleBetweenVectors(XMLoadFloat3(&XMFLOAT3(0.0, 1.0, 0.0)), currCollision.Normal);
-		R = XMMatrixRotationAxis(XMLoadFloat3(&mRight), XMVectorGetX(angle));
-		XMStoreFloat3(&direction, XMVector3TransformNormal(XMLoadFloat3(&direction), R));
-
-		XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&direction))); //normilizing sucks?
-
-		direction.y *= -d * WALK_SPEED;
+		direction.y *= d * WALK_SPEED;
 		direction.z *= d * WALK_SPEED;
 		direction.x *= d * WALK_SPEED;
 
@@ -105,7 +97,7 @@ void Player::Walk(float d)
 	}
 	else
 	{
-		//make it so you can only move in the xz plane
+		//moving in the air. maybe we dont want this
 		XMFLOAT3 temp1 = mLook;
 		temp1.y = vel.y;
 		temp1.z *= d * WALK_SPEED;
