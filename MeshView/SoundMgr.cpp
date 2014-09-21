@@ -92,7 +92,7 @@ void SoundMgr::InitFMOD()
 	//ERRCHECK(result);
 	playing.push_back(false);
 	channels.push_back(0);
-	result = sounds[0]->setMode(FMOD_LOOP_OFF);
+	result = sounds[GRUNT]->setMode(FMOD_LOOP_OFF);
 	//ERRCHECK(result);
 
 	result = system->createSound("sounds/FOOT2.wav", FMOD_HARDWARE, 0, &tempSound);
@@ -100,7 +100,7 @@ void SoundMgr::InitFMOD()
 	//ERRCHECK(result);
 	playing.push_back(false);
 	channels.push_back(0);
-	result = sounds[1]->setMode(FMOD_LOOP_OFF);
+	result = sounds[STEP_1]->setMode(FMOD_LOOP_OFF);
 	//ERRCHECK(result);
 
 	result = system->createSound("sounds/pl_step2.wav", FMOD_HARDWARE, 0, &tempSound);
@@ -108,7 +108,7 @@ void SoundMgr::InitFMOD()
 	//ERRCHECK(result);
 	playing.push_back(false);
 	channels.push_back(0);
-	result = sounds[2]->setMode(FMOD_LOOP_OFF);
+	result = sounds[STEP_2]->setMode(FMOD_LOOP_OFF);
 	//ERRCHECK(result);
 
 

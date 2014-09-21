@@ -146,7 +146,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
   mSmap(0), mSsao(0),
   mLightRotationAngle(0.0f)
 {
-	mMainWndCaption = L"MeshView Demo";
+	mMainWndCaption = L"Platformer";
 	
 	mLastMousePos.x = 0;
 	mLastMousePos.y = 0;
@@ -313,9 +313,9 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 
 	//Do player collisions: loops throiugh the current levels triangls and does a bunch of stuff
 	mPlayer.isCollidingFloor = false;//reset the collsiion status
-
+	//setup vars
 	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
-
+	XMVECTOR up = XMLoadFloat3(&XMFLOAT3(0.0, 1.0, 0.0));
 	//get the vector of indices and Vertices and store them
 	std::vector<TriData> tData = currLevel->data;
 	for (int j = 0; j < tData.size(); j++)
@@ -323,18 +323,33 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 		XMVECTOR P0 = tData[j].P0;
 		XMVECTOR P1 = tData[j].P1;
 		XMVECTOR P2 = tData[j].P2;
-			
-		if (mPlayer.isCollidingFloor == false)
+
+		XMVECTOR vAngleR = XMVector3AngleBetweenVectors(up, tData[j].Normal);
+		float angleD = (XMVectorGetX(vAngleR) * 180) / MathHelper::Pi;
+		
+		
+
+		if (  (angleD > 0 && angleD < 50.0f) && mPlayer.isCollidingFloor == false) //floor collisions
 		{
 			
 			mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
+			if (mPlayer.isCollidingFloor)
+			{
+				mPlayer.currCollision = tData[j];
+			}
+		}
+		else if ((angleD > 50.0f && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //Bounce collisions
+		{
+		}
+		else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingFloor == false) //Wall collisions
+		{
+		}
+		else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingFloor == false) //Bounce collisions
+		{
 		}
 	}
 
-	if (mPlayer.isCollidingFloor)
-		OutputDebugString(L"Colliding \n");
-	else
-		OutputDebugString(L"Not \n");
+	
 
 	//update player
 	mPlayer.Update(dt);
@@ -524,7 +539,7 @@ void MeshViewApp::KeyHandler(float dt)
 
 		if (mPlayer.isCollidingFloor || mPlayer.isOnWall)
 		{
-			mSound->playing[1] = true;
+			mSound->playing[mSound->STEP_1] = true;
 			mSound->ChangeVolume(1, 0.1);
 		}
 
@@ -549,7 +564,7 @@ void MeshViewApp::KeyHandler(float dt)
 
 		}
 		//key pressed
-		mSound->playing[2] = true;
+		mSound->playing[mSound->STEP_2] = true;
 		mPlayer.Walk(-10.0f * dt);
 		sKey = true;
 	}
@@ -613,7 +628,7 @@ void MeshViewApp::KeyHandler(float dt)
 		{
 			//key down
 			mPlayer.Jump();
-			mSound->playing[0] = true;
+			mSound->playing[mSound->GRUNT] = true;
 		}
 		//key pressed
 

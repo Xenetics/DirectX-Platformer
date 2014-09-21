@@ -1,10 +1,11 @@
 #include "Player.h"
 
-#define WALK_SPEED 400.0
+#define WALK_SPEED 200.0
 #define RUN_SPEED  2.0
 #define JUMP_POWER 18.0
+#define GRAVITY    -20.0
 
-Player::Player() : Camera(), isCollidingWall(false), isCollidingFloor(false), isOnWall(false), vel(0.0f, 0.0f, 0.0f), acc(0.0f, -20.0f, 0.0f), wallTimer(0)
+Player::Player() : Camera(), isCollidingWall(false), isCollidingFloor(false), isOnWall(false), vel(0.0f, 0.0f, 0.0f), acc(0.0f, GRAVITY, 0.0f), wallTimer(0)
 {
 	wallDir = 'z';
 	XMFLOAT3 temp = mPosition;
@@ -75,6 +76,33 @@ void Player::Walk(float d)
 			XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
 		}
 	}
+	else if (isCollidingFloor)
+	{
+		//make it so you can only move on the plane of the triangle you are colliding with
+		XMVECTOR angle = XMVector3AngleBetweenVectors(XMLoadFloat3(&mUp), currCollision.Normal);
+		XMFLOAT3 direction = mLook;
+
+		//pitch
+		XMMATRIX R = XMMatrixRotationAxis(XMLoadFloat3(&mRight), XMVectorGetX(angle));
+		XMStoreFloat3(&direction, XMVector3TransformNormal(XMLoadFloat3(&direction), R));
+
+
+		direction.y = 0;
+		
+
+		// to world space
+		angle = XMVector3AngleBetweenVectors(XMLoadFloat3(&XMFLOAT3(0.0, 1.0, 0.0)), currCollision.Normal);
+		R = XMMatrixRotationAxis(XMLoadFloat3(&mRight), XMVectorGetX(angle));
+		XMStoreFloat3(&direction, XMVector3TransformNormal(XMLoadFloat3(&direction), R));
+
+		XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&direction))); //normilizing sucks?
+
+		direction.y *= -d * WALK_SPEED;
+		direction.z *= d * WALK_SPEED;
+		direction.x *= d * WALK_SPEED;
+
+		XMStoreFloat3(&vel, XMLoadFloat3(&direction));
+	}
 	else
 	{
 		//make it so you can only move in the xz plane
@@ -105,7 +133,17 @@ void Player::Update(float dt)
 	{
 		isOnWall = false;
 		hasBeenOnWall = false;
-		vel.y = 0;
+		acc.y = 0;
+		if (firstFloorHit)
+		{
+			vel.y = 0;
+			firstFloorHit = false;
+		}
+	}
+	else
+	{
+		acc.y = GRAVITY;
+		firstFloorHit = true;
 	}
 
 	//this is a horrible way to do this.
@@ -114,10 +152,13 @@ void Player::Update(float dt)
 	XMVECTOR p = XMLoadFloat3(&mPosition);
 	XMStoreFloat3(&mPosition, XMVectorMultiplyAdd(s, l, p));
 
-	//velocity and acceleration stuff
-	vel.x += acc.x * dt;
-	vel.z += acc.z * dt;
-	vel.y += acc.y * dt;
+	if (!isCollidingFloor)
+	{
+		//velocity and acceleration stuff
+		vel.x += acc.x * dt;
+		vel.z += acc.z * dt;
+		vel.y += acc.y * dt;
+	}
 
 	if (vel.x > 2000000)
 		vel.x = 2000000;

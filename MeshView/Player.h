@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "xnacollision.h"
+#include "LevelModel.h"
 
 class Player : public Camera
 {
@@ -15,6 +16,7 @@ public:
 	bool isOnWall;
 	bool hasBeenOnWall;
 	
+	TriData currCollision;
 
 	void Update(float dt);
 
@@ -33,6 +35,8 @@ private:
 	XNA::Sphere boundingSphere;
 	char wallDir;
 	float wallTimer;
+
+	bool firstFloorHit = false;
 
 	XMFLOAT3 mPrevPos;
 	float height = 1.0;

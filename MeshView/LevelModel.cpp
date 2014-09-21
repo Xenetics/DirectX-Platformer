@@ -17,14 +17,14 @@ LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::stri
 		//XMVECTOR x = XMVectorSubtract(P1, P0);
 		//XMVECTOR y = XMVectorSubtract(P2, P0);
 		//tData.Normal = XMVector3Cross(x, y);
-		tData.Normal = XMVector3Cross(P1 - P0, P2 - P0);
+		tData.Normal = XMVector3Cross(P2 - P0, P1 - P0);
 
 		//calculate the plane
 		//set up vars
 		XMFLOAT3 v1, v2, v3, temp;
-		XMStoreFloat3(&v1, P0);
+		XMStoreFloat3(&v1, P2);//change order
 		XMStoreFloat3(&v2, P1);
-		XMStoreFloat3(&v3, P2);
+		XMStoreFloat3(&v3, P0);
 		XMFLOAT4 plane;
 		//calculate
 		plane.x = v1.y*(v2.z - v3.z) + v2.y*(v3.z - v1.z) + v3.y*(v1.z - v2.z);

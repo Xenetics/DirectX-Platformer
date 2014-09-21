@@ -5,6 +5,12 @@
 class SoundMgr
 {
 public:
+	enum soundNames
+	{
+		GRUNT,
+		STEP_1, 
+		STEP_2
+	};
 	SoundMgr();
 	~SoundMgr();
 	//FMOD stuff(for sound, Move to a sperate class)
