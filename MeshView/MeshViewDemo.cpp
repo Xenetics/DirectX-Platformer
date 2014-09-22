@@ -79,6 +79,7 @@ private:
 	void KeyHandler(float dt);
 
 private:
+	ID3D11RasterizerState* mWireframeRS;
 
 	TextureMgr mTexMgr;
 
@@ -216,7 +217,7 @@ bool MeshViewApp::Init()
 	
 	testInstance.Model = currLevel;
 
-	XMMATRIX modelScale = XMMatrixScaling(1.0f, 1.0f, -1.0f);
+	XMMATRIX modelScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 	XMMATRIX modelRot   = XMMatrixRotationY(0.0f);
 	XMMATRIX modelOffset = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 
@@ -261,6 +262,16 @@ bool MeshViewApp::Init()
 		0.5f*(maxPt.z - minPt.z));
 
 	mSceneBounds.Radius = sqrtf(extent.x*extent.x + extent.y*extent.y + extent.z*extent.z);
+
+	//revers face culling
+	D3D11_RASTERIZER_DESC jimJam;
+	ZeroMemory(&jimJam, sizeof(D3D11_RASTERIZER_DESC));
+	jimJam.FillMode = D3D11_FILL_SOLID;
+	jimJam.CullMode = D3D11_CULL_FRONT;
+	jimJam.AntialiasedLineEnable = true;
+	jimJam.FrontCounterClockwise = false;
+	HR(md3dDevice->CreateRasterizerState(&jimJam, &mWireframeRS));
+	md3dImmediateContext->RSSetState(mWireframeRS);
 
 	//init sound
 	mSound = new SoundMgr();
@@ -337,7 +348,16 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 				mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
 				if (mPlayer.isCollidingFloor)
 				{
-					mPlayer.currCollision = tData[j];
+					mPlayer.currColFloor = tData[j];
+					std::wstringstream debug;
+					debug << L"Pos of collsiion ";
+					debug << tData[j].Bounds.Center.x;
+					debug << L"		 ";
+					debug << tData[j].Bounds.Center.y;
+					debug << L"		 ";
+					debug << tData[j].Bounds.Center.z;
+					debug << std::endl;
+					OutputDebugString((LPCTSTR)debug.str().c_str());
 				}
 			}
 			else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingFloor == false) //Wall collisions
@@ -465,12 +485,13 @@ void MeshViewApp::DrawWhilePlaying()
 
 	md3dImmediateContext->IASetInputLayout(InputLayouts::PosNormalTexTan);
      
-	if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
+	//if( GetAsyncKeyState('1') & 0x8000 )
+		md3dImmediateContext->RSSetState(mWireframeRS);
 
 	//
 	// Draw opaque objects.
 	//
+	
 	D3DX11_TECHNIQUE_DESC techDesc;
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
@@ -702,8 +723,8 @@ void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
 	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	md3dImmediateContext->IASetInputLayout(InputLayouts::PosNormalTexTan);
 
-	if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
+	//if( GetAsyncKeyState('1') & 0x8000 )
+		md3dImmediateContext->RSSetState(mWireframeRS);
      
     D3DX11_TECHNIQUE_DESC techDesc;
     tech->GetDesc( &techDesc );
@@ -780,8 +801,8 @@ void MeshViewApp::DrawSceneToShadowMap()
 
 	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
      
-	if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
+	//if( GetAsyncKeyState('1') & 0x8000 )
+		md3dImmediateContext->RSSetState(mWireframeRS);
 	
     D3DX11_TECHNIQUE_DESC techDesc;
     tech->GetDesc( &techDesc );

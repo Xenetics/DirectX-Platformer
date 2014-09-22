@@ -16,7 +16,7 @@ public:
 	bool isOnWall;
 	bool hasBeenOnWall;
 	
-	TriData currCollision;
+	TriData currColFloor;
 
 	void Update(float dt);
 

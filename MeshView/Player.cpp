@@ -82,7 +82,7 @@ void Player::Walk(float d)
 		XMVECTOR U, V, N;
 		XMFLOAT3 direction;
 		V = XMLoadFloat3(&mLook);
-		N = XMVector3Normalize(currCollision.Normal);
+		N = XMVector3Normalize(currColFloor.Normal);
 
 		U = V - XMVectorScale(N, XMVectorGetX(XMVector3Dot(V, N)));
 
