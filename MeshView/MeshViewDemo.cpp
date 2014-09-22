@@ -210,7 +210,7 @@ bool MeshViewApp::Init()
 
 	BuildScreenQuadGeometryBuffers();
 
-	currLevel = new LevelModel(md3dDevice, mTexMgr, "Models\\testMap2.alx", L"Textures\\");
+	currLevel = new LevelModel(md3dDevice, mTexMgr, "Models\\testMapSmooth.alx", L"Textures\\");
 
 	BasicModelInstance testInstance;
 	
@@ -329,7 +329,7 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 		
 		
 
-		if (  (angleD > 0 && angleD < 50.0f) && mPlayer.isCollidingFloor == false) //floor collisions
+		if (  (angleD > 0 && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //floor collisions
 		{
 			
 			mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
@@ -337,9 +337,6 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 			{
 				mPlayer.currCollision = tData[j];
 			}
-		}
-		else if ((angleD > 50.0f && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //Bounce collisions
-		{
 		}
 		else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingFloor == false) //Wall collisions
 		{

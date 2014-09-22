@@ -180,6 +180,10 @@ void Player::Stop()
 	{
 		XMStoreFloat3(&vel, XMVectorReplicate(0.0f));
 	}
+	else if (isCollidingFloor)
+	{
+		XMStoreFloat3(&vel, XMVectorReplicate(0.0f));
+	}
 	else
 	{
 		XMVECTOR zeroXZ = XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f));
