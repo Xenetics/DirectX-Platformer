@@ -320,29 +320,32 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	std::vector<TriData> tData = currLevel->data;
 	for (int j = 0; j < tData.size(); j++)
 	{
-		XMVECTOR P0 = tData[j].P0;
-		XMVECTOR P1 = tData[j].P1;
-		XMVECTOR P2 = tData[j].P2;
-
-		XMVECTOR vAngleR = XMVector3AngleBetweenVectors(up, tData[j].Normal);
-		float angleD = (XMVectorGetX(vAngleR) * 180) / MathHelper::Pi;
-		
-		
-
-		if (  (angleD > 0 && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //floor collisions
+		if (XNA::IntersectSphereSphere(&tData[j].Bounds, &pSphere))
 		{
-			
-			mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
-			if (mPlayer.isCollidingFloor)
+			XMVECTOR P0 = tData[j].P0;
+			XMVECTOR P1 = tData[j].P1;
+			XMVECTOR P2 = tData[j].P2;
+
+			XMVECTOR vAngleR = XMVector3AngleBetweenVectors(up, tData[j].Normal);
+			float angleD = (XMVectorGetX(vAngleR) * 180) / MathHelper::Pi;
+
+
+
+			if ((angleD > 0 && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //floor collisions
 			{
-				mPlayer.currCollision = tData[j];
+
+				mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
+				if (mPlayer.isCollidingFloor)
+				{
+					mPlayer.currCollision = tData[j];
+				}
 			}
-		}
-		else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingFloor == false) //Wall collisions
-		{
-		}
-		else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingFloor == false) //Bounce collisions
-		{
+			else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingFloor == false) //Wall collisions
+			{
+			}
+			else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingFloor == false) //Bounce collisions
+			{
+			}
 		}
 	}
 

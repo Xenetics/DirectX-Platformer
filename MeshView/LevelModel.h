@@ -5,8 +5,7 @@
 //struc aligned to 32 bit, maybe change to 16? ask Bryan
 __declspec(align(32)) struct TriData
 {
-	XMVECTOR Center;            // Center of the Triangle.
-	FLOAT Radius;               // Radius of the bounding sphere around the triangle.
+	XNA::Sphere Bounds;
 	XMVECTOR P0;				//poitns...
 	XMVECTOR P1;
 	XMVECTOR P2;

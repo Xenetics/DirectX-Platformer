@@ -39,7 +39,7 @@ LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::stri
 		temp.y = (v1.y + v2.y + v3.y) * 0.3333;
 		temp.z = (v1.z + v2.z + v3.z) * 0.3333;
 		//set the center
-		tData.Center = XMLoadFloat3(&temp);
+		tData.Bounds.Center = temp;
 
 		//find radius of bounding sphere
 		float L1, L2, L3;
@@ -48,11 +48,11 @@ LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::stri
 		XMStoreFloat(&L2, XMVector3Length(vTemp - P1));
 		XMStoreFloat(&L3, XMVector3Length(vTemp - P2));
 		if (L1 > L2 && L1 > L3)
-			tData.Radius = L1;
+			tData.Bounds.Radius = L1;
 		else if (L2 > L1 && L2 > L3)
-			tData.Radius = L2;
+			tData.Bounds.Radius = L2;
 		else if (L3 > L2 && L3 > L1)
-			tData.Radius = L3;
+			tData.Bounds.Radius = L3;
 
 		//set the points 
 		tData.P0 = P0;
