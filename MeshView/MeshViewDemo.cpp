@@ -154,7 +154,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 
 	mPlayer.SetPosition(0.0f, 10.0f, 0.0f);
  
-	mDirLights[0].Ambient  = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
+	mDirLights[0].Ambient  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	mDirLights[0].Diffuse  = XMFLOAT4(0.8f, 0.7f, 0.7f, 1.0f);
 	mDirLights[0].Specular = XMFLOAT4(0.6f, 0.6f, 0.7f, 1.0f);
 	mDirLights[0].Direction = XMFLOAT3(-0.57735f, -0.57735f, 0.57735f);
@@ -164,10 +164,10 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 	mDirLights[1].Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	mDirLights[1].Direction = XMFLOAT3(0.707f, -0.707f, 0.0f);
 
-	mDirLights[2].Ambient  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	mDirLights[2].Ambient  = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[2].Diffuse  = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	mDirLights[2].Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-	mDirLights[2].Direction = XMFLOAT3(0.0f, 0.0, -1.0f);
+	mDirLights[2].Direction = XMFLOAT3(0.0f, -1.0, 0.0f);
 
 	mOriginalLightDir[0] = mDirLights[0].Direction;
 	mOriginalLightDir[1] = mDirLights[1].Direction;
@@ -211,7 +211,7 @@ bool MeshViewApp::Init()
 
 	BuildScreenQuadGeometryBuffers();
 
-	currLevel = new LevelModel(md3dDevice, mTexMgr, "Models\\testMapSmooth.alx", L"Textures\\");
+	currLevel = new LevelModel(md3dDevice, mTexMgr, "Models\\testMap.alx", L"Textures\\");
 
 	BasicModelInstance testInstance;
 	
@@ -323,7 +323,10 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 
 
 	//Do player collisions: loops throiugh the current levels triangls and does a bunch of stuff
-	mPlayer.isCollidingFloor = false;//reset the collsiion status
+
+	//reset the collsiion status
+	mPlayer.isCollidingFloor = false;
+	mPlayer.isCollidingWall = false;
 	//setup vars
 	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
 	XMVECTOR up = XMLoadFloat3(&XMFLOAT3(0.0, 1.0, 0.0));
@@ -331,12 +334,17 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	std::vector<TriData> tData = currLevel->data;
 	for (int j = 0; j < tData.size(); j++)
 	{
+		//only do collision checks with spheres you can collide with by doing a radius check first
 		if (XNA::IntersectSphereSphere(&tData[j].Bounds, &pSphere))
 		{
 			XMVECTOR P0 = tData[j].P0;
 			XMVECTOR P1 = tData[j].P1;
 			XMVECTOR P2 = tData[j].P2;
 
+			//get the angle of the triangles normal to the worlds up to diecide if 
+			//we are checking a wall or a floor or a ceiling(other)
+			//this code should be moved to the levelModel class where it can be done once on load 
+			//for a fairly large preformance increase
 			XMVECTOR vAngleR = XMVector3AngleBetweenVectors(up, tData[j].Normal);
 			float angleD = (XMVectorGetX(vAngleR) * 180) / MathHelper::Pi;
 
@@ -344,11 +352,13 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 
 			if ((angleD > 0 && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //floor collisions
 			{
-
+				//are you collidioing?
 				mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
+				//if you are...
 				if (mPlayer.isCollidingFloor)
 				{
 					mPlayer.currColFloor = tData[j];
+					//debug output for the center of the triangle  you colide with
 					std::wstringstream debug;
 					debug << L"Pos of collsiion ";
 					debug << tData[j].Bounds.Center.x;
@@ -357,13 +367,19 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 					debug << L"		 ";
 					debug << tData[j].Bounds.Center.z;
 					debug << std::endl;
-					OutputDebugString((LPCTSTR)debug.str().c_str());
+					//OutputDebugString((LPCTSTR)debug.str().c_str());
 				}
 			}
-			else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingFloor == false) //Wall collisions
+			else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingWall == false) //Wall collisions(same sort of thing as floor)
 			{
+				mPlayer.isCollidingWall = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
+				if (mPlayer.isCollidingWall)
+				{
+					OutputDebugString(L"thats a Wall");
+					//layer.currColFloor = tData[j];
+				}
 			}
-			else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingFloor == false) //Bounce collisions
+			else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingFloor == false) //Bounce collisions( stuff you cant walk or run on)
 			{
 			}
 		}

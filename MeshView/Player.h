@@ -13,10 +13,13 @@ public:
 
 	bool isCollidingFloor;
 	bool isCollidingWall;
+	bool isCollidingOther;
 	bool isOnWall;
 	bool hasBeenOnWall;
 	
 	TriData currColFloor;
+	TriData currColWall;
+	TriData currColOther;
 
 	void Update(float dt);
 

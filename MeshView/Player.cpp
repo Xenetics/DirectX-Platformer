@@ -166,7 +166,7 @@ void Player::Update(float dt)
 
 
 	//this is not right?
-	if ((isCollidingFloor && isCollidingWall)) //|| (!isOnWall && isCollidingWall) ) //this last part in not too sure
+	if (isCollidingWall) //|| (!isOnWall && isCollidingWall) ) //this last part in not too sure
 	{
 		mPosition = mPrevPos;
 	}
