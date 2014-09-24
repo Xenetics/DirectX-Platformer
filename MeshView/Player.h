@@ -14,7 +14,7 @@ public:
 	bool isCollidingFloor;
 	bool isCollidingWall;
 	bool isCollidingOther;
-	bool isOnWall;
+	bool isRunWall;
 	bool hasBeenOnWall;
 	
 	TriData currColFloor;
@@ -40,6 +40,8 @@ private:
 	float wallTimer;
 
 	bool firstFloorHit = false;
+
+	void DoWallCollisions();
 
 	XMFLOAT3 mPrevPos;
 	float height = 1.0;

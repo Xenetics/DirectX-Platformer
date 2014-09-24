@@ -1,19 +1,18 @@
-//***************************************************************************************
-//TO DO 
+/**************************      TO DO      ********************************************
 
-		//I (Alex) Need to add a struct that contains all the collision data for the object and then i need to make an array of them. 
-		//the struck will consist of the triangles center and a bounds sphere for the triangle (maybe this depends on if doing a proximity check on triangles to not do some colllsion testing is faster then just doing it)
-		//The normal of the triangle, and the plane the triangle sits on.
-		//this should all be calculated when the model is loaded in and stored in the model class.
+		
+	see player classes TO DO
+	recored any movment bugs in the player class
+
+	menus
+
+	level switching and picking(menus)
+		for this make a level class and in the level class hold all the information about the
+		level that this file needs to know to use it
+		maybe see about not loading the level until it is needed? beucase loading al the levels on start up will take forever
 		
 
-		//Sound Needs to be moved too a class and additinal functinatly added to it.
-
-		//menus
-
-		//level switching and picking(menus)
-
-//***************************************************************************************
+//***************************************************************************************/
 
 #include "d3dApp.h"
 #include "d3dx11Effect.h"
@@ -376,11 +375,17 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 				if (mPlayer.isCollidingWall)
 				{
 					OutputDebugString(L"thats a Wall");
-					//layer.currColFloor = tData[j];
+					mPlayer.currColWall = tData[j];
 				}
 			}
-			else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingFloor == false) //Bounce collisions( stuff you cant walk or run on)
+			else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingOther == false) //Bounce collisions( stuff you cant walk or run on)
 			{
+				mPlayer.isCollidingOther = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
+				if (mPlayer.isCollidingOther)
+				{
+					OutputDebugString(L"thats a Wall");
+					mPlayer.currColOther = tData[j];
+				}
 			}
 		}
 	}
@@ -572,9 +577,9 @@ void MeshViewApp::KeyHandler(float dt)
 
 		}
 		//key pressed
-		mPlayer.Walk(10.0f*dt);
+		mPlayer.Walk(1.0f);
 
-		if (mPlayer.isCollidingFloor || mPlayer.isOnWall)
+		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
 		{
 			mSound->playing[mSound->STEP_1] = true;
 			mSound->ChangeVolume(1, 0.1);
@@ -602,7 +607,7 @@ void MeshViewApp::KeyHandler(float dt)
 		}
 		//key pressed
 		mSound->playing[mSound->STEP_2] = true;
-		mPlayer.Walk(-10.0f * dt);
+		mPlayer.Walk(-1.0f);
 		sKey = true;
 	}
 	else
@@ -623,7 +628,7 @@ void MeshViewApp::KeyHandler(float dt)
 			//key down
 		}
 		//key pressed
-		mPlayer.Strafe(-10.0f * dt);
+		mPlayer.Strafe(-1.0f);
 		aKey = true;
 	}
 	else
@@ -644,7 +649,7 @@ void MeshViewApp::KeyHandler(float dt)
 			//key down
 		}
 		//key pressed
-		mPlayer.Strafe(10.0f * dt);
+		mPlayer.Strafe(1.0f);
 		dKey = true;
 	}
 	else
