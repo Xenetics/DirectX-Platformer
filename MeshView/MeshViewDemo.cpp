@@ -1,19 +1,18 @@
-//***************************************************************************************
-//TO DO 
+/**************************      TO DO      ********************************************
 
-		//I (Alex) Need to add a struct that contains all the collision data for the object and then i need to make an array of them. 
-		//the struck will consist of the triangles center and a bounds sphere for the triangle (maybe this depends on if doing a proximity check on triangles to not do some colllsion testing is faster then just doing it)
-		//The normal of the triangle, and the plane the triangle sits on.
-		//this should all be calculated when the model is loaded in and stored in the model class.
+		
+	see player classes TO DO
+	recored any movment bugs in the player class
+
+	menus
+
+	level switching and picking(menus)
+		for this make a level class and in the level class hold all the information about the
+		level that this file needs to know to use it
+		maybe see about not loading the level until it is needed? beucase loading al the levels on start up will take forever
 		
 
-		//Sound Needs to be moved too a class and additinal functinatly added to it.
-
-		//menus
-
-		//level switching and picking(menus)
-
-//***************************************************************************************
+//***************************************************************************************/
 
 #include "d3dApp.h"
 #include "d3dx11Effect.h"
@@ -38,6 +37,12 @@ struct BoundingSphere
 	BoundingSphere() : Center(0.0f, 0.0f, 0.0f), Radius(0.0f) {}
 	XMFLOAT3 Center;
 	float Radius;
+};
+
+struct Vertexes //used to make quad vertices for the menu, do not touch please (Damian)
+{
+	XMFLOAT3 Pos;
+	XMFLOAT4 Color;
 };
  
 class MeshViewApp : public D3DApp 
@@ -70,16 +75,22 @@ private:
 	void DrawScreenQuad(ID3D11ShaderResourceView* srv);
 	void BuildShadowTransform();
 	void BuildScreenQuadGeometryBuffers();
+	void BuildGeometryBuffers();
+	void BuildMenuFX();
+	void BuildVertexLayout();
 
-	//states
+
+	//state based functions
 	void UpdateWhilePlaying(float dt);
+	void UpdateMainMenu(float dt);
 	void DrawWhilePlaying();
-	void DrawMenuScene();
+	void DrawMenu();
 
 	//misc functions
 	void KeyHandler(float dt);
 
 private:
+	ID3D11RasterizerState* mWireframeRS;
 
 	TextureMgr mTexMgr;
 
@@ -90,6 +101,17 @@ private:
 
 	std::vector<BasicModelInstance> mModelInstances;
 	std::vector<BasicModelInstance> mAlphaClippedModelInstances;
+
+	//stuff bellow is needed for my menus (Damian)
+	ID3D11Buffer* mBoxVB;
+	ID3D11Buffer* mBoxIB;
+	ID3DX11Effect* mFX;
+	ID3DX11EffectTechnique* mTech;
+	ID3DX11EffectMatrixVariable* mfxWorldViewProj;
+	ID3D11InputLayout* mInputLayout;
+	XMFLOAT4X4 mWorld;
+	XMFLOAT4X4 mView;
+	XMFLOAT4X4 mProj;
 
 	ID3D11Buffer* mSkySphereVB;
 	ID3D11Buffer* mSkySphereIB;
@@ -115,6 +137,11 @@ private:
 	SoundMgr* mSound;
 
 	POINT mLastMousePos;
+
+	//important menu floats
+	float mTheta;
+	float mPhi;
+	float mRadius;
 
 	//key bools
 	bool wKey = false;
@@ -145,16 +172,18 @@ MeshViewApp::MeshViewApp(HINSTANCE hInstance)
 : D3DApp(hInstance), mSky(0), testModel(0), currLevel(0),
 mScreenQuadVB(0), mScreenQuadIB(0),
   mSmap(0), mSsao(0),
-  mLightRotationAngle(0.0f)
+  mLightRotationAngle(0.0f), mBoxVB(0), mBoxIB(0), mFX(0), mTech(0),
+  mfxWorldViewProj(0), mInputLayout(0),
+  mTheta(1.5f*MathHelper::Pi), mPhi(0.25f*MathHelper::Pi), mRadius(5.0f)
 {
-	mMainWndCaption = L"MeshView Demo";
+	mMainWndCaption = L"Platformer";
 	
 	mLastMousePos.x = 0;
 	mLastMousePos.y = 0;
 
-	mPlayer.SetPosition(-120.0f, 300.0f, 20.0f);
+	mPlayer.SetPosition(0.0f, 10.0f, 0.0f);
  
-	mDirLights[0].Ambient  = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
+	mDirLights[0].Ambient  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	mDirLights[0].Diffuse  = XMFLOAT4(0.8f, 0.7f, 0.7f, 1.0f);
 	mDirLights[0].Specular = XMFLOAT4(0.6f, 0.6f, 0.7f, 1.0f);
 	mDirLights[0].Direction = XMFLOAT3(-0.57735f, -0.57735f, 0.57735f);
@@ -164,10 +193,10 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 	mDirLights[1].Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	mDirLights[1].Direction = XMFLOAT3(0.707f, -0.707f, 0.0f);
 
-	mDirLights[2].Ambient  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	mDirLights[2].Ambient  = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[2].Diffuse  = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	mDirLights[2].Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-	mDirLights[2].Direction = XMFLOAT3(0.0f, 0.0, -1.0f);
+	mDirLights[2].Direction = XMFLOAT3(0.0f, -1.0, 0.0f);
 
 	mOriginalLightDir[0] = mDirLights[0].Direction;
 	mOriginalLightDir[1] = mDirLights[1].Direction;
@@ -203,7 +232,7 @@ bool MeshViewApp::Init()
 
 	mTexMgr.Init(md3dDevice);
 
-	mSky  = new Sky(md3dDevice, L"Textures/desertcube1024.dds", 5000.0f);
+	mSky  = new Sky(md3dDevice, L"Textures/rainy.dds", 5000.0f);
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
 	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
@@ -217,7 +246,7 @@ bool MeshViewApp::Init()
 	
 	testInstance.Model = currLevel;
 
-	XMMATRIX modelScale = XMMatrixScaling(1.0f, 1.0f, -1.0f);
+	XMMATRIX modelScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 	XMMATRIX modelRot   = XMMatrixRotationY(0.0f);
 	XMMATRIX modelOffset = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 
@@ -263,10 +292,25 @@ bool MeshViewApp::Init()
 
 	mSceneBounds.Radius = sqrtf(extent.x*extent.x + extent.y*extent.y + extent.z*extent.z);
 
+	//revers face culling
+	D3D11_RASTERIZER_DESC jimJam;
+	ZeroMemory(&jimJam, sizeof(D3D11_RASTERIZER_DESC));
+	jimJam.FillMode = D3D11_FILL_SOLID;
+	jimJam.CullMode = D3D11_CULL_FRONT;
+	jimJam.AntialiasedLineEnable = true;
+	jimJam.FrontCounterClockwise = false;
+	HR(md3dDevice->CreateRasterizerState(&jimJam, &mWireframeRS));
+	md3dImmediateContext->RSSetState(mWireframeRS);
+
 	//init sound
 	mSound = new SoundMgr();
-
 	srand(time(NULL));
+
+	//build menu stuff
+	//BuildGeometryBuffers();
+	//BuildMenuFX();
+	//BuildVertexLayout();
+
 
 	return true;
 }
@@ -293,6 +337,7 @@ void MeshViewApp::UpdateScene(float dt)
 	switch (gameState)
 	{
 	case GAME_STATE::menuState:
+		UpdateMainMenu(dt);
 		break;
 
 	case GAME_STATE::playingState:
@@ -313,36 +358,95 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	KeyHandler(dt);
 	// screaming while falling 
 
-	//I (Alex) Need to add a struct that contains all the collision data for the object and then i need to make an array of them. 
-	//the struck will consist of the triangles center and a bounds sphere for the triangle (maybe this depends on if doing a proximity check on triangles to not do some colllsion testing is faster then just doing it)
-	//The normal of the triangle, and the plane the triangle sits on.
-	//this should all be calculated when the model is loaded in and stored in the model class.
 
-	//for now whats below should do the trick
+	//Do player collisions: loops throiugh the current levels triangls and does a bunch of stuff
 
-	//Do player collisions: this will go through all models in the game(maybe not what we want)
-
-	mPlayer.isCollidingFloor = false;//reset the collsiion status
-
+	//reset the collsiion status
+	mPlayer.isCollidingFloor = false;
+	mPlayer.isCollidingWall = false;
+	//setup vars
 	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
+	XMVECTOR up = XMLoadFloat3(&XMFLOAT3(0.0, 1.0, 0.0));
+	//make a slightly smaller version of the players sphere 
+	XNA::Sphere pSmallSphere;
+	pSmallSphere.Center = pSphere.Center;
+	pSmallSphere.Radius = pSphere.Radius * 1.1f;//this value may be changed to work better.
 
-	for (UINT i = 0; i < mModelInstances.size(); ++i)
+	XNA::Sphere pTallSphere;
+	XMFLOAT3 adjustment = pSphere.Center;
+	adjustment.y += 0.3;//this value may be changed to work better.
+	pTallSphere.Center = adjustment;
+	pTallSphere.Radius = pSphere.Radius;
+
+	//get the vector of indices and Vertices and store them
+	std::vector<TriData> tData = currLevel->data;
+	for (int j = 0; j < tData.size(); j++)
 	{
-		//get the vector of indices and Vertices and store them
-		std::vector<Vertex::Basic32> cVertices = mModelInstances[i].Model->BasicVertices;
-		std::vector<USHORT> cIndices = mModelInstances[i].Model->Indices;
-		for (int j = 0; j < mModelInstances[i].Model->BasicVertices.size(); j += 3)
+		//only do collision checks with spheres you can collide with by doing a radius check first
+		if (XNA::IntersectSphereSphere(&tData[j].Bounds, &pSphere))
 		{
-			XMVECTOR P0 = XMLoadFloat3(&cVertices[cIndices[j]].Pos);
-			XMVECTOR P1 = XMLoadFloat3(&cVertices[cIndices[j + 1]].Pos);
-			XMVECTOR P2 = XMLoadFloat3(&cVertices[cIndices[j + 2]].Pos);
-			
-			if (mPlayer.isCollidingFloor == false)
+			//use the smaller player sphere to check and see if the player is above the triangles plane
+			int daBug = XNA::IntersectSpherePlane(&pSmallSphere, tData[j].Plane); //this may be compleatly Uneeded and useless But I cant tell
+			if (daBug == 0)
 			{
-				mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P0, P1, P2, &pSphere);
+				XMVECTOR P0 = tData[j].P0;
+				XMVECTOR P1 = tData[j].P1;
+				XMVECTOR P2 = tData[j].P2;
+
+				//get the angle of the triangles normal to the worlds up to diecide if 
+				//we are checking a wall or a floor or a ceiling(other)
+				//this code should be moved to the levelModel class where it can be done once on load 
+				//for a fairly large preformance increase
+				XMVECTOR vAngleR = XMVector3AngleBetweenVectors(up, tData[j].Normal);
+				float angleD = (XMVectorGetX(vAngleR) * 180) / MathHelper::Pi;
+
+
+
+				if ((angleD > 0 && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //floor collisions
+				{
+					//are you collidioing?
+					mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
+					//if you are...
+					if (mPlayer.isCollidingFloor)
+					{
+						mPlayer.currColFloor = tData[j];
+						//debug output for the center of the triangle  you colide with
+						std::wstringstream debug;
+						debug << L"Pos of collsiion ";
+						debug << tData[j].Bounds.Center.x;
+						debug << L"		 ";
+						debug << tData[j].Bounds.Center.y;
+						debug << L"		 ";
+						debug << tData[j].Bounds.Center.z;
+						debug << std::endl;
+						//OutputDebugString((LPCTSTR)debug.str().c_str());
+					}
+				}
+				else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingWall == false) //Wall collisions(same sort of thing as floor)
+				{
+					mPlayer.isCollidingWall = XNA::IntersectTriangleSphere(P2, P1, P0, &pTallSphere);
+					if (mPlayer.isCollidingWall)
+					{
+						OutputDebugString(L"thats a Wall");
+						mPlayer.currColWall = tData[j];
+					}
+				}
+				/********* CURRENTLY UNIMPLEMENTED IN THE PLAYER CLASS **************
+				else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingOther == false) //Bounce collisions( stuff you cant walk or run on)
+				{
+					mPlayer.isCollidingOther = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);//not sure if I should Use tall or normal Shpere
+					if (mPlayer.isCollidingOther)
+					{
+						OutputDebugString(L"thats a Wall");
+						mPlayer.currColOther = tData[j];
+					}
+				}
+				*/
 			}
 		}
 	}
+
+	
 
 	//update player
 	mPlayer.Update(dt);
@@ -356,6 +460,22 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	mPlayer.UpdateViewMatrix();
 }
 
+void MeshViewApp::UpdateMainMenu(float dt)
+{
+	// Convert Spherical to Cartesian coordinates.
+	float x = mRadius*sinf(mPhi)*cosf(mTheta);
+	float z = mRadius*sinf(mPhi)*sinf(mTheta);
+	float y = mRadius*cosf(mPhi);
+
+	// Build the view matrix.
+	XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+	XMVECTOR target = XMVectorZero();
+	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+	XMMATRIX V = XMMatrixLookAtLH(pos, target, up);
+	XMStoreFloat4x4(&mView, V);
+}
+
 void MeshViewApp::DrawScene()
 {
 
@@ -364,6 +484,7 @@ void MeshViewApp::DrawScene()
 	switch (gameState)
 	{
 		case GAME_STATE::menuState:
+			DrawMenu();
 			break;
 
 		case GAME_STATE::playingState:
@@ -458,12 +579,13 @@ void MeshViewApp::DrawWhilePlaying()
 
 	md3dImmediateContext->IASetInputLayout(InputLayouts::PosNormalTexTan);
      
-	if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
+	//if( GetAsyncKeyState('1') & 0x8000 )
+		md3dImmediateContext->RSSetState(mWireframeRS);
 
 	//
 	// Draw opaque objects.
 	//
+	
 	D3DX11_TECHNIQUE_DESC techDesc;
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
@@ -515,6 +637,40 @@ void MeshViewApp::DrawWhilePlaying()
 	HR(mSwapChain->Present(0, 0));
 }
 
+void MeshViewApp::DrawMenu()
+{
+	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView, reinterpret_cast<const float*>(&Colors::LightSteelBlue));
+	md3dImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	md3dImmediateContext->IASetInputLayout(mInputLayout);
+	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	UINT stride = sizeof(Vertexes);
+	UINT offset = 0;
+	md3dImmediateContext->IASetVertexBuffers(0, 1, &mBoxVB, &stride, &offset);
+	md3dImmediateContext->IASetIndexBuffer(mBoxIB, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set constants
+	XMMATRIX world = XMLoadFloat4x4(&mWorld);
+	XMMATRIX view = XMLoadFloat4x4(&mView);
+	XMMATRIX proj = XMLoadFloat4x4(&mProj);
+	XMMATRIX worldViewProj = world*view*proj;
+
+	mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
+
+	D3DX11_TECHNIQUE_DESC techDesc;
+	mTech->GetDesc(&techDesc);
+	for (UINT p = 0; p < techDesc.Passes; ++p)
+	{
+		mTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
+
+		// 36 indices for the box.
+		md3dImmediateContext->DrawIndexed(36, 0, 0);
+	}
+
+	HR(mSwapChain->Present(0, 0));
+}
+
 void MeshViewApp::KeyHandler(float dt)
 {
 	//
@@ -528,11 +684,11 @@ void MeshViewApp::KeyHandler(float dt)
 
 		}
 		//key pressed
-		mPlayer.Walk(10.0f*dt);
+		mPlayer.Walk(1.0f);
 
-		if (mPlayer.isCollidingFloor || mPlayer.isOnWall)
+		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
 		{
-			mSound->playing[1] = true;
+			mSound->playing[mSound->STEP_1] = true;
 			mSound->ChangeVolume(1, 0.1);
 			float random = 0.981 + (rand() * 0.000001);
 			mSound->ChangeFrequency(1,random);
@@ -558,10 +714,8 @@ void MeshViewApp::KeyHandler(float dt)
 		if (sKey == false)
 		{
 			//key down
-
 		}
 		//key pressed
-		mPlayer.Walk(10.0f*dt);
 
 		if (mPlayer.isCollidingFloor || mPlayer.isOnWall)
 		{
@@ -569,11 +723,13 @@ void MeshViewApp::KeyHandler(float dt)
 			mSound->ChangeVolume(1, 0.1);
 			float random = 0.981 + (rand() * 0.000001);
 			mSound->ChangeFrequency(1, random);
-			//mSound->playing[2] = true;
-			//mSound->ChangeVolume(2, 0.1);
+			mSound->playing[mSound->STEP_2] = true;
+			mSound->ChangeVolume(2, 0.1);
 		}
 		//mSound->playing[2] = true;
-		mPlayer.Walk(-10.0f * dt);
+
+		mPlayer.Walk(-1.0f);
+
 		sKey = true;
 	}
 	else
@@ -594,7 +750,7 @@ void MeshViewApp::KeyHandler(float dt)
 			//key down
 		}
 		//key pressed
-		mPlayer.Strafe(-10.0f * dt);
+		//mPlayer.Strafe(-1.0f);
 		aKey = true;
 	}
 	else
@@ -615,7 +771,7 @@ void MeshViewApp::KeyHandler(float dt)
 			//key down
 		}
 		//key pressed
-		mPlayer.Strafe(10.0f * dt);
+		//mPlayer.Strafe(1.0f);
 		dKey = true;
 	}
 	else
@@ -636,7 +792,7 @@ void MeshViewApp::KeyHandler(float dt)
 		{
 			//key down
 			mPlayer.Jump();
-			mSound->playing[0] = true;
+			mSound->playing[mSound->GRUNT] = true;
 		}
 		//key pressed
 
@@ -655,7 +811,7 @@ void MeshViewApp::KeyHandler(float dt)
 	//reseting the player
 	if ((GetAsyncKeyState('R') & 0x8000))
 	{
-		mPlayer.SetPosition(0.0f, 8.0f, -12.0f);
+		mPlayer.SetPosition(0.0f, 8.0f, 0.0f);
 		mPlayer.vel.y = 0;
 		mPlayer.vel.x = 0;
 		mPlayer.vel.z = 0;
@@ -710,8 +866,8 @@ void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
 	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	md3dImmediateContext->IASetInputLayout(InputLayouts::PosNormalTexTan);
 
-	if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
+	//if( GetAsyncKeyState('1') & 0x8000 )
+		md3dImmediateContext->RSSetState(mWireframeRS);
      
     D3DX11_TECHNIQUE_DESC techDesc;
     tech->GetDesc( &techDesc );
@@ -788,8 +944,8 @@ void MeshViewApp::DrawSceneToShadowMap()
 
 	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
      
-	if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(RenderStates::WireframeRS);
+	//if( GetAsyncKeyState('1') & 0x8000 )
+		md3dImmediateContext->RSSetState(mWireframeRS);
 	
     D3DX11_TECHNIQUE_DESC techDesc;
     tech->GetDesc( &techDesc );
@@ -955,3 +1111,121 @@ void MeshViewApp::BuildScreenQuadGeometryBuffers()
     HR(md3dDevice->CreateBuffer(&ibd, &iinitData, &mScreenQuadIB));
 }
 
+void MeshViewApp::BuildGeometryBuffers()
+{
+	// Create vertex buffer
+	Vertexes vertices[] =
+	{
+		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), (const float*)&Colors::White },
+		{ XMFLOAT3(-1.0f, +1.0f, -1.0f), (const float*)&Colors::Black },
+		{ XMFLOAT3(+1.0f, +1.0f, -1.0f), (const float*)&Colors::Red },
+		{ XMFLOAT3(+1.0f, -1.0f, -1.0f), (const float*)&Colors::Green },
+		{ XMFLOAT3(-1.0f, -1.0f, +1.0f), (const float*)&Colors::Blue },
+		{ XMFLOAT3(-1.0f, +1.0f, +1.0f), (const float*)&Colors::Yellow },
+		{ XMFLOAT3(+1.0f, +1.0f, +1.0f), (const float*)&Colors::Cyan },
+		{ XMFLOAT3(+1.0f, -1.0f, +1.0f), (const float*)&Colors::Magenta }
+	};
+
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(Vertexes)* 8;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	vbd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = vertices;
+	HR(md3dDevice->CreateBuffer(&vbd, &vinitData, &mBoxVB));
+
+
+	// Create the index buffer
+
+	UINT indices[] = {
+		// front face
+		0, 1, 2,
+		0, 2, 3,
+
+		// back face
+		4, 6, 5,
+		4, 7, 6,
+
+		// left face
+		4, 5, 1,
+		4, 1, 0,
+
+		// right face
+		3, 2, 6,
+		3, 6, 7,
+
+		// top face
+		1, 5, 6,
+		1, 6, 2,
+
+		// bottom face
+		4, 0, 3,
+		4, 3, 7
+	};
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT)* 36;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	ibd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = indices;
+	HR(md3dDevice->CreateBuffer(&ibd, &iinitData, &mBoxIB));
+}
+
+void MeshViewApp::BuildMenuFX()
+{
+	DWORD shaderFlags = 0;
+#if defined( DEBUG ) || defined( _DEBUG )
+	shaderFlags |= D3D10_SHADER_DEBUG;
+	shaderFlags |= D3D10_SHADER_SKIP_OPTIMIZATION;
+#endif
+
+	ID3D10Blob* compiledShader = 0;
+	ID3D10Blob* compilationMsgs = 0;
+	HRESULT hr = D3DX11CompileFromFile(L"FX/color.fx", 0, 0, 0, "fx_5_0", shaderFlags,
+		0, 0, &compiledShader, &compilationMsgs, 0);
+
+	// compilationMsgs can store errors or warnings.
+	if (compilationMsgs != 0)
+	{
+		MessageBoxA(0, (char*)compilationMsgs->GetBufferPointer(), 0, 0);
+		ReleaseCOM(compilationMsgs);
+	}
+
+	// Even if there are no compilationMsgs, check to make sure there were no other errors.
+	if (FAILED(hr))
+	{
+		DXTrace(__FILE__, (DWORD)__LINE__, hr, L"D3DX11CompileFromFile", true);
+	}
+
+	HR(D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(),
+		0, md3dDevice, &mFX));
+
+	// Done with compiled shader.
+	ReleaseCOM(compiledShader);
+
+	mTech = mFX->GetTechniqueByName("ColorTech");
+	mfxWorldViewProj = mFX->GetVariableByName("gWorldViewProj")->AsMatrix();
+}
+
+void MeshViewApp::BuildVertexLayout()
+{
+	// Create the vertex input layout.
+	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	// Create the input layout
+	D3DX11_PASS_DESC passDesc;
+	mTech->GetPassByIndex(0)->GetDesc(&passDesc);
+	HR(md3dDevice->CreateInputLayout(vertexDesc, 2, passDesc.pIAInputSignature,
+		passDesc.IAInputSignatureSize, &mInputLayout));
+}

@@ -4,7 +4,7 @@
 LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::string& modelFilename, const std::wstring& texturePath, MeshGeometry::Type type) :
 	BasicModel(device, texMgr, modelFilename, texturePath, type)
 {
-	for (int j = 0; j < BasicVertices.size(); j += 3)
+	for (int j = 0; j < Indices.size(); j += 3)
 	{
 		//make new triData object
 		TriData tData;
@@ -12,19 +12,28 @@ LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::stri
 		XMVECTOR P0 = XMLoadFloat3(&BasicVertices[Indices[j]].Pos);
 		XMVECTOR P1 = XMLoadFloat3(&BasicVertices[Indices[j + 1]].Pos);
 		XMVECTOR P2 = XMLoadFloat3(&BasicVertices[Indices[j + 2]].Pos);
+
+		//Some Test Code********************
+		//seems like for some reason the z axis needs to be multiplied by -1
+		XMVECTOR adjust = XMLoadFloat3(&XMFLOAT3(1.0, 1.0, 1.0));
+		P0 = XMVectorMultiply(P0, adjust);
+		P1 = XMVectorMultiply(P1, adjust);
+		P2 = XMVectorMultiply(P2, adjust);
+
+		//**********************************
 		
 		//calculate Normal
 		//XMVECTOR x = XMVectorSubtract(P1, P0);
 		//XMVECTOR y = XMVectorSubtract(P2, P0);
 		//tData.Normal = XMVector3Cross(x, y);
-		tData.Normal = XMVector3Cross(P1 - P0, P2 - P0);
+		tData.Normal = XMVector3Cross(P2 - P0, P1 - P0);
 
 		//calculate the plane
 		//set up vars
 		XMFLOAT3 v1, v2, v3, temp;
-		XMStoreFloat3(&v1, P0);
+		XMStoreFloat3(&v1, P2);//change order
 		XMStoreFloat3(&v2, P1);
-		XMStoreFloat3(&v3, P2);
+		XMStoreFloat3(&v3, P0);
 		XMFLOAT4 plane;
 		//calculate
 		plane.x = v1.y*(v2.z - v3.z) + v2.y*(v3.z - v1.z) + v3.y*(v1.z - v2.z);
@@ -39,7 +48,7 @@ LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::stri
 		temp.y = (v1.y + v2.y + v3.y) * 0.3333;
 		temp.z = (v1.z + v2.z + v3.z) * 0.3333;
 		//set the center
-		tData.Center = XMLoadFloat3(&temp);
+		tData.Bounds.Center = temp;
 
 		//find radius of bounding sphere
 		float L1, L2, L3;
@@ -48,16 +57,20 @@ LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::stri
 		XMStoreFloat(&L2, XMVector3Length(vTemp - P1));
 		XMStoreFloat(&L3, XMVector3Length(vTemp - P2));
 		if (L1 > L2 && L1 > L3)
-			tData.Radius = L1;
+			tData.Bounds.Radius = L1;
 		else if (L2 > L1 && L2 > L3)
-			tData.Radius = L2;
+			tData.Bounds.Radius = L2;
 		else if (L3 > L2 && L3 > L1)
-			tData.Radius = L3;
+			tData.Bounds.Radius = L3;
 
 		//set the points 
 		tData.P0 = P0;
 		tData.P1 = P1;
 		tData.P2 = P2;
+		
+		//add it to yhe vector
+		data.push_back(tData);
+		
 	}
 }
 
