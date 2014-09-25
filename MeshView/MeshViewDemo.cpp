@@ -329,6 +329,17 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	//setup vars
 	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
 	XMVECTOR up = XMLoadFloat3(&XMFLOAT3(0.0, 1.0, 0.0));
+	//make a slightly smaller version of the players sphere 
+	XNA::Sphere pSmallSphere;
+	pSmallSphere.Center = pSphere.Center;
+	pSmallSphere.Radius = pSphere.Radius * 1.1f;//this value may be changed to work better.
+
+	XNA::Sphere pTallSphere;
+	XMFLOAT3 adjustment = pSphere.Center;
+	adjustment.y += 0.3;//this value may be changed to work better.
+	pTallSphere.Center = adjustment;
+	pTallSphere.Radius = pSphere.Radius;
+
 	//get the vector of indices and Vertices and store them
 	std::vector<TriData> tData = currLevel->data;
 	for (int j = 0; j < tData.size(); j++)
@@ -336,56 +347,63 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 		//only do collision checks with spheres you can collide with by doing a radius check first
 		if (XNA::IntersectSphereSphere(&tData[j].Bounds, &pSphere))
 		{
-			XMVECTOR P0 = tData[j].P0;
-			XMVECTOR P1 = tData[j].P1;
-			XMVECTOR P2 = tData[j].P2;
-
-			//get the angle of the triangles normal to the worlds up to diecide if 
-			//we are checking a wall or a floor or a ceiling(other)
-			//this code should be moved to the levelModel class where it can be done once on load 
-			//for a fairly large preformance increase
-			XMVECTOR vAngleR = XMVector3AngleBetweenVectors(up, tData[j].Normal);
-			float angleD = (XMVectorGetX(vAngleR) * 180) / MathHelper::Pi;
-
-
-
-			if ((angleD > 0 && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //floor collisions
+			//use the smaller player sphere to check and see if the player is above the triangles plane
+			int daBug = XNA::IntersectSpherePlane(&pSmallSphere, tData[j].Plane); //this may be compleatly Uneeded and useless But I cant tell
+			if (daBug == 0)
 			{
-				//are you collidioing?
-				mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
-				//if you are...
-				if (mPlayer.isCollidingFloor)
+				XMVECTOR P0 = tData[j].P0;
+				XMVECTOR P1 = tData[j].P1;
+				XMVECTOR P2 = tData[j].P2;
+
+				//get the angle of the triangles normal to the worlds up to diecide if 
+				//we are checking a wall or a floor or a ceiling(other)
+				//this code should be moved to the levelModel class where it can be done once on load 
+				//for a fairly large preformance increase
+				XMVECTOR vAngleR = XMVector3AngleBetweenVectors(up, tData[j].Normal);
+				float angleD = (XMVectorGetX(vAngleR) * 180) / MathHelper::Pi;
+
+
+
+				if ((angleD > 0 && angleD < 65.0f) && mPlayer.isCollidingFloor == false) //floor collisions
 				{
-					mPlayer.currColFloor = tData[j];
-					//debug output for the center of the triangle  you colide with
-					std::wstringstream debug;
-					debug << L"Pos of collsiion ";
-					debug << tData[j].Bounds.Center.x;
-					debug << L"		 ";
-					debug << tData[j].Bounds.Center.y;
-					debug << L"		 ";
-					debug << tData[j].Bounds.Center.z;
-					debug << std::endl;
-					//OutputDebugString((LPCTSTR)debug.str().c_str());
+					//are you collidioing?
+					mPlayer.isCollidingFloor = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
+					//if you are...
+					if (mPlayer.isCollidingFloor)
+					{
+						mPlayer.currColFloor = tData[j];
+						//debug output for the center of the triangle  you colide with
+						std::wstringstream debug;
+						debug << L"Pos of collsiion ";
+						debug << tData[j].Bounds.Center.x;
+						debug << L"		 ";
+						debug << tData[j].Bounds.Center.y;
+						debug << L"		 ";
+						debug << tData[j].Bounds.Center.z;
+						debug << std::endl;
+						//OutputDebugString((LPCTSTR)debug.str().c_str());
+					}
 				}
-			}
-			else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingWall == false) //Wall collisions(same sort of thing as floor)
-			{
-				mPlayer.isCollidingWall = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
-				if (mPlayer.isCollidingWall)
+				else if ((angleD > 65.0f && angleD < 115.0f) && mPlayer.isCollidingWall == false) //Wall collisions(same sort of thing as floor)
 				{
-					OutputDebugString(L"thats a Wall");
-					mPlayer.currColWall = tData[j];
+					mPlayer.isCollidingWall = XNA::IntersectTriangleSphere(P2, P1, P0, &pTallSphere);
+					if (mPlayer.isCollidingWall)
+					{
+						OutputDebugString(L"thats a Wall");
+						mPlayer.currColWall = tData[j];
+					}
 				}
-			}
-			else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingOther == false) //Bounce collisions( stuff you cant walk or run on)
-			{
-				mPlayer.isCollidingOther = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);
-				if (mPlayer.isCollidingOther)
+				/********* CURRENTLY UNIMPLEMENTED IN THE PLAYER CLASS **************
+				else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingOther == false) //Bounce collisions( stuff you cant walk or run on)
 				{
-					OutputDebugString(L"thats a Wall");
-					mPlayer.currColOther = tData[j];
+					mPlayer.isCollidingOther = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);//not sure if I should Use tall or normal Shpere
+					if (mPlayer.isCollidingOther)
+					{
+						OutputDebugString(L"thats a Wall");
+						mPlayer.currColOther = tData[j];
+					}
 				}
+				*/
 			}
 		}
 	}
@@ -603,7 +621,6 @@ void MeshViewApp::KeyHandler(float dt)
 		if (sKey == false)
 		{
 			//key down
-
 		}
 		//key pressed
 		mSound->playing[mSound->STEP_2] = true;
@@ -628,7 +645,7 @@ void MeshViewApp::KeyHandler(float dt)
 			//key down
 		}
 		//key pressed
-		mPlayer.Strafe(-1.0f);
+		//mPlayer.Strafe(-1.0f);
 		aKey = true;
 	}
 	else
@@ -649,7 +666,7 @@ void MeshViewApp::KeyHandler(float dt)
 			//key down
 		}
 		//key pressed
-		mPlayer.Strafe(1.0f);
+		//mPlayer.Strafe(1.0f);
 		dKey = true;
 	}
 	else

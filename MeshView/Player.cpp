@@ -1,8 +1,4 @@
 /********  TO DO  ************
-make it so that you only collide / walk on floors if you are (almost) compleatly above them
-		use shpere plane check but make a shpere with a little less radiius 
-		then the players shphere that way it sould work out nicely
-
 Fix bugs People find
 
 //bugs should be well explained so that I can fix them
