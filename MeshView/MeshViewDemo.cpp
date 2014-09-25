@@ -372,6 +372,8 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	pSmallSphere.Center = pSphere.Center;
 	pSmallSphere.Radius = pSphere.Radius * 1.1f;//this value may be changed to work better.
 
+	//use this for wall collisions to improve walking and wall running 
+	//the slight offset in y makes it so that you dont get stuck in the ground and on walls
 	XNA::Sphere pTallSphere;
 	XMFLOAT3 adjustment = pSphere.Center;
 	adjustment.y += 0.3;//this value may be changed to work better.

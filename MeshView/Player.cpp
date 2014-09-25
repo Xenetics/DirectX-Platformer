@@ -3,7 +3,9 @@ Fix bugs People find
 
 //bugs should be well explained so that I can fix them
 +++++++ LIST OF FOUND BUGS ++++++++
+	When you are on a wall and fall off do to staying on it too long you go flying(direction?)
 
+	Jumping off a wall makes you jump super far and fast.
 
 +++++++++++++++++++++++++++++++++++
 *///////////////////////////////
@@ -45,7 +47,7 @@ void Player::Jump()
 		temp.y = (temp.y + 1.0f) * 0.5f;//midpoint? sortof
 
 		XMVECTOR tempDir = XMLoadFloat3(&temp);
-		//tempDir = XMVector3Normalize(tempDir);
+		tempDir = XMVector3Normalize(tempDir);//hardly chnages it
 		tempDir *= JUMP_POWER * 2.2f;
 		XMStoreFloat3(&vel, XMVectorAdd(tempDir, XMLoadFloat3(&vel)));
 		wallTimer == 0;
