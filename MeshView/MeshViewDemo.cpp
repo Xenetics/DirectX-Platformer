@@ -32,6 +32,7 @@
 #include "LevelModel.h"
 #include "SoundMgr.h"
 
+
 struct BoundingSphere
 {
 	BoundingSphere() : Center(0.0f, 0.0f, 0.0f), Radius(0.0f) {}
@@ -264,6 +265,8 @@ bool MeshViewApp::Init()
 
 	//init sound
 	mSound = new SoundMgr();
+
+	srand(time(NULL));
 
 	return true;
 }
@@ -531,6 +534,10 @@ void MeshViewApp::KeyHandler(float dt)
 		{
 			mSound->playing[1] = true;
 			mSound->ChangeVolume(1, 0.1);
+			float random = 0.981 + (rand() * 0.000001);
+			mSound->ChangeFrequency(1,random);
+			//mSound->playing[2] = true;
+			//mSound->ChangeVolume(2, 0.1);
 		}
 
 		wKey = true;
@@ -554,7 +561,18 @@ void MeshViewApp::KeyHandler(float dt)
 
 		}
 		//key pressed
-		mSound->playing[2] = true;
+		mPlayer.Walk(10.0f*dt);
+
+		if (mPlayer.isCollidingFloor || mPlayer.isOnWall)
+		{
+			mSound->playing[2] = true;
+			mSound->ChangeVolume(1, 0.1);
+			float random = 0.981 + (rand() * 0.000001);
+			mSound->ChangeFrequency(1, random);
+			//mSound->playing[2] = true;
+			//mSound->ChangeVolume(2, 0.1);
+		}
+		//mSound->playing[2] = true;
 		mPlayer.Walk(-10.0f * dt);
 		sKey = true;
 	}

@@ -110,8 +110,8 @@ void SoundMgr::InitFMOD()
 	channels.push_back(0);
 	result = sounds[2]->setMode(FMOD_LOOP_OFF);
 	//ERRCHECK(result);
-
-
+	
+	
 
 	result = system->createStream("sounds/CoolRide.mp3", FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D, 0, &music);
 	//ERRCHECK(result);

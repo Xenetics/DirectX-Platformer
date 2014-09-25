@@ -25,6 +25,14 @@ public:
 		channels[ch]->setVolume(in);
 	}
 
+	void ChangeFrequency(int ch, float in)
+	{
+
+		float temp = 0;
+		channels[ch]->getFrequency(&temp);
+		channels[ch]->setFrequency(in* temp);
+	}
+
 
 };
 
