@@ -719,7 +719,7 @@ void MeshViewApp::KeyHandler(float dt)
 		}
 		//key pressed
 
-		if (mPlayer.isCollidingFloor || mPlayer.isOnWall)
+		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
 		{
 			mSound->playing[2] = true;
 			mSound->ChangeVolume(1, 0.1);
