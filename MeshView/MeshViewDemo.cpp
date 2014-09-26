@@ -30,6 +30,7 @@
 #include "BasicModel.h"
 #include "LevelModel.h"
 #include "SoundMgr.h"
+#include "Level.h"
 
 
 struct BoundingSphere
@@ -137,6 +138,9 @@ private:
 	SoundMgr* mSound;
 
 	POINT mLastMousePos;
+
+	//level stuff
+	std::vector<Level> mlevels;
 
 	//important menu floats
 	float mTheta;

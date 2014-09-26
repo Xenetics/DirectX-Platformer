@@ -158,13 +158,13 @@ void Player::Update(float dt)
 		vel.z += acc.z * dt;
 		vel.y += acc.y * dt;
 	}
-
-	if (vel.x > 2000000)
-		vel.x = 2000000;
-	if (vel.y > 2000000)
-		vel.y = 2000000;
-	if (vel.z > 2000000)
-		vel.z = 2000000;
+	//max velocity 
+	if (vel.x > 100)
+		vel.x = 100;
+	if (vel.y > 2000)
+		vel.y = 2000;
+	if (vel.z > 100)
+		vel.z = 100;
 
 	//after movment
 	//update bounding box
