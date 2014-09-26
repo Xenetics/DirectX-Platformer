@@ -7,10 +7,14 @@
 	menus
 
 	level switching and picking(menus)
-		for this make a level class and in the level class hold all the information about the
-		level that this file needs to know to use it
 		maybe see about not loading the level until it is needed? beucase loading al the levels on start up will take forever
+		This part still needs to be done ^
 		
+		basicly implement on the fly level switching.
+
+		Maybe make and e-num for the difrent levels(not really needed at all)
+
+		Roof and other Collisions
 
 //***************************************************************************************/
 
@@ -80,6 +84,8 @@ private:
 	void BuildMenuFX();
 	void BuildVertexLayout();
 
+	void LoadCurrLevel();
+
 
 	//state based functions
 	void UpdateWhilePlaying(float dt);
@@ -97,11 +103,11 @@ private:
 
 	Sky* mSky;
 
-	BasicModel* testModel;
-	LevelModel* currLevel;
+	//BasicModel* testModel;
+	int currLevel = 2;
 
 	std::vector<BasicModelInstance> mModelInstances;
-	std::vector<BasicModelInstance> mAlphaClippedModelInstances;
+	//std::vector<BasicModelInstance> mAlphaClippedModelInstances;
 
 	//stuff bellow is needed for my menus (Damian)
 	ID3D11Buffer* mBoxVB;
@@ -113,6 +119,7 @@ private:
 	XMFLOAT4X4 mWorld;
 	XMFLOAT4X4 mView;
 	XMFLOAT4X4 mProj;
+	//
 
 	ID3D11Buffer* mSkySphereVB;
 	ID3D11Buffer* mSkySphereIB;
@@ -140,7 +147,7 @@ private:
 	POINT mLastMousePos;
 
 	//level stuff
-	std::vector<Level> mlevels;
+	std::vector<Level*> mLevels;
 
 	//important menu floats
 	float mTheta;
@@ -173,7 +180,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
  
 
 MeshViewApp::MeshViewApp(HINSTANCE hInstance)
-: D3DApp(hInstance), mSky(0), testModel(0), currLevel(0),
+: D3DApp(hInstance), mSky(0), //currLevel(0),
 mScreenQuadVB(0), mScreenQuadIB(0),
   mSmap(0), mSsao(0),
   mLightRotationAngle(0.0f), mBoxVB(0), mBoxIB(0), mFX(0), mTech(0),
@@ -209,8 +216,8 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 
 MeshViewApp::~MeshViewApp()
 {
-	SafeDelete(testModel);
-	SafeDelete(currLevel);
+	//this needs work
+	//SafeDelete(testModel);
 
 	SafeDelete(mSky);
 	SafeDelete(mSmap);
@@ -226,7 +233,7 @@ MeshViewApp::~MeshViewApp()
 
 bool MeshViewApp::Init()
 {
-	if(!D3DApp::Init())
+	if (!D3DApp::Init())
 		return false;
 
 	// Must init Effects first since InputLayouts depend on shader signatures.
@@ -236,7 +243,7 @@ bool MeshViewApp::Init()
 
 	mTexMgr.Init(md3dDevice);
 
-	mSky  = new Sky(md3dDevice, L"Textures/rainy.dds", 5000.0f);
+	mSky = new Sky(md3dDevice, L"Textures/rainy.dds", 5000.0f);
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
 	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
@@ -244,30 +251,55 @@ bool MeshViewApp::Init()
 
 	BuildScreenQuadGeometryBuffers();
 
-	currLevel = new LevelModel(md3dDevice, mTexMgr, "Models\\testMap.alx", L"Textures\\");
+	//set up the levels so they are ready to load when needed
+	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap.alx");
+	mLevels.push_back(lvl);
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap2.alx");
+	mLevels.push_back(lvl);
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMapSmooth.alx");
+	mLevels.push_back(lvl);
 
-	BasicModelInstance testInstance;
-	
-	testInstance.Model = currLevel;
+	LoadCurrLevel();
 
-	XMMATRIX modelScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-	XMMATRIX modelRot   = XMMatrixRotationY(0.0f);
-	XMMATRIX modelOffset = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+	//revers face culling
+	D3D11_RASTERIZER_DESC jimJam;
+	ZeroMemory(&jimJam, sizeof(D3D11_RASTERIZER_DESC));
+	jimJam.FillMode = D3D11_FILL_SOLID;
+	jimJam.CullMode = D3D11_CULL_FRONT;
+	jimJam.AntialiasedLineEnable = true;
+	jimJam.FrontCounterClockwise = false;
+	HR(md3dDevice->CreateRasterizerState(&jimJam, &mWireframeRS));
+	md3dImmediateContext->RSSetState(mWireframeRS);
 
-	XMStoreFloat4x4(&testInstance.World, modelScale*modelRot*modelOffset);
+	//init sound
+	mSound = new SoundMgr();
+	srand(time(NULL));
 
-	mModelInstances.push_back(testInstance);
+	//build menu stuff
+	//BuildGeometryBuffers();
+	//BuildMenuFX();
+	//BuildVertexLayout();
 
+
+	return true;
+}
+
+void MeshViewApp::LoadCurrLevel()
+{
+	mLevels[currLevel]->Init();
 
 	//
 	// Compute scene bounding box.
 	//
 
+	//load this in
+	 mModelInstances = mLevels[currLevel]->GetModelInstances();
+
 	XMFLOAT3 minPt(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
 	XMFLOAT3 maxPt(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
-	for(UINT i = 0; i < mModelInstances.size(); ++i)
+	for (UINT i = 0; i < mModelInstances.size(); ++i)
 	{
-		for(UINT j = 0; j < mModelInstances[i].Model->BasicVertices.size(); ++j)
+		for (UINT j = 0; j < mModelInstances[i].Model->BasicVertices.size(); ++j)
 		{
 			XMFLOAT3 P = mModelInstances[i].Model->BasicVertices[j].Pos;
 
@@ -295,28 +327,6 @@ bool MeshViewApp::Init()
 		0.5f*(maxPt.z - minPt.z));
 
 	mSceneBounds.Radius = sqrtf(extent.x*extent.x + extent.y*extent.y + extent.z*extent.z);
-
-	//revers face culling
-	D3D11_RASTERIZER_DESC jimJam;
-	ZeroMemory(&jimJam, sizeof(D3D11_RASTERIZER_DESC));
-	jimJam.FillMode = D3D11_FILL_SOLID;
-	jimJam.CullMode = D3D11_CULL_FRONT;
-	jimJam.AntialiasedLineEnable = true;
-	jimJam.FrontCounterClockwise = false;
-	HR(md3dDevice->CreateRasterizerState(&jimJam, &mWireframeRS));
-	md3dImmediateContext->RSSetState(mWireframeRS);
-
-	//init sound
-	mSound = new SoundMgr();
-	srand(time(NULL));
-
-	//build menu stuff
-	//BuildGeometryBuffers();
-	//BuildMenuFX();
-	//BuildVertexLayout();
-
-
-	return true;
 }
 
 void MeshViewApp::OnResize()
@@ -385,7 +395,7 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	pTallSphere.Radius = pSphere.Radius;
 
 	//get the vector of indices and Vertices and store them
-	std::vector<TriData> tData = currLevel->data;
+	std::vector<TriData> tData = mLevels[currLevel]->GetLevelModel()->data;
 	for (int j = 0; j < tData.size(); j++)
 	{
 		//only do collision checks with spheres you can collide with by doing a radius check first
@@ -874,7 +884,7 @@ void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
 
 	//if( GetAsyncKeyState('1') & 0x8000 )
 		md3dImmediateContext->RSSetState(mWireframeRS);
-     
+
     D3DX11_TECHNIQUE_DESC techDesc;
     tech->GetDesc( &techDesc );
     for(UINT p = 0; p < techDesc.Passes; ++p)
@@ -900,6 +910,8 @@ void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
 		}
     }
 
+	//this can be reimplemented if we ever want to have objects that are not culled and have alpha in the texture?(or whatever it does)
+	/*
 	// The alpha tested triangles are leaves, so render them double sided.
 	md3dImmediateContext->RSSetState(RenderStates::NoCullRS);
 	alphaClippedTech->GetDesc( &techDesc );
@@ -926,7 +938,7 @@ void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
 			}
 		}
     }
- 
+	*/
 	md3dImmediateContext->RSSetState(0);
 }
 
@@ -952,7 +964,7 @@ void MeshViewApp::DrawSceneToShadowMap()
      
 	//if( GetAsyncKeyState('1') & 0x8000 )
 		md3dImmediateContext->RSSetState(mWireframeRS);
-	
+
     D3DX11_TECHNIQUE_DESC techDesc;
     tech->GetDesc( &techDesc );
     for(UINT p = 0; p < techDesc.Passes; ++p)
@@ -977,6 +989,8 @@ void MeshViewApp::DrawSceneToShadowMap()
 		}
     }
 
+	//this can be reimplemented if we ever want to have objects that are not culled and have alpha in the texture?(or whatever it does)
+	/*
 	alphaClippedTech->GetDesc( &techDesc );
     for(UINT p = 0; p < techDesc.Passes; ++p)
     {
@@ -999,7 +1013,7 @@ void MeshViewApp::DrawSceneToShadowMap()
 			}
 		}
     }
-
+	*/
 	md3dImmediateContext->RSSetState(0);
 }
 
