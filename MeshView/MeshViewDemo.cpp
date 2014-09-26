@@ -104,7 +104,7 @@ private:
 	Sky* mSky;
 
 	//BasicModel* testModel;
-	int currLevel = 2;
+	int currLevel = 0;
 
 	std::vector<BasicModelInstance> mModelInstances;
 	//std::vector<BasicModelInstance> mAlphaClippedModelInstances;
@@ -252,13 +252,16 @@ bool MeshViewApp::Init()
 	BuildScreenQuadGeometryBuffers();
 
 	//set up the levels so they are ready to load when needed
-	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap.alx");
-	mLevels.push_back(lvl);
-	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap2.alx");
-	mLevels.push_back(lvl);
-	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMapSmooth.alx");
+	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap.alx", XMFLOAT3(11.0, 7.0, 9.0), 10.0f);
 	mLevels.push_back(lvl);
 
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap2.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
+	mLevels.push_back(lvl);
+
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMapSmooth.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
+	mLevels.push_back(lvl);
+
+	//load the current level
 	LoadCurrLevel();
 
 	//revers face culling
@@ -370,8 +373,21 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 {
 	//deal with keypresses
 	KeyHandler(dt);
-	// screaming while falling 
+	
+	//get eh player sphere
+	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
+	//see if you win
+	if (XNA::IntersectSphereSphere(&pSphere, &mLevels[currLevel]->GetWinSphere()))
+	{
+		if (currLevel + 1 < mLevels.size())
+		{
+			currLevel++;
+		}
 
+		LoadCurrLevel();
+
+		return;
+	}
 
 	//Do player collisions: loops throiugh the current levels triangls and does a bunch of stuff
 
@@ -379,12 +395,11 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	mPlayer.isCollidingFloor = false;
 	mPlayer.isCollidingWall = false;
 	//setup vars
-	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
 	XMVECTOR up = XMLoadFloat3(&XMFLOAT3(0.0, 1.0, 0.0));
 	//make a slightly smaller version of the players sphere 
 	XNA::Sphere pSmallSphere;
 	pSmallSphere.Center = pSphere.Center;
-	pSmallSphere.Radius = pSphere.Radius * 1.1f;//this value may be changed to work better.
+	pSmallSphere.Radius = pSphere.Radius * 0.9f;//this value may be changed to work better.
 
 	//use this for wall collisions to improve walking and wall running 
 	//the slight offset in y makes it so that you dont get stuck in the ground and on walls
@@ -402,6 +417,7 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 		if (XNA::IntersectSphereSphere(&tData[j].Bounds, &pSphere))
 		{
 			//use the smaller player sphere to check and see if the player is above the triangles plane
+			//Im pretty sure this does not work because I had to comment out line 3682 of the XNACollision.cpp for it to even compile
 			int daBug = XNA::IntersectSpherePlane(&pSmallSphere, tData[j].Plane); //this may be compleatly Uneeded and useless But I cant tell
 			if (daBug == 0)
 			{
@@ -448,6 +464,7 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 					}
 				}
 				/********* CURRENTLY UNIMPLEMENTED IN THE PLAYER CLASS **************
+				//this is for collision that are like ceilings
 				else if ((angleD > 115.0f && angleD < 180.0f) && mPlayer.isCollidingOther == false) //Bounce collisions( stuff you cant walk or run on)
 				{
 					mPlayer.isCollidingOther = XNA::IntersectTriangleSphere(P2, P1, P0, &pSphere);//not sure if I should Use tall or normal Shpere

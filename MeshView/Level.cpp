@@ -1,9 +1,10 @@
 #include "Level.h"
 
 
-Level::Level(ID3D11Device* device, TextureMgr* tex, std::string name) : md3dDevice(device), mTexMgr(tex), fileName(name)
+Level::Level(ID3D11Device* device, TextureMgr* tex, std::string name, XMFLOAT3 winSphereCenter, float winSphereRadius) : md3dDevice(device), mTexMgr(tex), fileName(name)
 {
-
+	mWinSphere.Center = winSphereCenter;
+	mWinSphere.Radius = winSphereRadius;
 }
 
 

@@ -10,7 +10,7 @@
 class Level
 {
 public:
-	Level(ID3D11Device* device, TextureMgr* tex, std::string name);
+	Level(ID3D11Device* device, TextureMgr* tex, std::string name, XMFLOAT3 winSphereCenter, float winSphereRadius);
 	~Level();
 
 	void Init();
@@ -23,10 +23,17 @@ public:
 	{
 		return mModelInstances;
 	}
+	XNA::Sphere GetWinSphere()
+	{
+		return mWinSphere;
+	}
+
 private:
 	LevelModel* level;
 	std::vector<BasicModelInstance> mModelInstances;
 	
+	XNA::Sphere mWinSphere;
+
 	ID3D11Device* md3dDevice;
 	TextureMgr* mTexMgr;
 	std::string fileName;
