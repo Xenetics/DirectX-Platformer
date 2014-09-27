@@ -1,11 +1,29 @@
 /********  TO DO  ************
 Fix bugs People find
 
+strafing
+	if strafing is implemented you need to be able to push A-W and move left and forward
+
+Make movement Acceleration based so that you start slow and then get faster. also slow stoping too
+
+After movement Acceleration is implemented change the jump so that the velocity assigned from moving
+carries over to jumping so that when you jump from standing you cant go very far and when you jump from slow running
+farther but still not as far as when you jump full speed.
+
+Wall running needs to be greatly impoved as it is not implemeneted very well (probably why its so buggy)
+	Improvment that need to be done:
+	-when you are no running on the wall fall of very shortly 
+	-when running make it so you can stay on the wall longer
+	-speed will play a part in how long you stay on the wall
+	-speed from running will carry over in to wall running
+	-if your running and you stop you fall of instantly(maybe?)
+	-you run on the wall in an arc unless you are running right up the wall (this could be hard to implement) 
+
 //bugs should be well explained so that I can fix them
 +++++++ LIST OF FOUND BUGS ++++++++
-	When you are on a wall and fall off do to staying on it too long you go flying(direction?)
+	When you are on a wall and fall off from staying on it too long you go flying(direction?)
 
-	Jumping off a wall makes you jump super far and fast.
+	Jumping off a wall makes you jump super far and fast.(fixed? At least mostly)
 
 +++++++++++++++++++++++++++++++++++
 *///////////////////////////////

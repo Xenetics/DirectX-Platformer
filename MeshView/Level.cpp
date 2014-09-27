@@ -1,3 +1,19 @@
+/**************************************
+				TO DO 
+
+	Load in level data from a Text File
+	the text file would ahve the model (or models of more are imlemeneted)
+	the highscores?
+	the file name of the screen shot
+	the location of the win-Sphere
+	And anything else needed
+
+
+
+
+
+***************************************/
+
 #include "Level.h"
 
 

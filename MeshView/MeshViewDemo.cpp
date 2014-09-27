@@ -7,14 +7,18 @@
 	menus
 
 	level switching and picking(menus)
-		maybe see about not loading the level until it is needed? beucase loading al the levels on start up will take forever
-		This part still needs to be done ^
 		
 		basicly implement on the fly level switching.
+		This is mostly done. a function needs to be implemented that deletes all the data the level is storing
+		that way you will not run out of memery after playing many differetn maps withough restarting the game.
 
-		Maybe make and e-num for the difrent levels(not really needed at all)
+	Maybe make and e-num for the difrent levels(not really needed at all)
 
-		Roof and other Collisions
+	Draw a sphere where the win sphere is.
+
+	Roof and other Collisions
+
+		
 
 //***************************************************************************************/
 
