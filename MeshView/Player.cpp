@@ -21,17 +21,15 @@ Wall running needs to be greatly impoved as it is not implemeneted very well (pr
 
 //bugs should be well explained so that I can fix them
 +++++++ LIST OF FOUND BUGS ++++++++
-	When you are on a wall and fall off from staying on it too long you go flying(direction?)
 
-	Jumping off a wall makes you jump super far and fast.(fixed? At least mostly)
 
 +++++++++++++++++++++++++++++++++++
 *///////////////////////////////
 #include "Player.h"
 
-#define WALK_SPEED 5.0
+#define WALK_SPEED 15.0
 #define RUN_SPEED  2.0
-#define JUMP_POWER 8.0
+#define JUMP_POWER 10.0
 #define GRAVITY    -20.0
 
 Player::Player() : Camera(), isCollidingWall(false), isCollidingFloor(false), isRunWall(false), vel(0.0f, 0.0f, 0.0f), acc(0.0f, GRAVITY, 0.0f), wallTimer(0)

@@ -7,6 +7,7 @@
 	the file name of the screen shot
 	the location of the win-Sphere
 	And anything else needed
+	where the player spanws
 
 
 

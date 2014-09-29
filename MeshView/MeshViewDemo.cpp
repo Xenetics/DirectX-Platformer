@@ -24,8 +24,6 @@
 
 	Unless the player will spawn at the same place(cordanite) in every level it needs to ba asigened to each level
 
-
-
 		
 	The header part of this could use some orginizing
 //***************************************************************************************/
@@ -365,6 +363,8 @@ void MeshViewApp::LoadCurrLevel()
 	//load this in
 	 mModelInstances = mLevels[currLevel]->GetModelInstances();
 
+
+
 	XMFLOAT3 minPt(+MathHelper::Infinity, +MathHelper::Infinity, +MathHelper::Infinity);
 	XMFLOAT3 maxPt(-MathHelper::Infinity, -MathHelper::Infinity, -MathHelper::Infinity);
 	for (UINT i = 0; i < mModelInstances.size(); ++i)
@@ -468,7 +468,7 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	pSmallSphere.Center = pSphere.Center;
 	pSmallSphere.Radius = pSphere.Radius * 0.9f;//this value may be changed to work better.
 
-	//use this for wall collisions to improve walking and wall running 
+	//use this for wall collisions to improve walking and wall running
 	//the slight offset in y makes it so that you dont get stuck in the ground and on walls
 	XNA::Sphere pTallSphere;
 	XMFLOAT3 adjustment = pSphere.Center;
@@ -715,27 +715,6 @@ void MeshViewApp::DrawWhilePlaying()
 				mModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
 			}
 		}
-		/*/try to draw the win sphere
-		md3dImmediateContext->IASetVertexBuffers(0, 1, &mWinSphereVB, &stride, &offset);
-		md3dImmediateContext->IASetIndexBuffer(mWinSphereIB, DXGI_FORMAT_R32_UINT, 0);
-
-		world = XMLoadFloat4x4(&mWinSphereWorld);
-		worldInvTranspose = MathHelper::InverseTranspose(world);
-		worldViewProj = world*view*proj;
-
-		Effects::BasicFX->SetWorld(world);
-		Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
-		Effects::BasicFX->SetWorldViewProj(worldViewProj);
-		Effects::BasicFX->SetWorldViewProjTex(worldViewProj*toTexSpace);
-		Effects::BasicFX->SetTexTransform(XMMatrixIdentity());
-		Effects::BasicFX->SetShadowTransform(world*shadowTransform);
-		Effects::BasicFX->SetMaterial(mWinSphereMat);
-		Effects::BasicFX->SetDiffuseMap(mWinSphereTexSRV);
-		//normal would need to be added here if you want to implement it
-
-		tech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
-		md3dImmediateContext->DrawIndexed(mWinSphereIndexCount, 0, 0);
-		*/
 	}
 	// Turn off wireframe.
 	md3dImmediateContext->RSSetState(0);
@@ -756,41 +735,6 @@ void MeshViewApp::DrawWhilePlaying()
 	// to it next frame.  These textures can be at any slot, so clear all slots.
 	ID3D11ShaderResourceView* nullSRV[16] = { 0 };
 	md3dImmediateContext->PSSetShaderResources(0, 16, nullSRV);
-
-	//______________________________________________
-	//|try drawing the winsphere is a deffertnt way|
-	//|--------------------------------------------|
-
-	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
-	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	stride = sizeof(Vertex::Basic32);
-	offset = 0;
-
-	tech->GetDesc(&techDesc);
-	for (UINT p = 0; p < techDesc.Passes; ++p)
-	{
-		//try to draw the win sphere
-		md3dImmediateContext->IASetVertexBuffers(0, 1, &mWinSphereVB, &stride, &offset);
-		md3dImmediateContext->IASetIndexBuffer(mWinSphereIB, DXGI_FORMAT_R32_UINT, 0);
-
-		world = XMLoadFloat4x4(&mWinSphereWorld);
-		worldInvTranspose = MathHelper::InverseTranspose(world);
-		worldViewProj = world*view*proj;
-
-		Effects::BasicFX->SetWorld(world);
-		Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
-		Effects::BasicFX->SetWorldViewProj(worldViewProj);
-		Effects::BasicFX->SetWorldViewProjTex(worldViewProj*toTexSpace);
-		Effects::BasicFX->SetTexTransform(XMMatrixIdentity());
-		Effects::BasicFX->SetShadowTransform(world*shadowTransform);
-		Effects::BasicFX->SetMaterial(mWinSphereMat);
-		Effects::BasicFX->SetDiffuseMap(mWinSphereTexSRV);
-		//normal would need to be added here if you want to implement it
-
-		tech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
-		md3dImmediateContext->DrawIndexed(mWinSphereIndexCount, 0, 0);
-	}
 
 	HR(mSwapChain->Present(0, 0));
 }

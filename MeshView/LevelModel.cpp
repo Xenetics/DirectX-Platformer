@@ -12,15 +12,6 @@ LevelModel::LevelModel(ID3D11Device* device, TextureMgr& texMgr, const std::stri
 		XMVECTOR P0 = XMLoadFloat3(&BasicVertices[Indices[j]].Pos);
 		XMVECTOR P1 = XMLoadFloat3(&BasicVertices[Indices[j + 1]].Pos);
 		XMVECTOR P2 = XMLoadFloat3(&BasicVertices[Indices[j + 2]].Pos);
-
-		//Some Test Code********************
-		//seems like for some reason the z axis needs to be multiplied by -1
-		XMVECTOR adjust = XMLoadFloat3(&XMFLOAT3(1.0, 1.0, 1.0));
-		P0 = XMVectorMultiply(P0, adjust);
-		P1 = XMVectorMultiply(P1, adjust);
-		P2 = XMVectorMultiply(P2, adjust);
-
-		//**********************************
 		
 		//calculate Normal
 		//XMVECTOR x = XMVectorSubtract(P1, P0);
