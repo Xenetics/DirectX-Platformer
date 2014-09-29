@@ -1,10 +1,13 @@
 /**************************      TO DO      ********************************************
-
+	Once you have a model with real textures you may have to mess with the draw function to get it top draw properly
+	as none of our models have had textures yet so we dont know if it wirks right
 		
 	see player classes TO DO
 	recored any movment bugs in the player class
 
-	menus
+	menus - LIKE HOLLY FUCK WE NEED MENU	
+		this entire file and a bunch of shit in it is going to have to be changed around 
+		Becuase Damain Can't get his dam menu done on time. ARRG!
 
 	level switching and picking(menus)
 		
@@ -15,11 +18,16 @@
 	Maybe make and e-num for the difrent levels(not really needed at all)
 
 	Draw a sphere where the win sphere is.
+	The code is done but it does not draw. Ithink this has something to do with the way the draw is different in respect to the mesh draw
 
 	Roof and other Collisions
 
-		
+	Unless the player will spawn at the same place(cordanite) in every level it needs to ba asigened to each level
 
+
+
+		
+	The header part of this could use some orginizing
 //***************************************************************************************/
 
 #include "d3dApp.h"
@@ -101,7 +109,7 @@ private:
 	void KeyHandler(float dt);
 
 private:
-	ID3D11RasterizerState* mWireframeRS;
+	ID3D11RasterizerState* mCullCorrectionRS;
 
 	TextureMgr mTexMgr;
 
@@ -123,6 +131,16 @@ private:
 	XMFLOAT4X4 mWorld;
 	XMFLOAT4X4 mView;
 	XMFLOAT4X4 mProj;
+	//
+
+	//winSphere draw stuff
+	ID3D11Buffer* mWinSphereVB;
+	ID3D11Buffer* mWinSphereIB;
+
+	UINT mWinSphereIndexCount;
+	Material mWinSphereMat;
+	ID3D11ShaderResourceView* mWinSphereTexSRV;
+	XMFLOAT4X4 mWinSphereWorld;
 	//
 
 	ID3D11Buffer* mSkySphereVB;
@@ -182,7 +200,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	return theApp.Run();
 }
  
-
+//there is probably more stuff that can be pre-initilzed
 MeshViewApp::MeshViewApp(HINSTANCE hInstance)
 : D3DApp(hInstance), mSky(0), //currLevel(0),
 mScreenQuadVB(0), mScreenQuadIB(0),
@@ -221,6 +239,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 MeshViewApp::~MeshViewApp()
 {
 	//this needs work
+	//LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOTS of work....
 	//SafeDelete(testModel);
 
 	SafeDelete(mSky);
@@ -275,8 +294,52 @@ bool MeshViewApp::Init()
 	jimJam.CullMode = D3D11_CULL_FRONT;
 	jimJam.AntialiasedLineEnable = true;
 	jimJam.FrontCounterClockwise = false;
-	HR(md3dDevice->CreateRasterizerState(&jimJam, &mWireframeRS));
-	md3dImmediateContext->RSSetState(mWireframeRS);
+	HR(md3dDevice->CreateRasterizerState(&jimJam, &mCullCorrectionRS));
+	md3dImmediateContext->RSSetState(mCullCorrectionRS);
+	
+
+	//make the model for the winSphere
+	GeometryGenerator::MeshData winSphereData;
+	GeometryGenerator gen;
+	gen.CreateGeosphere(1.0f, 3, winSphereData);
+
+	mWinSphereIndexCount = winSphereData.Indices.size();
+
+	//buffers
+	D3D11_BUFFER_DESC vbd;
+	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	vbd.ByteWidth = sizeof(Vertex::Basic32) * 8;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = 0;
+	vbd.MiscFlags = 0;
+	vbd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA vinitData;
+	vinitData.pSysMem = &winSphereData.Vertices;
+	HR(md3dDevice->CreateBuffer(&vbd, &vinitData, &mWinSphereVB));
+
+	D3D11_BUFFER_DESC ibd;
+	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	ibd.ByteWidth = sizeof(UINT)* 36;
+	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+	ibd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA iinitData;
+	iinitData.pSysMem = &winSphereData.Indices;
+	HR(md3dDevice->CreateBuffer(&ibd, &iinitData, &mWinSphereIB));
+	//WHERE IT IS 
+	float temp = mLevels[currLevel]->GetWinSphere().Radius * 2;
+	XMFLOAT3 tempF3 = mLevels[currLevel]->GetWinSphere().Center;
+	XMMATRIX scale = XMMatrixScaling(temp, temp, temp);
+	XMMATRIX offset = XMMatrixTranslation(tempF3.x, tempF3.y, tempF3.z);
+	XMStoreFloat4x4(&mWinSphereWorld, XMMatrixMultiply(scale, offset));
+	//texture time BB (This really needs a better texture!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	mWinSphereTexSRV = mTexMgr.CreateTexture(L"Textures/farm_silo_D.png");
+	//material? do i even need this?
+	mWinSphereMat.Ambient = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	mWinSphereMat.Diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	mWinSphereMat.Specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 16.0f);
+
 
 	//init sound
 	mSound = new SoundMgr();
@@ -488,12 +551,13 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	//update player
 	mPlayer.Update(dt);
 
-	//
+	// SHADOWS DONT WORK RIGHT NOW (you need normal maps or something? look in to it
 	// Animate the lights (and hence shadows).
 	//
 
 	BuildShadowTransform();
 
+	//this can probably be moved in to the players update
 	mPlayer.UpdateViewMatrix();
 }
 
@@ -617,7 +681,7 @@ void MeshViewApp::DrawWhilePlaying()
 	md3dImmediateContext->IASetInputLayout(InputLayouts::PosNormalTexTan);
      
 	//if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(mWireframeRS);
+		md3dImmediateContext->RSSetState(mCullCorrectionRS);
 
 	//
 	// Draw opaque objects.
@@ -627,6 +691,7 @@ void MeshViewApp::DrawWhilePlaying()
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
+		//draw the mesh
 		for (UINT modelIndex = 0; modelIndex < mModelInstances.size(); ++modelIndex)
 		{
 			world = XMLoadFloat4x4(&mModelInstances[modelIndex].World);
@@ -650,6 +715,27 @@ void MeshViewApp::DrawWhilePlaying()
 				mModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
 			}
 		}
+		/*/try to draw the win sphere
+		md3dImmediateContext->IASetVertexBuffers(0, 1, &mWinSphereVB, &stride, &offset);
+		md3dImmediateContext->IASetIndexBuffer(mWinSphereIB, DXGI_FORMAT_R32_UINT, 0);
+
+		world = XMLoadFloat4x4(&mWinSphereWorld);
+		worldInvTranspose = MathHelper::InverseTranspose(world);
+		worldViewProj = world*view*proj;
+
+		Effects::BasicFX->SetWorld(world);
+		Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
+		Effects::BasicFX->SetWorldViewProj(worldViewProj);
+		Effects::BasicFX->SetWorldViewProjTex(worldViewProj*toTexSpace);
+		Effects::BasicFX->SetTexTransform(XMMatrixIdentity());
+		Effects::BasicFX->SetShadowTransform(world*shadowTransform);
+		Effects::BasicFX->SetMaterial(mWinSphereMat);
+		Effects::BasicFX->SetDiffuseMap(mWinSphereTexSRV);
+		//normal would need to be added here if you want to implement it
+
+		tech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
+		md3dImmediateContext->DrawIndexed(mWinSphereIndexCount, 0, 0);
+		*/
 	}
 	// Turn off wireframe.
 	md3dImmediateContext->RSSetState(0);
@@ -670,6 +756,41 @@ void MeshViewApp::DrawWhilePlaying()
 	// to it next frame.  These textures can be at any slot, so clear all slots.
 	ID3D11ShaderResourceView* nullSRV[16] = { 0 };
 	md3dImmediateContext->PSSetShaderResources(0, 16, nullSRV);
+
+	//______________________________________________
+	//|try drawing the winsphere is a deffertnt way|
+	//|--------------------------------------------|
+
+	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
+	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	stride = sizeof(Vertex::Basic32);
+	offset = 0;
+
+	tech->GetDesc(&techDesc);
+	for (UINT p = 0; p < techDesc.Passes; ++p)
+	{
+		//try to draw the win sphere
+		md3dImmediateContext->IASetVertexBuffers(0, 1, &mWinSphereVB, &stride, &offset);
+		md3dImmediateContext->IASetIndexBuffer(mWinSphereIB, DXGI_FORMAT_R32_UINT, 0);
+
+		world = XMLoadFloat4x4(&mWinSphereWorld);
+		worldInvTranspose = MathHelper::InverseTranspose(world);
+		worldViewProj = world*view*proj;
+
+		Effects::BasicFX->SetWorld(world);
+		Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
+		Effects::BasicFX->SetWorldViewProj(worldViewProj);
+		Effects::BasicFX->SetWorldViewProjTex(worldViewProj*toTexSpace);
+		Effects::BasicFX->SetTexTransform(XMMatrixIdentity());
+		Effects::BasicFX->SetShadowTransform(world*shadowTransform);
+		Effects::BasicFX->SetMaterial(mWinSphereMat);
+		Effects::BasicFX->SetDiffuseMap(mWinSphereTexSRV);
+		//normal would need to be added here if you want to implement it
+
+		tech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
+		md3dImmediateContext->DrawIndexed(mWinSphereIndexCount, 0, 0);
+	}
 
 	HR(mSwapChain->Present(0, 0));
 }
@@ -904,7 +1025,7 @@ void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
 	md3dImmediateContext->IASetInputLayout(InputLayouts::PosNormalTexTan);
 
 	//if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(mWireframeRS);
+		md3dImmediateContext->RSSetState(mCullCorrectionRS);
 
     D3DX11_TECHNIQUE_DESC techDesc;
     tech->GetDesc( &techDesc );
@@ -984,7 +1105,7 @@ void MeshViewApp::DrawSceneToShadowMap()
 	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
      
 	//if( GetAsyncKeyState('1') & 0x8000 )
-		md3dImmediateContext->RSSetState(mWireframeRS);
+		//md3dImmediateContext->RSSetState(mWireframeRS);
 
     D3DX11_TECHNIQUE_DESC techDesc;
     tech->GetDesc( &techDesc );

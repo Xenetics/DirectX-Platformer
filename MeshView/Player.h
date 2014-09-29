@@ -44,6 +44,7 @@ private:
 	void DoWallCollisions();
 
 	XMFLOAT3 mPrevPos;
+
 	float height = 1.0;
 	float extents = 0.3;
 };
