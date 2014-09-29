@@ -275,10 +275,10 @@ bool MeshViewApp::Init()
 	BuildScreenQuadGeometryBuffers();
 
 	//set up the levels so they are ready to load when needed
-	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap.alx", XMFLOAT3(11.0, 7.0, 9.0), 10.0f);
+	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(11.0, 7.0, 9.0), 10.0f);
 	mLevels.push_back(lvl);
 
-	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap2.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
 	mLevels.push_back(lvl);
 
 	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMapSmooth.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
