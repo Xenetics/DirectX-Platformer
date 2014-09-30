@@ -1,0 +1,26 @@
+Rory 	- Get menu framework started
+	- Menu camera to display orthographic
+	- Start highscore menu
+
+
+Andrew	- Add player acceleration
+	- fix wall to wall to wall jumping
+	- possibly add strafing
+	- fix playing spawning position/rotation
+	- smoothen player controls and level interactivity
+
+
+Damian 	- Texture the first level "level1.alx"
+	- Find and add listed textures to the "Textures" folder in project
+		- logo banner "Parkcoul"
+		- Play
+		- Exit
+		- Music On
+		- Music Off
+		- Sound On
+		- Sound Off
+		- Level 01
+		- level selection cube with image of first level.
+		- High Score
+		- numbers 0-9, #, :
+		- Back
