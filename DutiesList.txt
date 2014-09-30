@@ -24,3 +24,11 @@ Damian 	- Texture the first level "level1.alx"
 		- High Score
 		- numbers 0-9, #, :
 		- Back
+
+Ryan 	-
+
+Unassigned tasks:
+-On Screen timer
+-Make second level
+-Ending object or particle effect
+-HUD acceleration meter
