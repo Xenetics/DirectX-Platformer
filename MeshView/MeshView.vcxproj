@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Users\Ryan\Documents\GitHub\Common;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;C:\Users\Ryan\Documents\GitHub\Common;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,6 +54,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -80,23 +81,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Common\Camera.cpp" />
-    <ClCompile Include="..\..\Common\d3dApp.cpp" />
-    <ClCompile Include="..\..\Common\d3dUtil.cpp" />
-    <ClCompile Include="..\..\Common\GameTimer.cpp" />
-    <ClCompile Include="..\..\Common\GeometryGenerator.cpp" />
-    <ClCompile Include="..\..\Common\LightHelper.cpp" />
-    <ClCompile Include="..\..\Common\MathHelper.cpp" />
-    <ClCompile Include="..\..\Common\TextureMgr.cpp" />
-    <ClCompile Include="..\..\Common\Waves.cpp" />
-    <ClCompile Include="..\..\Common\xnacollision.cpp" />
     <ClCompile Include="BasicModel.cpp" />
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="d3dApp.cpp" />
+    <ClCompile Include="d3dUtil.cpp" />
     <ClCompile Include="Effects.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelModel.cpp" />
+    <ClCompile Include="LightHelper.cpp" />
     <ClCompile Include="LoadM3d.cpp" />
     <ClCompile Include="LoadOBJ.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MeshGeometry.cpp" />
     <ClCompile Include="MeshViewDemo.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -105,27 +103,28 @@
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SoundMgr.cpp" />
     <ClCompile Include="Ssao.cpp" />
+    <ClCompile Include="TextureMgr.cpp" />
     <ClCompile Include="Vertex.cpp" />
+    <ClCompile Include="Waves.cpp" />
+    <ClCompile Include="xnacollision.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Common\Camera.h" />
-    <ClInclude Include="..\..\Common\d3dApp.h" />
-    <ClInclude Include="..\..\Common\d3dUtil.h" />
-    <ClInclude Include="..\..\Common\d3dx11effect.h" />
-    <ClInclude Include="..\..\Common\GameTimer.h" />
-    <ClInclude Include="..\..\Common\GeometryGenerator.h" />
-    <ClInclude Include="..\..\Common\LightHelper.h" />
-    <ClInclude Include="..\..\Common\MathHelper.h" />
-    <ClInclude Include="..\..\Common\TextureMgr.h" />
-    <ClInclude Include="..\..\Common\Waves.h" />
-    <ClInclude Include="..\..\Common\xnacollision.h" />
     <ClInclude Include="BasicModel.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="d3dApp.h" />
+    <ClInclude Include="d3dUtil.h" />
+    <ClInclude Include="d3dx11effect.h" />
+    <ClInclude Include="d3dxGlobal.h" />
     <ClInclude Include="Effects.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelModel.h" />
+    <ClInclude Include="LightHelper.h" />
     <ClInclude Include="LoadM3d.h" />
     <ClInclude Include="LoadOBJ.h" />
+    <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MeshGeometry.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RenderStates.h" />
@@ -133,7 +132,10 @@
     <ClInclude Include="Sky.h" />
     <ClInclude Include="SoundMgr.h" />
     <ClInclude Include="Ssao.h" />
+    <ClInclude Include="TextureMgr.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Waves.h" />
+    <ClInclude Include="xnacollision.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="FX\BuildShadowMap.fx">
@@ -219,6 +221,8 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\..\Program Files (x86)\FMOD SoundSystem\FMOD Programmers API Windows\api\lib\fmodex_vc.lib" />
+    <Library Include="Effects11.lib" />
+    <Library Include="Effects11d.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
