@@ -28,6 +28,10 @@ public:
 		return mWinSphere;
 	}
 
+	//getters and setters for spawnpoint
+	void SetSpawnPoint(XMFLOAT3 spawn) { mSpawnPoint = spawn; }
+	XMFLOAT3 GetSpawnPoint() { return mSpawnPoint; }
+
 private:
 	LevelModel* level;
 	std::vector<BasicModelInstance> mModelInstances;
@@ -38,6 +42,8 @@ private:
 	TextureMgr* mTexMgr;
 	std::string fileName;
 
+	//level spawn point
+	XMFLOAT3 mSpawnPoint;
 	
 };
 

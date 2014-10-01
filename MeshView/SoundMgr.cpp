@@ -22,7 +22,7 @@ void SoundMgr::InitFMOD()
 	if (version < FMOD_VERSION)
 	{
 		printf("Error! You are using an old version of FMOD %08x.");
-		return;
+		//return;
 	}
 
 	int numdrivers = 0;

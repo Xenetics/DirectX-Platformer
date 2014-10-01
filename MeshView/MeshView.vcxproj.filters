@@ -216,7 +216,7 @@
     <Library Include="Effects11d.lib">
       <Filter>Resource Files</Filter>
     </Library>
-    <Library Include="..\..\..\..\..\..\Program Files (x86)\FMOD SoundSystem\FMOD Programmers API Windows\api\lib\fmodex_vc.lib">
+    <Library Include="fmodex_vc.lib">
       <Filter>Resource Files</Filter>
     </Library>
   </ItemGroup>

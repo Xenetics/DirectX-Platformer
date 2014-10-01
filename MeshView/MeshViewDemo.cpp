@@ -180,6 +180,9 @@ private:
 	bool sKey = false;
 	bool dKey = false;
 	bool space = false;
+
+	//reset level
+	void ResetLevel();
 };
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
@@ -211,9 +214,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 	
 	mLastMousePos.x = 0;
 	mLastMousePos.y = 0;
-
-	mPlayer.SetPosition(0.0f, 10.0f, 0.0f);
- 
+	
 	mDirLights[0].Ambient  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	mDirLights[0].Diffuse  = XMFLOAT4(0.8f, 0.7f, 0.7f, 1.0f);
 	mDirLights[0].Specular = XMFLOAT4(0.6f, 0.6f, 0.7f, 1.0f);
@@ -274,16 +275,23 @@ bool MeshViewApp::Init()
 
 	//set up the levels so they are ready to load when needed
 	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(11.0, 7.0, 9.0), 10.0f);
+	lvl->SetSpawnPoint(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	mLevels.push_back(lvl);
 
 	lvl = new Level(md3dDevice, &mTexMgr, "Models\\.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
+	// TODO add spawnpoint
 	mLevels.push_back(lvl);
 
 	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMapSmooth.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
+	//TODO add spawnpoint
 	mLevels.push_back(lvl);
 
 	//load the current level
 	LoadCurrLevel();
+
+	mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
+	ResetLevel();
+	//mPlayer.RotateY(XMConvertToRadians(-90));
 
 	//revers face culling
 	D3D11_RASTERIZER_DESC jimJam;
@@ -454,6 +462,12 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 		LoadCurrLevel();
 
 		return;
+	}
+
+	//check if player has fallen off level
+	if (mPlayer.GetPosition().y < -10)
+	{
+		ResetLevel();
 	}
 
 	//Do player collisions: loops throiugh the current levels triangls and does a bunch of stuff
@@ -913,10 +927,7 @@ void MeshViewApp::KeyHandler(float dt)
 	//reseting the player
 	if ((GetAsyncKeyState('R') & 0x8000))
 	{
-		mPlayer.SetPosition(0.0f, 8.0f, 0.0f);
-		mPlayer.vel.y = 0;
-		mPlayer.vel.x = 0;
-		mPlayer.vel.z = 0;
+		ResetLevel();
 	}
 }
 
@@ -1334,4 +1345,15 @@ void MeshViewApp::BuildVertexLayout()
 	mTech->GetPassByIndex(0)->GetDesc(&passDesc);
 	HR(md3dDevice->CreateInputLayout(vertexDesc, 2, passDesc.pIAInputSignature,
 		passDesc.IAInputSignatureSize, &mInputLayout));
+}
+
+void MeshViewApp::ResetLevel()
+{
+	mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
+	mPlayer.SetPlayerRotation(XMConvertToRadians(75));
+	//mPlayer.RotateY(XMConvertToRadians(-90));
+	//TODO set rotation to specific float3x3
+	mPlayer.vel.y = 0;
+	mPlayer.vel.x = 0;
+	mPlayer.vel.z = 0;
 }
