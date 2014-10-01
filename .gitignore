@@ -6,6 +6,8 @@
 *.lo
 *.o
 *.obj
+*.cod
+*.fxo
 
 # Compiled Dynamic libraries
 *.so
