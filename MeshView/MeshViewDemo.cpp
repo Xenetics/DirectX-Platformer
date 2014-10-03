@@ -46,6 +46,18 @@
 #include "SoundMgr.h"
 #include "Level.h"
 
+struct Cube
+{
+	XMVECTOR pos;
+	XMVECTOR originPos;
+	XMVECTOR scale;
+	enum menuButtons { LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff };
+	menuButtons button;
+	UINT menuTexture;
+	XNA::AxisAlignedBox mMeshBox;
+	XMFLOAT4X4 localWorld;
+	bool isMenu = false;
+};
 
 struct BoundingSphere
 {
@@ -93,6 +105,19 @@ private:
 	void BuildGeometryBuffers();
 	void BuildMenuFX();
 	void BuildVertexLayout();
+	void Pick(int sx, int sy);
+
+	//Menu creation and draw stuff
+	std::vector<Cube*> cubes;
+	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[6];
+	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[7];
+	void CreateMenu();
+	Material mBoxMat;
+	XMFLOAT4X4 mTexTransform;
+	int mBoxVertexOffset;
+	UINT mBoxIndexOffset;
+	UINT mBoxIndexCount;
+
 
 	void LoadCurrLevel();
 
@@ -212,7 +237,15 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 	mLastMousePos.x = 0;
 	mLastMousePos.y = 0;
 
+	XMMATRIX I = XMMatrixIdentity();
+	XMStoreFloat4x4(&mTexTransform, I);
+
 	mPlayer.SetPosition(0.0f, 10.0f, 0.0f);
+
+	mBoxMat.Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	mBoxMat.Diffuse = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	mBoxMat.Specular = XMFLOAT4(0.4f, 0.4f, 0.4f, 16.0f);
+	mBoxMat.Reflect = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
  
 	mDirLights[0].Ambient  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	mDirLights[0].Diffuse  = XMFLOAT4(0.8f, 0.7f, 0.7f, 1.0f);
@@ -265,6 +298,16 @@ bool MeshViewApp::Init()
 	mTexMgr.Init(md3dDevice);
 
 	mSky = new Sky(md3dDevice, L"Textures/rainy.dds", 5000.0f);
+
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/MetalBox.jpg", 0, 0, &mDiffuseMapSRVMenuButtons[0], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/diamond.png", 0, 0, &mDiffuseMapSRVMenuButtons[1], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/one.png", 0, 0, &mDiffuseMapSRVMenuButtons[2], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/two.png", 0, 0, &mDiffuseMapSRVMenuButtons[3], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/three.png", 0, 0, &mDiffuseMapSRVMenuButtons[4], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/four.png", 0, 0, &mDiffuseMapSRVMenuButtons[5], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/five.png", 0, 0, &mDiffuseMapSRVMenuButtons[6], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/flag.png", 0, 0, &mDiffuseMapSRVMenuButtons[6], 0));
+
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
 	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
@@ -756,9 +799,9 @@ void MeshViewApp::DrawMenu()
 	XMMATRIX world = XMLoadFloat4x4(&mWorld);
 	XMMATRIX view = XMLoadFloat4x4(&mView);
 	XMMATRIX proj = XMLoadFloat4x4(&mProj);
-	XMMATRIX worldViewProj = world*view*proj;
 
-	mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
+	ID3DX11EffectTechnique* activeTexTech = Effects::BasicFX->Light3TexTech;
+
 
 	D3DX11_TECHNIQUE_DESC techDesc;
 	mTech->GetDesc(&techDesc);
@@ -768,8 +811,71 @@ void MeshViewApp::DrawMenu()
 
 		// 36 indices for the box.
 		md3dImmediateContext->DrawIndexed(36, 0, 0);
-	}
 
+
+		for (int i = 0; i < cubes.size(); i++)
+		{
+			if (cubes[i] != NULL)
+			{
+				XMMATRIX world = XMLoadFloat4x4(&cubes[i]->localWorld)/* * XMMatrixTranslationFromVector(cubes[i]->pos)*/;
+				XMMATRIX worldInvTranspose = MathHelper::InverseTranspose(world);
+				XMMATRIX worldViewProj = world*view*proj;
+				mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
+
+				Effects::BasicFX->SetWorld(world);
+				Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
+				Effects::BasicFX->SetWorldViewProj(worldViewProj);
+				Effects::BasicFX->SetTexTransform(XMLoadFloat4x4(&mTexTransform));
+				Effects::BasicFX->SetMaterial(mBoxMat);
+				//Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRV);
+				//Effects::BasicFX->SetDiffuseMap2(mDiffuseMapSRV2);
+				switch (cubes[i]->menuTexture) //show texture of cube
+				{
+				case Cube::LOGOb:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[0]);
+					break;
+				case Cube::PLAYb:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[1]);
+					break;
+				case Cube::EXITb:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[2]);
+					break;
+				case Cube::SOUNDb:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[3]);
+					break;
+				case Cube::SOUNDbOff:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[4]);
+					break;
+				case Cube::MUSICb:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[5]);
+					break;
+				case Cube::MUSICbOff:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[6]);
+					break;
+				}
+				activeTexTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
+				md3dImmediateContext->DrawIndexed(mBoxIndexCount, mBoxIndexOffset, mBoxVertexOffset);
+				/*
+				// Restore default
+				md3dImmediateContext->RSSetState(0);
+				if (mPickedTriangle != -1)
+				{
+				// Change depth test from < to <= so that if we draw the same triangle twice, it will still pass
+				// the depth test.  This is because we redraw the picked triangle with a different material
+				// to highlight it.
+				md3dImmediateContext->OMSetDepthStencilState(RenderStates::LessEqualDSS, 0);
+
+				Effects::BasicFX->SetMaterial(mPickedTriangleMat);
+				activeTexTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
+				md3dImmediateContext->DrawIndexed(3, 3 * mPickedTriangle, 0);
+
+				// restore default
+				md3dImmediateContext->OMSetDepthStencilState(0, 0);
+				}
+				*/
+			}
+		}
+	}
 	HR(mSwapChain->Present(0, 0));
 }
 
@@ -1335,3 +1441,175 @@ void MeshViewApp::BuildVertexLayout()
 	HR(md3dDevice->CreateInputLayout(vertexDesc, 2, passDesc.pIAInputSignature,
 		passDesc.IAInputSignatureSize, &mInputLayout));
 }
+
+void MeshViewApp::CreateMenu()
+{
+	// LOGO
+	Cube * logoButton = new Cube; //creates new block
+	logoButton->pos = XMVectorSet(0, 6, 5, 1); //set the position in world space for the cube
+	logoButton->originPos = XMVectorSet(0, 6, 5, 1); //set its origin pos for button presses
+	logoButton->scale = XMVectorSet(20.0f, 2.0f, 1.0f, 1.0f); //set the scale of the button
+	XMStoreFloat4x4(&logoButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(logoButton->scale), XMMatrixTranslationFromVector(logoButton->pos)));
+	XMStoreFloat3(&logoButton->mMeshBox.Center, logoButton->pos); //sets the center of the mesh box for click detection
+	XMVECTOR logoHalfSize = XMVectorSet(10.0f, 1.0f, 0.5f, 1.0f); // sets the size of the bounding box from the center of the object
+	XMStoreFloat3(&logoButton->mMeshBox.Extents, logoHalfSize);
+	logoButton->menuTexture = Cube::LOGOb; //sets the texture of button; 
+	logoButton->isMenu = true; //tells the game this is a menu block, not a game block. (wont be destroyed when clicked)
+	MeshViewApp::cubes.push_back(logoButton); //adds the play button to the array of cubes to draw
+}
+
+/*
+void MeshViewApp::Pick(int sx, int sy)
+{
+	XMMATRIX P = mCam.Proj();
+
+	// Compute picking ray in view space.
+	float vx = (+2.0f*sx / mClientWidth - 1.0f) / P(0, 0);
+	float vy = (-2.0f*sy / mClientHeight + 1.0f) / P(1, 1);
+
+	// Ray definition in view space.
+	XMVECTOR rayOrigin = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	XMVECTOR rayDir = XMVectorSet(vx, vy, 1.0f, 0.0f);
+
+	// Tranform ray to local space of Mesh.
+	XMMATRIX V = mCam.View();
+	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(V), V);
+
+	//XMMATRIX W = XMMatrixTranslationFromVector(cubes[i]->pos);
+	//XMMATRIX W = XMLoadFloat4x4(&mMeshWorld);
+	//XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(W), W);
+
+	XMMATRIX toLocal = invView;// XMMatrixMultiply(invView, invWorld);
+
+	rayOrigin = XMVector3TransformCoord(rayOrigin, toLocal);
+	rayDir = XMVector3TransformNormal(rayDir, toLocal);
+
+	// If we hit the bounding box of the Mesh, then we might have picked a Mesh triangle,
+	// so do the ray/triangle tests.
+	//
+	// If we did not hit the bounding box, then it is impossible that we hit 
+	// the Mesh, so do not waste effort doing ray/triangle tests.
+
+	mPickedTriangle = -1;// Assume we have not picked anything yet, so init to -1.
+	float tmin = 0.0f;
+	std::vector<Cube*> cubesTouched;
+
+	// Make the ray direction unit length for the intersection tests.
+	rayDir = XMVector3Normalize(rayDir);
+	for (int i = 0; i < cubes.size(); i++)
+	{
+		if (cubes[i] != NULL)
+		{
+			// Make the ray direction unit length for the intersection tests.
+			rayDir = XMVector3Normalize(rayDir);
+			if (XNA::IntersectRayAxisAlignedBox(rayOrigin, rayDir, &Game::cubes[i]->mMeshBox, &tmin))
+			{
+				XMVECTOR temp = XMVector3Length(mCam.GetPositionXM() - cubes[i]->pos);
+				cubes[i]->distanceFromCam = XMVectorGetIntX(temp);
+				cubesTouched.push_back(cubes[i]);
+			}
+		}
+	}
+
+	if (menu)
+	{
+		if (!cubesTouched.empty())
+		{
+			for (int i = 0; i < cubesTouched.size(); i++)
+			{
+				if (AreSameVec(XMVector3Length(mCam.GetPositionXM() - cubesTouched[i]->pos), XMVector3Length(mCam.GetPositionXM() - cubesTouched[i]->pos)))
+				{
+					switch (cubesTouched[i]->menuTexture)
+					{
+					case LOGOb:
+
+						break;
+					case PLAYb:
+						switch (diffState)
+						{
+						case EASY:
+							MakeLevel(6, 6, 6);
+							menu = false;
+							break;
+						case MEDIUM:
+							MakeLevel(8, 8, 8);
+							menu = false;
+							break;
+						case HARD:
+							MakeLevel(10, 10, 10);
+							menu = false;
+							break;
+						case NONE:
+							MessageBox(0, L"Please Choose Your Difficulty and Try Again", L"Error", MB_OK);
+							break;
+						}
+
+						break;
+					case EASYb:
+						diffState = EASY;
+						IndentDiff(2);
+						cubes[2]->menuTexture = EASYbOn;
+						break;
+					case MEDIUMb:
+						diffState = MEDIUM;
+						IndentDiff(3);
+						cubes[3]->menuTexture = MEDIUMbOn;
+						break;
+					case HARDb:
+						diffState = HARD;
+						IndentDiff(4);
+						cubes[4]->menuTexture = HARDbOn;
+						break;
+					case EXITb:
+						PostQuitMessage(0);
+						break;
+					case SOUNDb:
+
+						break;
+					case MUSICb:
+						musicIsPlaying = !musicIsPlaying;
+						musicChannel->setMute(musicIsPlaying);
+						break;
+					}
+				}
+			}
+		}
+	}
+	else //in game
+	{
+		if (!cubesTouched.empty())
+		{
+			std::sort(cubesTouched.begin(), cubesTouched.end(), SortByVector);
+			int size = cubes.size();
+			int place = cubesTouched[0]->uniqueID;
+			switch (cubes[place]->texture)
+			{
+			case Cube::GRAY:
+				SetUpLevelData(20);
+				CheckBlockSides(place);
+				//cubesChecked.clear();
+				//delete(cubes[place]);
+				cubes[place] = NULL;
+				//cubes.erase(cubes.begin() + place);
+				break;
+			case Cube::MINE:
+				CleanLevel();
+				MakeLevel(levelWidth, levelHeight, levelLength);
+				break;
+			}
+		}
+	}
+}
+
+bool MeshViewApp::AreSameVec(XMVECTOR a, XMVECTOR b)
+{
+	if (XMVectorGetIntX(a) - XMVectorGetIntX(b) < EPSILON &&
+		XMVectorGetIntY(a) - XMVectorGetIntY(b) < EPSILON &&
+		XMVectorGetIntZ(a) - XMVectorGetIntZ(b) < EPSILON)
+	{
+		return true;
+	}
+	else
+		return false;
+}
+*/
