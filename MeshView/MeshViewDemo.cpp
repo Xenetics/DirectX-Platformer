@@ -109,8 +109,8 @@ private:
 
 	//Menu creation and draw stuff
 	std::vector<Cube*> cubes;
-	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[6];
 	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[7];
+	//ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[7];
 	void CreateMenu();
 	Material mBoxMat;
 	XMFLOAT4X4 mTexTransform;
@@ -142,7 +142,7 @@ private:
 	int currLevel = 0;
 
 	std::vector<BasicModelInstance> mModelInstances;
-	//std::vector<BasicModelInstance> mAlphaClippedModelInstances;
+	std::vector<BasicModelInstance> mAlphaClippedModelInstances;
 
 	//stuff bellow is needed for my menus (Damian)
 	ID3D11Buffer* mBoxVB;
@@ -302,7 +302,7 @@ bool MeshViewApp::Init()
 
 	mSky = new Sky(md3dDevice, L"Textures/rainy.dds", 5000.0f);
 
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/MetalBox.jpg", 0, 0, &mDiffuseMapSRVMenuButtons[0], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/MetalBox.png", 0, 0, &mDiffuseMapSRVMenuButtons[0], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/diamond.png", 0, 0, &mDiffuseMapSRVMenuButtons[1], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/one.png", 0, 0, &mDiffuseMapSRVMenuButtons[2], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/two.png", 0, 0, &mDiffuseMapSRVMenuButtons[3], 0));
