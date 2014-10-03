@@ -106,10 +106,39 @@ void Player::Walk(float d)
 void Player::Strafe(float d)
 {
 	// mPosition += d*mRight
-	XMVECTOR s = XMVectorReplicate(d);
-	XMVECTOR r = XMLoadFloat3(&mRight);
-	XMVECTOR p = XMLoadFloat3(&vel);
-	XMStoreFloat3(&vel, XMVectorMultiplyAdd(s, r, p));
+	//XMVECTOR s = XMVectorReplicate(d);
+	//XMVECTOR r = XMLoadFloat3(&mRight);
+	//XMVECTOR p = XMLoadFloat3(&vel);
+	//XMStoreFloat3(&vel, XMVectorMultiplyAdd(s, r, p));
+	if (isCollidingFloor)
+	{
+		//Project the look vector on to the plane you are colliding with.
+		XMVECTOR U, V, N;
+		XMFLOAT3 direction;
+		V = XMLoadFloat3(&mRight);
+		N = XMVector3Normalize(currColFloor.Normal);
+
+		U = V - XMVectorScale(N, XMVectorGetX(XMVector3Dot(V, N)));
+
+		//using projection
+		XMStoreFloat3(&direction, XMVector3Normalize(U)); //normilizing sucks?
+
+		direction.y *= d * WALK_SPEED;
+		direction.z *= d * WALK_SPEED;
+		direction.x *= d * WALK_SPEED;
+
+		XMStoreFloat3(&vel, XMLoadFloat3(&direction));
+	}
+	else
+	{
+		//moving in the air. maybe we dont want this
+		XMFLOAT3 temp1 = mRight;
+		temp1.y = vel.y;
+		temp1.z *= d * WALK_SPEED;
+		temp1.x *= d * WALK_SPEED;
+
+		XMStoreFloat3(&vel, XMLoadFloat3(&temp1));
+	}
 }
 
 void Player::Update(float dt)

@@ -319,11 +319,11 @@ bool MeshViewApp::Init()
 	BuildScreenQuadGeometryBuffers();
 
 	//set up the levels so they are ready to load when needed
-	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(11.0, 7.0, 9.0), 10.0f);
+	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(127.0, -2.3, -79.0), 10.0f); //TODO change end point to proper place
 	lvl->SetSpawnPoint(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	mLevels.push_back(lvl);
 
-	lvl = new Level(md3dDevice, &mTexMgr, "Models\\.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
 	// TODO add spawnpoint
 	mLevels.push_back(lvl);
 
@@ -973,8 +973,18 @@ void MeshViewApp::KeyHandler(float dt)
 		{
 			//key down
 		}
+
 		//key pressed
-		//mPlayer.Strafe(-1.0f);
+		mPlayer.Strafe(-0.4f);
+		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+		{
+			mSound->playing[2] = true;
+			mSound->ChangeVolume(1, 0.1);
+			float random = 0.981 + (rand() * 0.000001);
+			mSound->ChangeFrequency(1, random);
+			mSound->playing[mSound->STEP_2] = true;
+			mSound->ChangeVolume(2, 0.1);
+		}
 		aKey = true;
 	}
 	else
@@ -995,7 +1005,16 @@ void MeshViewApp::KeyHandler(float dt)
 			//key down
 		}
 		//key pressed
-		//mPlayer.Strafe(1.0f);
+		mPlayer.Strafe(0.4f);
+		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+		{
+			mSound->playing[2] = true;
+			mSound->ChangeVolume(1, 0.1);
+			float random = 0.981 + (rand() * 0.000001);
+			mSound->ChangeFrequency(1, random);
+			mSound->playing[mSound->STEP_2] = true;
+			mSound->ChangeVolume(2, 0.1);
+		}
 		dKey = true;
 	}
 	else
