@@ -138,9 +138,11 @@ float4 PS(VertexOut pin,
 		float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		float4 spec    = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
+		/*
 		// Only the first light casts a shadow.
 		float3 shadow = float3(1.0f, 1.0f, 1.0f);
 		shadow[0] = CalcShadowFactor(samShadow, gShadowMap, pin.ShadowPosH);
+		*/
 
 		// Finish texture projection and sample SSAO map.
 		pin.SsaoPosH /= pin.SsaoPosH.w;
@@ -151,12 +153,11 @@ float4 PS(VertexOut pin,
 		for(int i = 0; i < gLightCount; ++i)
 		{
 			float4 A, D, S;
-			ComputeDirectionalLight(gMaterial, gDirLights[i], pin.NormalW, toEye, 
-				A, D, S);
+			ComputeDirectionalLight(gMaterial, gDirLights[i], pin.NormalW, toEye, A, D, S);
 
-			ambient += A * ambientAccess;    
-			diffuse += shadow[i]*D;
-			spec    += shadow[i]*S;
+			ambient += A;// * ambientAccess;    
+			diffuse += /*shadow[i]**/D;
+			spec    += /*shadow[i]**/S;
 		}
 
 		litColor = texColor * (ambient + diffuse) + spec;
