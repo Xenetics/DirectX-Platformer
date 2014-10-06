@@ -140,7 +140,7 @@ private:
 	int currLevel = 0;
 
 	std::vector<BasicModelInstance> mModelInstances;
-	//std::vector<BasicModelInstance> mAlphaClippedModelInstances;
+	std::vector<BasicModelInstance> mAlphaClippedModelInstances;
 
 	//stuff bellow is needed for my menus (Damian)
 	ID3D11Buffer* mBoxVB;

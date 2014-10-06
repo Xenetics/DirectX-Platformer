@@ -5,7 +5,7 @@ Rory 	- Get menu framework started
 
 Andrew	- Add player acceleration
 	- fix wall to wall to wall jumping
-	- possibly add strafing
+	(WORK IN PROGRESS) possibly add strafing
 	(DONE) fix player spawning position/rotation
 	- smoothen player controls and level interactivity
 
