@@ -333,13 +333,13 @@ bool MeshViewApp::Init()
 	//TODO add spawnpoint
 	mLevels.push_back(lvl);
 
-	/*
+	
 	//load the current level
 	LoadCurrLevel();
 
 	mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
 	ResetLevel();
-	*/
+	
 	
 	mPlayer.RotateY(1.57);
 	//revers face culling
