@@ -140,7 +140,7 @@ private:
 	int currLevel = 0;
 
 	std::vector<BasicModelInstance> mModelInstances;
-	std::vector<BasicModelInstance> mAlphaClippedModelInstances;
+	//std::vector<BasicModelInstance> mAlphaClippedModelInstances;
 
 	//stuff bellow is needed for my menus (Damian)
 	ID3D11Buffer* mBoxVB;
@@ -233,7 +233,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
   mSmap(0), mSsao(0),
   mLightRotationAngle(0.0f), mBoxVB(0), mBoxIB(0), mFX(0), mTech(0),
   mfxWorldViewProj(0), mInputLayout(0),
-  mTheta(1.5f*MathHelper::Pi), mPhi(0.25f*MathHelper::Pi), mRadius(5.0f), gameState(GAME_STATE::menuState)
+  mTheta(1.5f*MathHelper::Pi), mPhi(0.25f*MathHelper::Pi), mRadius(5.0f), gameState(GAME_STATE::playingState)
 {
 	mMainWndCaption = L"Platformer";
 	
