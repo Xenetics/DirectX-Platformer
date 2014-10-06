@@ -208,6 +208,8 @@ private:
 
 	//reset level
 	void ResetLevel();
+
+	GAME_STATE gameState;
 };
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
@@ -233,7 +235,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
   mSmap(0), mSsao(0),
   mLightRotationAngle(0.0f), mBoxVB(0), mBoxIB(0), mFX(0), mTech(0),
   mfxWorldViewProj(0), mInputLayout(0),
-  mTheta(1.5f*MathHelper::Pi), mPhi(0.25f*MathHelper::Pi), mRadius(5.0f)
+  mTheta(1.5f*MathHelper::Pi), mPhi(0.25f*MathHelper::Pi), mRadius(5.0f), gameState(GAME_STATE::playingState)
 {
 	mMainWndCaption = L"Platformer";
 	
@@ -245,6 +247,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 
 	mPlayer.SetPosition(0.0f, 10.0f, 0.0f);
 
+	// Mat for the general blocks
 	mBoxMat.Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	mBoxMat.Diffuse = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	mBoxMat.Specular = XMFLOAT4(0.4f, 0.4f, 0.4f, 16.0f);
@@ -301,15 +304,16 @@ bool MeshViewApp::Init()
 	mTexMgr.Init(md3dDevice);
 
 	mSky = new Sky(md3dDevice, L"Textures/rainy.dds", 5000.0f);
-
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/MetalBox.png", 0, 0, &mDiffuseMapSRVMenuButtons[0], 0));
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/diamond.png", 0, 0, &mDiffuseMapSRVMenuButtons[1], 0));
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/one.png", 0, 0, &mDiffuseMapSRVMenuButtons[2], 0));
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/two.png", 0, 0, &mDiffuseMapSRVMenuButtons[3], 0));
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/three.png", 0, 0, &mDiffuseMapSRVMenuButtons[4], 0));
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/four.png", 0, 0, &mDiffuseMapSRVMenuButtons[5], 0));
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/five.png", 0, 0, &mDiffuseMapSRVMenuButtons[6], 0));
-	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/flag.png", 0, 0, &mDiffuseMapSRVMenuButtons[6], 0));
+	
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/LogoBanner.png", 0, 0, &mDiffuseMapSRVMenuButtons[0], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/PlayButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[1], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/ExitButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[2], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/SoundOnButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[3], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/SoundOffButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[4], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/MusicOnButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[5], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/MusicOffButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[6], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/BestRuns.png", 0, 0, &mDiffuseMapSRVMenuButtons[7], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/ReturnButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[8], 0));
 
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
@@ -638,9 +642,6 @@ void MeshViewApp::UpdateMainMenu(float dt)
 
 void MeshViewApp::DrawScene()
 {
-
-	GAME_STATE gameState = GAME_STATE::playingState;
-
 	switch (gameState)
 	{
 		case GAME_STATE::menuState:
@@ -808,26 +809,26 @@ void MeshViewApp::DrawMenu()
 
 	UINT stride = sizeof(Vertexes);
 	UINT offset = 0;
-	md3dImmediateContext->IASetVertexBuffers(0, 1, &mBoxVB, &stride, &offset);
-	md3dImmediateContext->IASetIndexBuffer(mBoxIB, DXGI_FORMAT_R32_UINT, 0);
 
 	// Set constants
-	XMMATRIX world = XMLoadFloat4x4(&mWorld);
-	XMMATRIX view = XMLoadFloat4x4(&mView);
-	XMMATRIX proj = XMLoadFloat4x4(&mProj);
+	mPlayer.UpdateViewMatrix();
+
+	XMMATRIX view = mPlayer.View();
+	XMMATRIX proj = mPlayer.Proj();
+	XMMATRIX viewProj = mPlayer.ViewProj();
+
+	Effects::BasicFX->SetDirLights(mDirLights);
+	Effects::BasicFX->SetEyePosW(mPlayer.GetPosition());
+	Effects::BasicFX->SetCubeMap(mSky->CubeMapSRV());
 
 	ID3DX11EffectTechnique* activeTexTech = Effects::BasicFX->Light3TexTech;
 
-
 	D3DX11_TECHNIQUE_DESC techDesc;
-	mTech->GetDesc(&techDesc);
+	activeTexTech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
-		mTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
-
-		// 36 indices for the box.
-		md3dImmediateContext->DrawIndexed(36, 0, 0);
-
+		md3dImmediateContext->IASetVertexBuffers(0, 1, &mBoxVB, &stride, &offset);
+		md3dImmediateContext->IASetIndexBuffer(mBoxIB, DXGI_FORMAT_R32_UINT, 0);
 
 		for (int i = 0; i < cubes.size(); i++)
 		{
@@ -843,8 +844,6 @@ void MeshViewApp::DrawMenu()
 				Effects::BasicFX->SetWorldViewProj(worldViewProj);
 				Effects::BasicFX->SetTexTransform(XMLoadFloat4x4(&mTexTransform));
 				Effects::BasicFX->SetMaterial(mBoxMat);
-				//Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRV);
-				//Effects::BasicFX->SetDiffuseMap2(mDiffuseMapSRV2);
 				switch (cubes[i]->menuTexture) //show texture of cube
 				{
 				case Cube::LOGOb:
@@ -891,170 +890,176 @@ void MeshViewApp::DrawMenu()
 				*/
 			}
 		}
+		mSky->Draw(md3dImmediateContext, mPlayer); // draw sky
 	}
 	HR(mSwapChain->Present(0, 0));
 }
 
 void MeshViewApp::KeyHandler(float dt)
 {
-	//
-	// Control the  Player
-	//
-	if (GetAsyncKeyState('W') & 0x8000)
+	if (gameState != GAME_STATE::menuState)
 	{
-		if (wKey == false)
+		//
+		// Control the  Player
+		//
+		if (GetAsyncKeyState('W') & 0x8000)
 		{
-			//key down
+			if (wKey == false)
+			{
+				//key down
 
+			}
+			//key pressed
+			mPlayer.Walk(1.0f);
+
+			if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+			{
+				mSound->playing[mSound->STEP_1] = true;
+				mSound->ChangeVolume(1, 0.1);
+				float random = 0.981 + (rand() * 0.000001);
+				mSound->ChangeFrequency(1, random);
+				//mSound->playing[2] = true;
+				//mSound->ChangeVolume(2, 0.1);
+			}
+
+			wKey = true;
 		}
-		//key pressed
-		mPlayer.Walk(1.0f);
-
-		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+		else
 		{
-			mSound->playing[mSound->STEP_1] = true;
-			mSound->ChangeVolume(1, 0.1);
-			float random = 0.981 + (rand() * 0.000001);
-			mSound->ChangeFrequency(1,random);
+			if (wKey == true)
+			{
+				//on key up
+				mPlayer.Stop();
+			}
+			wKey = false;
+		}
+
+
+		if (GetAsyncKeyState('S') & 0x8000)
+		{
+			if (sKey == false)
+			{
+				//key down
+			}
+			//key pressed
+
+			if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+			{
+				mSound->playing[2] = true;
+				mSound->ChangeVolume(1, 0.1);
+				float random = 0.981 + (rand() * 0.000001);
+				mSound->ChangeFrequency(1, random);
+				mSound->playing[mSound->STEP_2] = true;
+				mSound->ChangeVolume(2, 0.1);
+			}
 			//mSound->playing[2] = true;
-			//mSound->ChangeVolume(2, 0.1);
-		}
 
-		wKey = true;
-	}
-	else
-	{
-		if (wKey == true)
+			mPlayer.Walk(-1.0f);
+
+			sKey = true;
+		}
+		else
 		{
-			//on key up
-			mPlayer.Stop();
+			if (sKey == true)
+			{
+				//on key up
+				mPlayer.Stop();
+			}
+			sKey = false;
 		}
-		wKey = false;
-	}
 
 
-	if (GetAsyncKeyState('S') & 0x8000)
-	{
-		if (sKey == false)
+		if (GetAsyncKeyState('A') & 0x8000)
 		{
-			//key down
-		}
-		//key pressed
+			if (aKey == false)
+			{
+				//key down
+			}
+			//key pressed
+			//mPlayer.Strafe(-1.0f);
+			aKey = true;
 
-		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+			//key pressed
+			mPlayer.Strafe(-0.4f);
+			if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+			{
+				mSound->playing[2] = true;
+				mSound->ChangeVolume(1, 0.1);
+				float random = 0.981 + (rand() * 0.000001);
+				mSound->ChangeFrequency(1, random);
+				mSound->playing[mSound->STEP_2] = true;
+				mSound->ChangeVolume(2, 0.1);
+			}
+			aKey = true;
+		}
+		else
 		{
-			mSound->playing[2] = true;
-			mSound->ChangeVolume(1, 0.1);
-			float random = 0.981 + (rand() * 0.000001);
-			mSound->ChangeFrequency(1, random);
-			mSound->playing[mSound->STEP_2] = true;
-			mSound->ChangeVolume(2, 0.1);
+			if (aKey == true)
+			{
+				//on key up
+				mPlayer.Stop();
+			}
+			aKey = false;
+
+			if (GetAsyncKeyState('D') & 0x8000)
+			{
+				if (dKey == false)
+				{
+					//key down
+				}
+				//key pressed
+				//mPlayer.Strafe(1.0f);
+				dKey = true;
+				//key pressed
+				mPlayer.Strafe(0.4f);
+				if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+				{
+					mSound->playing[2] = true;
+					mSound->ChangeVolume(1, 0.1);
+					float random = 0.981 + (rand() * 0.000001);
+					mSound->ChangeFrequency(1, random);
+					mSound->playing[mSound->STEP_2] = true;
+					mSound->ChangeVolume(2, 0.1);
+				}
+				dKey = true;
+			}
+			else
+			{
+				if (dKey == true)
+				{
+					//on key up
+					mPlayer.Stop();
+				}
+				dKey = false;
+			}
+			if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+			{
+				if (space == false)
+				{
+					//key down
+					mPlayer.Jump();
+					mSound->playing[mSound->GRUNT] = true;
+				}
+				//key pressed
+
+				space = true;
+			}
+			else
+			{
+				if (space == true)
+				{
+					//on key up
+				}
+				space = false;
+			}
+
+			//for debugging
+			//reseting the player
+			if ((GetAsyncKeyState('R') & 0x8000))
+			{
+				ResetLevel();
+			}
 		}
-		//mSound->playing[2] = true;
-
-		mPlayer.Walk(-1.0f);
-
-		sKey = true;
-	}
-	else
-	{
-		if (sKey == true)
-		{
-			//on key up
-			mPlayer.Stop();
-		}
-		sKey = false;
-	}
-
-
-	if (GetAsyncKeyState('A') & 0x8000)
-	{
-		if (aKey == false)
-		{
-			//key down
-		}
-
-		//key pressed
-		mPlayer.Strafe(-0.4f);
-		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
-		{
-			mSound->playing[2] = true;
-			mSound->ChangeVolume(1, 0.1);
-			float random = 0.981 + (rand() * 0.000001);
-			mSound->ChangeFrequency(1, random);
-			mSound->playing[mSound->STEP_2] = true;
-			mSound->ChangeVolume(2, 0.1);
-		}
-		aKey = true;
-	}
-	else
-	{
-		if (aKey == true)
-		{
-			//on key up
-			mPlayer.Stop();
-		}
-		aKey = false;
-	}
-
-
-	if (GetAsyncKeyState('D') & 0x8000)
-	{
-		if (dKey == false)
-		{
-			//key down
-		}
-		//key pressed
-		mPlayer.Strafe(0.4f);
-		if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
-		{
-			mSound->playing[2] = true;
-			mSound->ChangeVolume(1, 0.1);
-			float random = 0.981 + (rand() * 0.000001);
-			mSound->ChangeFrequency(1, random);
-			mSound->playing[mSound->STEP_2] = true;
-			mSound->ChangeVolume(2, 0.1);
-		}
-		dKey = true;
-	}
-	else
-	{
-		if (dKey == true)
-		{
-			//on key up
-			mPlayer.Stop();
-		}
-		dKey = false;
-	}
-
-
-
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
-	{
-		if (space == false)
-		{
-			//key down
-			mPlayer.Jump();
-			mSound->playing[mSound->GRUNT] = true;
-		}
-		//key pressed
-
-		space = true;
-	}
-	else
-	{
-		if (space == true)
-		{
-			//on key up
-		}
-		space = false;
-	}
-
-	//for debugging
-	//reseting the player
-	if ((GetAsyncKeyState('R') & 0x8000))
-	{
-		ResetLevel();
 	}
 }
 
@@ -1478,7 +1483,7 @@ void MeshViewApp::CreateMenu()
 {
 	// LOGO
 	Cube * logoButton = new Cube; //creates new block
-	logoButton->pos = XMVectorSet(0, 6, 5, 1); //set the position in world space for the cube
+	logoButton->pos = XMVectorSet(0, 10, 5, 1); //set the position in world space for the cube
 	logoButton->originPos = XMVectorSet(0, 6, 5, 1); //set its origin pos for button presses
 	logoButton->scale = XMVectorSet(20.0f, 2.0f, 1.0f, 1.0f); //set the scale of the button
 	XMStoreFloat4x4(&logoButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(logoButton->scale), XMMatrixTranslationFromVector(logoButton->pos)));
