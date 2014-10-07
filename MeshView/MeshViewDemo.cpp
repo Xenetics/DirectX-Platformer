@@ -51,12 +51,13 @@ struct Cube
 	XMVECTOR pos;
 	XMVECTOR originPos;
 	XMVECTOR scale;
-	enum menuButtons { LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff };
+	XMVECTOR halfSize;
+	enum menuButtons { LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff, BESTRUNS, RETURN };
 	menuButtons button;
-	UINT menuTexture;
 	XNA::AxisAlignedBox mMeshBox;
 	XMFLOAT4X4 localWorld;
-	bool isMenu = false;
+	enum hudTextures{ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, COLON, HASH};
+	hudTextures currentTex;
 };
 
 struct BoundingSphere
@@ -109,7 +110,8 @@ private:
 
 	//Menu creation and draw stuff
 	std::vector<Cube*> cubes;
-	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[7];
+	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[9];
+	ID3D11ShaderResourceView* mDiffuseMapSRVGUITex[12];
 	void CreateMenu();
 	Material mBoxMat;
 	XMFLOAT4X4 mTexTransform;
@@ -209,6 +211,11 @@ private:
 	void ResetLevel();
 
 	GAME_STATE gameState;
+
+	//in-game gui functions
+	void InitGUI();
+	void UpdateGUI(float dt);
+	void DrawGUI();
 };
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
@@ -244,7 +251,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 	XMMATRIX I = XMMatrixIdentity();
 	XMStoreFloat4x4(&mTexTransform, I);
 
-	mPlayer.SetPosition(0.0f, 10.0f, 0.0f);
+	mPlayer.SetPosition(0.0f, 0.0f, 0.0f);
 
 	// Mat for the general blocks
 	mBoxMat.Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -252,12 +259,12 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 	mBoxMat.Specular = XMFLOAT4(0.4f, 0.4f, 0.4f, 16.0f);
 	mBoxMat.Reflect = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	mDirLights[0].Ambient  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-	mDirLights[0].Diffuse  = XMFLOAT4(0.8f, 0.7f, 0.7f, 1.0f);
-	mDirLights[0].Specular = XMFLOAT4(0.6f, 0.6f, 0.7f, 1.0f);
+	mDirLights[0].Ambient  = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	mDirLights[0].Diffuse  = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
+	mDirLights[0].Specular = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[0].Direction = XMFLOAT3(-0.57735f, -0.57735f, 0.57735f);
 
-	mDirLights[1].Ambient  = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	mDirLights[1].Ambient  = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	mDirLights[1].Diffuse  = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
 	mDirLights[1].Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	mDirLights[1].Direction = XMFLOAT3(0.707f, -0.707f, 0.0f);
@@ -314,6 +321,10 @@ bool MeshViewApp::Init()
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/BestRuns.png", 0, 0, &mDiffuseMapSRVMenuButtons[7], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/ReturnButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[8], 0));
 
+	//GUI textures
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/0Texture.png", 0, 0, &mDiffuseMapSRVGUITex[0], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/1Texture.png", 0, 0, &mDiffuseMapSRVGUITex[1], 0));
+
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
 	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
@@ -334,13 +345,10 @@ bool MeshViewApp::Init()
 	//TODO add spawnpoint
 	mLevels.push_back(lvl);
 
-	//load the current level
-	LoadCurrLevel();
-
-	mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
-	ResetLevel();
-	//mPlayer.RotateY(XMConvertToRadians(-90));
-
+	
+	
+	
+	mPlayer.RotateY(1.57);
 	//revers face culling
 	D3D11_RASTERIZER_DESC jimJam;
 	ZeroMemory(&jimJam, sizeof(D3D11_RASTERIZER_DESC));
@@ -393,6 +401,7 @@ bool MeshViewApp::Init()
 	mWinSphereMat.Ambient = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	mWinSphereMat.Diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	mWinSphereMat.Specular = XMFLOAT4(0.8f, 0.8f, 0.8f, 16.0f);
+	mWinSphereMat.Reflect = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 
 
 	//init sound
@@ -400,10 +409,24 @@ bool MeshViewApp::Init()
 	srand(time(NULL));
 
 	//build menu stuff
-	//BuildGeometryBuffers();
+	BuildGeometryBuffers();
 	//BuildMenuFX();
+	
 	//BuildVertexLayout();
+	if (gameState == GAME_STATE::playingState)
+	{
+		//load the current level
+		LoadCurrLevel();
 
+		mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
+		ResetLevel();
+		InitGUI();
+	}
+	else if (gameState == GAME_STATE::menuState)
+	{
+		CreateMenu();
+	}
+	
 
 	return true;
 }
@@ -469,15 +492,12 @@ void MeshViewApp::OnResize()
 
 void MeshViewApp::UpdateScene(float dt)
 {
-
-	GAME_STATE gameState = GAME_STATE::playingState;
-
 	mSound->UpdateSound();
 
 	switch (gameState)
 	{
 	case GAME_STATE::menuState:
-		UpdateMainMenu(dt);
+		//UpdateMainMenu(dt);
 		break;
 
 	case GAME_STATE::playingState:
@@ -488,8 +508,6 @@ void MeshViewApp::UpdateScene(float dt)
 		break;
 
 	}
-	
-
 }
 
 void MeshViewApp::UpdateWhilePlaying(float dt)
@@ -649,13 +667,13 @@ void MeshViewApp::DrawScene()
 
 		case GAME_STATE::playingState:
 			DrawWhilePlaying();
+			DrawGUI();
 			break;
 
 		case GAME_STATE::pauseState:
 			break;
-
 	}
-
+	HR(mSwapChain->Present(0, 0));
 }
 
 void MeshViewApp::DrawWhilePlaying()
@@ -745,8 +763,7 @@ void MeshViewApp::DrawWhilePlaying()
 	//
 	// Draw opaque objects.
 	//
-	
-	D3DX11_TECHNIQUE_DESC techDesc;
+	/*D3DX11_TECHNIQUE_DESC techDesc;
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
@@ -774,7 +791,9 @@ void MeshViewApp::DrawWhilePlaying()
 				mModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
 			}
 		}
-	}
+	}*/
+
+
 	// Turn off wireframe.
 	md3dImmediateContext->RSSetState(0);
 
@@ -794,8 +813,8 @@ void MeshViewApp::DrawWhilePlaying()
 	// to it next frame.  These textures can be at any slot, so clear all slots.
 	ID3D11ShaderResourceView* nullSRV[16] = { 0 };
 	md3dImmediateContext->PSSetShaderResources(0, 16, nullSRV);
-
-	HR(mSwapChain->Present(0, 0));
+	
+	//HR(mSwapChain->Present(0, 0));
 }
 
 void MeshViewApp::DrawMenu()
@@ -803,10 +822,10 @@ void MeshViewApp::DrawMenu()
 	md3dImmediateContext->ClearRenderTargetView(mRenderTargetView, reinterpret_cast<const float*>(&Colors::LightSteelBlue));
 	md3dImmediateContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	md3dImmediateContext->IASetInputLayout(mInputLayout);
+	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
 	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	UINT stride = sizeof(Vertexes);
+	UINT stride = sizeof(Vertex::Basic32);
 	UINT offset = 0;
 
 	// Set constants
@@ -819,6 +838,7 @@ void MeshViewApp::DrawMenu()
 	Effects::BasicFX->SetDirLights(mDirLights);
 	Effects::BasicFX->SetEyePosW(mPlayer.GetPosition());
 	Effects::BasicFX->SetCubeMap(mSky->CubeMapSRV());
+	Effects::BasicFX->SetShadowMap(mSmap->DepthMapSRV());
 
 	ID3DX11EffectTechnique* activeTexTech = Effects::BasicFX->Light3TexTech;
 
@@ -833,17 +853,17 @@ void MeshViewApp::DrawMenu()
 		{
 			if (cubes[i] != NULL)
 			{
-				XMMATRIX world = XMLoadFloat4x4(&cubes[i]->localWorld)/* * XMMatrixTranslationFromVector(cubes[i]->pos)*/;
+				XMMATRIX world = XMLoadFloat4x4(&cubes[i]->localWorld);
 				XMMATRIX worldInvTranspose = MathHelper::InverseTranspose(world);
 				XMMATRIX worldViewProj = world*view*proj;
-				mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
+				//mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
 
 				Effects::BasicFX->SetWorld(world);
 				Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
 				Effects::BasicFX->SetWorldViewProj(worldViewProj);
 				Effects::BasicFX->SetTexTransform(XMLoadFloat4x4(&mTexTransform));
 				Effects::BasicFX->SetMaterial(mBoxMat);
-				switch (cubes[i]->menuTexture) //show texture of cube
+				switch (cubes[i]->button) //show texture of cube
 				{
 				case Cube::LOGOb:
 					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[0]);
@@ -866,12 +886,18 @@ void MeshViewApp::DrawMenu()
 				case Cube::MUSICbOff:
 					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[6]);
 					break;
+				case Cube::BESTRUNS:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[7]);
+					break;
+				case Cube::RETURN:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[8]);
+					break;
 				}
 				activeTexTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
 				md3dImmediateContext->DrawIndexed(mBoxIndexCount, mBoxIndexOffset, mBoxVertexOffset);
-				/*
 				// Restore default
 				md3dImmediateContext->RSSetState(0);
+				/*
 				if (mPickedTriangle != -1)
 				{
 				// Change depth test from < to <= so that if we draw the same triangle twice, it will still pass
@@ -891,7 +917,7 @@ void MeshViewApp::DrawMenu()
 		}
 		mSky->Draw(md3dImmediateContext, mPlayer); // draw sky
 	}
-	HR(mSwapChain->Present(0, 0));
+	//HR(mSwapChain->Present(0, 0));
 }
 
 void MeshViewApp::KeyHandler(float dt)
@@ -1361,68 +1387,51 @@ void MeshViewApp::BuildScreenQuadGeometryBuffers()
 
 void MeshViewApp::BuildGeometryBuffers()
 {
-	// Create vertex buffer
-	Vertexes vertices[] =
+	GeometryGenerator::MeshData box;
+	GeometryGenerator geoGen;
+	geoGen.CreateBox(1.0f, 1.0f, 1.0f, box);
+	// Cache the vertex offsets to each object in the concatenated vertex buffer.
+	mBoxVertexOffset = 0;
+	// Cache the index count of each object.
+	mBoxIndexCount = box.Indices.size();
+	// Cache the starting index for each object in the concatenated index buffer.
+	mBoxIndexOffset = 0;
+	UINT totalVertexCount = box.Vertices.size();
+	UINT totalIndexCount = mBoxIndexCount;
+	//
+	// Extract the vertex elements we are interested in and pack the
+	// vertices of all the meshes into one vertex buffer.
+	//
+	std::vector<Vertex::Basic32> vertices(totalVertexCount);
+	UINT k = 0;
+	for (size_t i = 0; i < box.Vertices.size(); ++i, ++k)
 	{
-		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), (const float*)&Colors::White },
-		{ XMFLOAT3(-1.0f, +1.0f, -1.0f), (const float*)&Colors::Black },
-		{ XMFLOAT3(+1.0f, +1.0f, -1.0f), (const float*)&Colors::Red },
-		{ XMFLOAT3(+1.0f, -1.0f, -1.0f), (const float*)&Colors::Green },
-		{ XMFLOAT3(-1.0f, -1.0f, +1.0f), (const float*)&Colors::Blue },
-		{ XMFLOAT3(-1.0f, +1.0f, +1.0f), (const float*)&Colors::Yellow },
-		{ XMFLOAT3(+1.0f, +1.0f, +1.0f), (const float*)&Colors::Cyan },
-		{ XMFLOAT3(+1.0f, -1.0f, +1.0f), (const float*)&Colors::Magenta }
-	};
-
+		vertices[k].Pos = box.Vertices[i].Position;
+		vertices[k].Normal = box.Vertices[i].Normal;
+		vertices[k].Tex = box.Vertices[i].TexC;
+	}
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(Vertexes)* 8;
+	vbd.ByteWidth = sizeof(Vertex::Basic32) * totalVertexCount;
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
-	vbd.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA vinitData;
-	vinitData.pSysMem = vertices;
+	vinitData.pSysMem = &vertices[0];
 	HR(md3dDevice->CreateBuffer(&vbd, &vinitData, &mBoxVB));
-
-
-	// Create the index buffer
-
-	UINT indices[] = {
-		// front face
-		0, 1, 2,
-		0, 2, 3,
-
-		// back face
-		4, 6, 5,
-		4, 7, 6,
-
-		// left face
-		4, 5, 1,
-		4, 1, 0,
-
-		// right face
-		3, 2, 6,
-		3, 6, 7,
-
-		// top face
-		1, 5, 6,
-		1, 6, 2,
-
-		// bottom face
-		4, 0, 3,
-		4, 3, 7
-	};
-
+	//
+	// Pack the indices of all the meshes into one index buffer.
+	//
+	std::vector<UINT> indices;
+	indices.insert(indices.end(), box.Indices.begin(), box.Indices.end());
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT)* 36;
+	ibd.ByteWidth = sizeof(UINT)* totalIndexCount;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
-	ibd.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA iinitData;
-	iinitData.pSysMem = indices;
+	iinitData.pSysMem = &indices[0];
 	HR(md3dDevice->CreateBuffer(&ibd, &iinitData, &mBoxIB));
 }
 
@@ -1452,8 +1461,7 @@ void MeshViewApp::BuildMenuFX()
 		DXTrace(__FILE__, (DWORD)__LINE__, hr, L"D3DX11CompileFromFile", true);
 	}
 
-	HR(D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(),
-		0, md3dDevice, &mFX));
+	HR(D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(),0, md3dDevice, &mFX));
 
 	// Done with compiled shader.
 	ReleaseCOM(compiledShader);
@@ -1478,20 +1486,91 @@ void MeshViewApp::BuildVertexLayout()
 		passDesc.IAInputSignatureSize, &mInputLayout));
 }
 
-void MeshViewApp::CreateMenu()
+void MeshViewApp::CreateMenu() //LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff
 {
 	// LOGO
 	Cube * logoButton = new Cube; //creates new block
-	logoButton->pos = XMVectorSet(0, 10, 5, 1); //set the position in world space for the cube
-	logoButton->originPos = XMVectorSet(0, 6, 5, 1); //set its origin pos for button presses
-	logoButton->scale = XMVectorSet(20.0f, 2.0f, 1.0f, 1.0f); //set the scale of the button
+	logoButton->pos = XMVectorSet(0, 1, 3, 1); //set the position in world space for the cube
+	logoButton->originPos = logoButton->pos; //set its origin pos for button presses
+	logoButton->scale = XMVectorSet(3.0f, 0.4f, 0.00001f, 1.0f); //set the scale of the button
 	XMStoreFloat4x4(&logoButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(logoButton->scale), XMMatrixTranslationFromVector(logoButton->pos)));
 	XMStoreFloat3(&logoButton->mMeshBox.Center, logoButton->pos); //sets the center of the mesh box for click detection
-	XMVECTOR logoHalfSize = XMVectorSet(10.0f, 1.0f, 0.5f, 1.0f); // sets the size of the bounding box from the center of the object
-	XMStoreFloat3(&logoButton->mMeshBox.Extents, logoHalfSize);
-	logoButton->menuTexture = Cube::LOGOb; //sets the texture of button; 
-	logoButton->isMenu = true; //tells the game this is a menu block, not a game block. (wont be destroyed when clicked)
+	logoButton->halfSize = XMVectorSet(1.5f, 0.2f, 0.000005f, 1.0f); // sets the size of the bounding box from the center of the object
+	XMStoreFloat3(&logoButton->mMeshBox.Extents, logoButton->halfSize);
+	logoButton->button = Cube::LOGOb; //sets the texture of button; 
 	MeshViewApp::cubes.push_back(logoButton); //adds the play button to the array of cubes to draw
+
+	// Play button
+	Cube * playButton = new Cube; 
+	playButton->pos = XMVectorSet(0, 0.5, 3, 1); 
+	playButton->originPos = playButton->pos; 
+	playButton->scale = XMVectorSet(1.0f, 0.28f, 0.00001f, 1.0f); 
+	XMStoreFloat4x4(&playButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(playButton->scale), XMMatrixTranslationFromVector(playButton->pos)));
+	XMStoreFloat3(&playButton->mMeshBox.Center, playButton->pos); 
+	playButton->halfSize = XMVectorSet(0.5f, 0.14f, 0.000005f, 1.0f);
+	XMStoreFloat3(&playButton->mMeshBox.Extents, playButton->halfSize);
+	playButton->button = Cube::PLAYb; 
+	MeshViewApp::cubes.push_back(playButton);
+
+	// Exit button
+	Cube * exitButton = new Cube;
+	exitButton->pos = XMVectorSet(1.2, -1, 3, 1);
+	exitButton->originPos = exitButton->pos;
+	exitButton->scale = XMVectorSet(0.6f, 0.2f, 0.00001f, 1.0f);
+	XMStoreFloat4x4(&exitButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(exitButton->scale), XMMatrixTranslationFromVector(exitButton->pos)));
+	XMStoreFloat3(&exitButton->mMeshBox.Center, exitButton->pos);
+	exitButton->halfSize = XMVectorSet(0.3f, 0.1f, 0.000005f, 1.0f);
+	XMStoreFloat3(&exitButton->mMeshBox.Extents, exitButton->halfSize);
+	exitButton->button = Cube::EXITb;
+	MeshViewApp::cubes.push_back(exitButton);
+
+	// Sound button
+	Cube * soundButton = new Cube;
+	soundButton->pos = XMVectorSet(-1.2, -0.7, 3, 1);
+	soundButton->originPos = soundButton->pos;
+	soundButton->scale = XMVectorSet(0.6f, 0.2f, 0.00001f, 1.0f);
+	XMStoreFloat4x4(&soundButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(soundButton->scale), XMMatrixTranslationFromVector(soundButton->pos)));
+	XMStoreFloat3(&soundButton->mMeshBox.Center, soundButton->pos);
+	soundButton->halfSize = XMVectorSet(0.3f, 0.1f, 0.000005f, 1.0f);
+	XMStoreFloat3(&soundButton->mMeshBox.Extents, soundButton->halfSize);
+	soundButton->button = Cube::SOUNDb;
+	MeshViewApp::cubes.push_back(soundButton);
+
+	// Music button
+	Cube * musicButton = new Cube;
+	musicButton->pos = XMVectorSet(-1.2, -1, 3, 1);
+	musicButton->originPos = musicButton->pos;
+	musicButton->scale = XMVectorSet(0.6f, 0.2f, 0.00001f, 1.0f);
+	XMStoreFloat4x4(&musicButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(musicButton->scale), XMMatrixTranslationFromVector(musicButton->pos)));
+	XMStoreFloat3(&musicButton->mMeshBox.Center, musicButton->pos);
+	musicButton->halfSize = XMVectorSet(0.3f, 0.1f, 0.000005f, 1.0f);
+	XMStoreFloat3(&musicButton->mMeshBox.Extents, musicButton->halfSize);
+	musicButton->button = Cube::MUSICb;
+	MeshViewApp::cubes.push_back(musicButton);
+
+	// Highscores button
+	Cube * scoresButton = new Cube;
+	scoresButton->pos = XMVectorSet(1.2, -0.7, 3, 1);
+	scoresButton->originPos = scoresButton->pos;
+	scoresButton->scale = XMVectorSet(0.6f, 0.2f, 0.00001f, 1.0f);
+	XMStoreFloat4x4(&scoresButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(scoresButton->scale), XMMatrixTranslationFromVector(scoresButton->pos)));
+	XMStoreFloat3(&scoresButton->mMeshBox.Center, scoresButton->pos);
+	scoresButton->halfSize = XMVectorSet(0.3f, 0.1f, 0.000005f, 1.0f);
+	XMStoreFloat3(&scoresButton->mMeshBox.Extents, scoresButton->halfSize);
+	scoresButton->button = Cube::BESTRUNS;
+	MeshViewApp::cubes.push_back(scoresButton);
+
+	// Highscores Banner
+	Cube * scoresBanner = new Cube;
+	scoresBanner->pos = XMVectorSet(3, 1, 0, 1);
+	scoresBanner->originPos = scoresBanner->pos;
+	scoresBanner->scale = XMVectorSet(0.00001f, 0.4f, 3.0f, 1.0f);
+	XMStoreFloat4x4(&scoresBanner->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(scoresBanner->scale), XMMatrixTranslationFromVector(scoresBanner->pos)));
+	XMStoreFloat3(&scoresBanner->mMeshBox.Center, scoresButton->pos);
+	scoresButton->halfSize = XMVectorSet(0.000005f, 0.1f, 0.3f, 1.0f);
+	XMStoreFloat3(&scoresBanner->mMeshBox.Extents, scoresBanner->halfSize);
+	scoresBanner->button = Cube::BESTRUNS;
+	MeshViewApp::cubes.push_back(scoresBanner);
 }
 
 /*
@@ -1658,5 +1737,102 @@ void MeshViewApp::ResetLevel()
 	mPlayer.vel.y = 0;
 	mPlayer.vel.x = 0;
 	mPlayer.vel.z = 0;
+}
+
+void MeshViewApp::InitGUI()
+{
+	cubes.clear(); //makes sure there is nothing in the vector and starts fresh.
+
+	// LOGO
+	Cube* MinuteOne = new Cube; //creates new block
+	MinuteOne->pos = XMVectorSet(0, 1, 3, 1); //set the position in world space for the cube
+	MinuteOne->originPos = MinuteOne->pos; //set its origin pos for button presses
+	MinuteOne->scale = XMVectorSet(3.0f, 0.4f, 2.0f, 1.0f); //set the scale of the button
+	XMStoreFloat4x4(&MinuteOne->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(MinuteOne->scale), XMMatrixTranslationFromVector(MinuteOne->pos)));
+	XMStoreFloat3(&MinuteOne->mMeshBox.Center, MinuteOne->pos); //sets the center of the mesh box for click detection
+	MinuteOne->halfSize = XMVectorSet(1.5f, 0.2f, 1.0f, 1.0f); // sets the size of the bounding box from the center of the object
+	XMStoreFloat3(&MinuteOne->mMeshBox.Extents, MinuteOne->halfSize);
+	MinuteOne->currentTex = Cube::ZERO; //sets the texture of button; 
+	MeshViewApp::cubes.push_back(MinuteOne); //adds the play button to the array of cubes to draw
+
+	// Play button
+	Cube * playButton = new Cube;
+	playButton->pos = XMVectorSet(0, 0.5, 3, 1);
+	playButton->originPos = playButton->pos;
+	playButton->scale = XMVectorSet(1.0f, 0.28f, 0.00001f, 1.0f);
+	XMStoreFloat4x4(&playButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(playButton->scale), XMMatrixTranslationFromVector(playButton->pos)));
+	XMStoreFloat3(&playButton->mMeshBox.Center, playButton->pos);
+	playButton->halfSize = XMVectorSet(0.5f, 0.14f, 0.000005f, 1.0f);
+	XMStoreFloat3(&playButton->mMeshBox.Extents, playButton->halfSize);
+	playButton->currentTex = Cube::ONE;
+	MeshViewApp::cubes.push_back(playButton);
+}
+
+void MeshViewApp::UpdateGUI(float dt)
+{
+
+}
+
+void MeshViewApp::DrawGUI()
+{
+	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
+	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	UINT stride = sizeof(Vertex::Basic32);
+	UINT offset = 0;
+
+	// Set constants
+	mPlayer.UpdateViewMatrix();
+
+	XMMATRIX view = mPlayer.View();
+	XMMATRIX proj = mPlayer.Proj();
+	XMMATRIX viewProj = mPlayer.ViewProj();
+
+	Effects::BasicFX->SetDirLights(mDirLights);
+	Effects::BasicFX->SetEyePosW(mPlayer.GetPosition());
+	Effects::BasicFX->SetCubeMap(mSky->CubeMapSRV());
+	Effects::BasicFX->SetShadowMap(mSmap->DepthMapSRV());
+
+	ID3DX11EffectTechnique* activeTexTech = Effects::BasicFX->Light3TexTech;
+
+	D3DX11_TECHNIQUE_DESC techDesc;
+	activeTexTech->GetDesc(&techDesc);
+	for (UINT p = 0; p < techDesc.Passes; ++p)
+	{
+		md3dImmediateContext->IASetVertexBuffers(0, 1, &mBoxVB, &stride, &offset);
+		md3dImmediateContext->IASetIndexBuffer(mBoxIB, DXGI_FORMAT_R32_UINT, 0);
+
+		for (int i = 0; i < cubes.size(); i++)
+		{
+			if (cubes[i] != NULL)
+			{
+				XMMATRIX world = XMLoadFloat4x4(&cubes[i]->localWorld);
+				XMMATRIX worldInvTranspose = MathHelper::InverseTranspose(world);
+				XMMATRIX worldViewProj = world*view*proj;
+				//mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
+
+				Effects::BasicFX->SetWorld(world);
+				Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
+				Effects::BasicFX->SetWorldViewProj(worldViewProj);
+				Effects::BasicFX->SetTexTransform(XMLoadFloat4x4(&mTexTransform));
+				Effects::BasicFX->SetMaterial(mBoxMat);
+				switch (cubes[i]->currentTex) //show texture of cube
+				{
+				case Cube::ZERO:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[0]);
+					break;
+				case Cube::ONE:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[1]);
+					break;
+				}
+				activeTexTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
+				md3dImmediateContext->DrawIndexed(mBoxIndexCount, mBoxIndexOffset, mBoxVertexOffset);
+
+				// Restore default
+				md3dImmediateContext->RSSetState(0);
+			}
+		}
+	}
+	//HR(mSwapChain->Present(0, 0));
 }
 
