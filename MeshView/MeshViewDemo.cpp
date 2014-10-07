@@ -56,7 +56,16 @@ struct Cube
 	menuButtons button;
 	XNA::AxisAlignedBox mMeshBox;
 	XMFLOAT4X4 localWorld;
-	enum hudTextures{ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, COLON, HASH};
+};
+
+struct GUICube
+{
+	XMVECTOR pos;
+	XMVECTOR scale;
+	XMVECTOR halfSize;
+	XNA::AxisAlignedBox mMeshBox;
+	XMFLOAT4X4 localWorld;
+	enum hudTextures{ ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, COLON, HASH };
 	hudTextures currentTex;
 };
 
@@ -213,6 +222,7 @@ private:
 	GAME_STATE gameState;
 
 	//in-game gui functions
+	std::vector<GUICube*> guiCubes;
 	void InitGUI();
 	void UpdateGUI(float dt);
 	void DrawGUI();
@@ -501,6 +511,7 @@ void MeshViewApp::UpdateScene(float dt)
 		break;
 
 	case GAME_STATE::playingState:
+		UpdateGUI(dt);
 		UpdateWhilePlaying(dt);
 		break;
 
@@ -673,7 +684,7 @@ void MeshViewApp::DrawScene()
 		case GAME_STATE::pauseState:
 			break;
 	}
-	HR(mSwapChain->Present(0, 0));
+	HR(mSwapChain->Present(0, 0)); //only call this ONCE!
 }
 
 void MeshViewApp::DrawWhilePlaying()
@@ -1741,36 +1752,33 @@ void MeshViewApp::ResetLevel()
 
 void MeshViewApp::InitGUI()
 {
-	cubes.clear(); //makes sure there is nothing in the vector and starts fresh.
-
 	// LOGO
-	Cube* MinuteOne = new Cube; //creates new block
+	GUICube* MinuteOne = new GUICube; //creates new block
 	MinuteOne->pos = XMVectorSet(0, 1, 3, 1); //set the position in world space for the cube
-	MinuteOne->originPos = MinuteOne->pos; //set its origin pos for button presses
 	MinuteOne->scale = XMVectorSet(3.0f, 0.4f, 2.0f, 1.0f); //set the scale of the button
 	XMStoreFloat4x4(&MinuteOne->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(MinuteOne->scale), XMMatrixTranslationFromVector(MinuteOne->pos)));
 	XMStoreFloat3(&MinuteOne->mMeshBox.Center, MinuteOne->pos); //sets the center of the mesh box for click detection
 	MinuteOne->halfSize = XMVectorSet(1.5f, 0.2f, 1.0f, 1.0f); // sets the size of the bounding box from the center of the object
 	XMStoreFloat3(&MinuteOne->mMeshBox.Extents, MinuteOne->halfSize);
-	MinuteOne->currentTex = Cube::ZERO; //sets the texture of button; 
-	MeshViewApp::cubes.push_back(MinuteOne); //adds the play button to the array of cubes to draw
+	MinuteOne->currentTex = GUICube::ZERO; //sets the texture of button; 
+	MeshViewApp::guiCubes.push_back(MinuteOne); //adds the play button to the array of cubes to draw
 
 	// Play button
-	Cube * playButton = new Cube;
+	GUICube * playButton = new GUICube;
 	playButton->pos = XMVectorSet(0, 0.5, 3, 1);
-	playButton->originPos = playButton->pos;
 	playButton->scale = XMVectorSet(1.0f, 0.28f, 0.00001f, 1.0f);
 	XMStoreFloat4x4(&playButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(playButton->scale), XMMatrixTranslationFromVector(playButton->pos)));
 	XMStoreFloat3(&playButton->mMeshBox.Center, playButton->pos);
 	playButton->halfSize = XMVectorSet(0.5f, 0.14f, 0.000005f, 1.0f);
 	XMStoreFloat3(&playButton->mMeshBox.Extents, playButton->halfSize);
-	playButton->currentTex = Cube::ONE;
-	MeshViewApp::cubes.push_back(playButton);
+	playButton->currentTex = GUICube::ONE;
+	MeshViewApp::guiCubes.push_back(playButton);
 }
 
 void MeshViewApp::UpdateGUI(float dt)
 {
-
+	guiCubes[0]->pos = XMVectorSet(mPlayer.GetPosition().x-5, mPlayer.GetPosition().y, mPlayer.GetPosition().z, 1);
+	XMStoreFloat4x4(&guiCubes[0]->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(guiCubes[0]->scale), XMMatrixTranslationFromVector(guiCubes[0]->pos)));
 }
 
 void MeshViewApp::DrawGUI()
@@ -1802,11 +1810,11 @@ void MeshViewApp::DrawGUI()
 		md3dImmediateContext->IASetVertexBuffers(0, 1, &mBoxVB, &stride, &offset);
 		md3dImmediateContext->IASetIndexBuffer(mBoxIB, DXGI_FORMAT_R32_UINT, 0);
 
-		for (int i = 0; i < cubes.size(); i++)
+		for (int i = 0; i < guiCubes.size(); i++)
 		{
-			if (cubes[i] != NULL)
+			if (guiCubes[i] != NULL)
 			{
-				XMMATRIX world = XMLoadFloat4x4(&cubes[i]->localWorld);
+				XMMATRIX world = XMLoadFloat4x4(&guiCubes[i]->localWorld);
 				XMMATRIX worldInvTranspose = MathHelper::InverseTranspose(world);
 				XMMATRIX worldViewProj = world*view*proj;
 				//mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
@@ -1816,12 +1824,12 @@ void MeshViewApp::DrawGUI()
 				Effects::BasicFX->SetWorldViewProj(worldViewProj);
 				Effects::BasicFX->SetTexTransform(XMLoadFloat4x4(&mTexTransform));
 				Effects::BasicFX->SetMaterial(mBoxMat);
-				switch (cubes[i]->currentTex) //show texture of cube
+				switch (guiCubes[i]->currentTex) //show texture of cube
 				{
-				case Cube::ZERO:
+				case GUICube::ZERO:
 					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[0]);
 					break;
-				case Cube::ONE:
+				case GUICube::ONE:
 					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[1]);
 					break;
 				}
