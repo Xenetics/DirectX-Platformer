@@ -438,19 +438,8 @@ bool MeshViewApp::Init()
 	//BuildMenuFX();
 	
 	//BuildVertexLayout();
-	if (gameState == GAME_STATE::playingState)
-	{
-		//load the current level
-		LoadCurrLevel();
 
-		mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
-		ResetLevel();
-		InitGUI();
-	}
-	else if (gameState == GAME_STATE::menuState)
-	{
-		CreateMenu();
-	}
+	CreateMenu();
 	
 
 	return true;
@@ -1676,6 +1665,7 @@ void MeshViewApp::Pick(int sx, int sy)
 					LoadCurrLevel();
 					mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
 					ResetLevel();
+					InitGUI();
 					break;
 				case Cube::EXITb:
 					PostQuitMessage(0);
@@ -1692,11 +1682,14 @@ void MeshViewApp::Pick(int sx, int sy)
 					cubes[4]->button = Cube::MUSICbOff;
 					break;
 				case Cube::SOUNDbOff:
-
+					for (int i = 1; i < mSound->channels.size(); ++i)
+					{
+						mSound->channels[i]->setMute(false);
+					}
 					cubes[3]->button = Cube::SOUNDb;
 					break;
 				case Cube::MUSICbOff:
-
+					mSound->musicChannel->setMute(false);
 					cubes[4]->button = Cube::MUSICb;
 					break;
 				case Cube::BESTRUNS:
