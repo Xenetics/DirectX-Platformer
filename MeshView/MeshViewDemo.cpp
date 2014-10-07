@@ -780,7 +780,7 @@ void MeshViewApp::DrawWhilePlaying()
 	//
 	// Draw opaque objects.
 	//
-	/*D3DX11_TECHNIQUE_DESC techDesc;
+	D3DX11_TECHNIQUE_DESC techDesc;
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
@@ -808,7 +808,7 @@ void MeshViewApp::DrawWhilePlaying()
 				mModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
 			}
 		}
-	}*/
+	}
 
 
 	// Turn off wireframe.
@@ -1777,6 +1777,7 @@ void MeshViewApp::UpdateGUI(float dt)
 {
 	guiCubes[0]->pos = XMVectorSet(mPlayer.GetPosition().x-5, mPlayer.GetPosition().y, mPlayer.GetPosition().z, 1);
 	XMStoreFloat4x4(&guiCubes[0]->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(guiCubes[0]->scale), XMMatrixTranslationFromVector(guiCubes[0]->pos)));
+	//set to player postion then move out from the look vector.
 }
 
 void MeshViewApp::DrawGUI()
