@@ -46,16 +46,19 @@
 #include "SoundMgr.h"
 #include "Level.h"
 
+#define EPSILON 0.00001
+
 struct Cube
 {
 	XMVECTOR pos;
 	XMVECTOR originPos;
 	XMVECTOR scale;
 	XMVECTOR halfSize;
-	enum menuButtons { LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff, BESTRUNS, RETURN };
+	enum menuButtons { LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff, BESTRUNS, RETURN, BESTRUNSB };
 	menuButtons button;
 	XNA::AxisAlignedBox mMeshBox;
 	XMFLOAT4X4 localWorld;
+	float distanceFromCam;
 };
 
 struct BoundingSphere
@@ -105,10 +108,11 @@ private:
 	void BuildMenuFX();
 	void BuildVertexLayout();
 	void Pick(int sx, int sy);
+	bool AreSameVec(XMVECTOR a, XMVECTOR b);
 
 	//Menu creation and draw stuff
 	std::vector<Cube*> cubes;
-	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[9];
+	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[10];
 	void CreateMenu();
 	Material mBoxMat;
 	XMFLOAT4X4 mTexTransform;
@@ -142,7 +146,7 @@ private:
 	std::vector<BasicModelInstance> mModelInstances;
 	std::vector<BasicModelInstance> mAlphaClippedModelInstances;
 
-	//stuff bellow is needed for my menus (Damian)
+	//stuff bellow is needed for my menus
 	ID3D11Buffer* mBoxVB;
 	ID3D11Buffer* mBoxIB;
 	ID3DX11Effect* mFX;
@@ -152,7 +156,14 @@ private:
 	XMFLOAT4X4 mWorld;
 	XMFLOAT4X4 mView;
 	XMFLOAT4X4 mProj;
-	//
+	float angleTo;
+	float angleCur;
+	void ScreenTransition(float);
+	
+	// Picking stuff
+	UINT mPickedTriangle;
+	Material mPickedTriangleMat;
+	static bool SortByVector(const Cube* lhs, const Cube* rhs) { return lhs->distanceFromCam < rhs->distanceFromCam; }
 
 	//winSphere draw stuff
 	ID3D11Buffer* mWinSphereVB;
@@ -186,6 +197,8 @@ private:
 
 	Player mPlayer;
 	SoundMgr* mSound;
+	bool SFXOn = true;
+	bool MusicOn = true;
 
 	POINT mLastMousePos;
 
@@ -312,6 +325,7 @@ bool MeshViewApp::Init()
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/MusicOffButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[6], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/BestRuns.png", 0, 0, &mDiffuseMapSRVMenuButtons[7], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/ReturnButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[8], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/BestRuns.png", 0, 0, &mDiffuseMapSRVMenuButtons[9], 0));
 
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
@@ -341,7 +355,6 @@ bool MeshViewApp::Init()
 	ResetLevel();
 	*/
 	
-	mPlayer.RotateY(1.57);
 	//revers face culling
 	D3D11_RASTERIZER_DESC jimJam;
 	ZeroMemory(&jimJam, sizeof(D3D11_RASTERIZER_DESC));
@@ -478,7 +491,7 @@ void MeshViewApp::UpdateScene(float dt)
 	switch (gameState)
 	{
 	case GAME_STATE::menuState:
-		//UpdateMainMenu(dt);
+		UpdateMainMenu(dt);
 		break;
 
 	case GAME_STATE::playingState:
@@ -624,6 +637,7 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 
 void MeshViewApp::UpdateMainMenu(float dt)
 {
+	ScreenTransition(dt);
 	// Convert Spherical to Cartesian coordinates.
 	float x = mRadius*sinf(mPhi)*cosf(mTheta);
 	float z = mRadius*sinf(mPhi)*sinf(mTheta);
@@ -651,10 +665,9 @@ void MeshViewApp::DrawScene()
 			break;
 
 		case GAME_STATE::pauseState:
+
 			break;
-
 	}
-
 }
 
 void MeshViewApp::DrawWhilePlaying()
@@ -877,22 +890,7 @@ void MeshViewApp::DrawMenu()
 				md3dImmediateContext->DrawIndexed(mBoxIndexCount, mBoxIndexOffset, mBoxVertexOffset);
 				// Restore default
 				md3dImmediateContext->RSSetState(0);
-				/*
-				if (mPickedTriangle != -1)
-				{
-				// Change depth test from < to <= so that if we draw the same triangle twice, it will still pass
-				// the depth test.  This is because we redraw the picked triangle with a different material
-				// to highlight it.
-				md3dImmediateContext->OMSetDepthStencilState(RenderStates::LessEqualDSS, 0);
-
-				Effects::BasicFX->SetMaterial(mPickedTriangleMat);
-				activeTexTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
-				md3dImmediateContext->DrawIndexed(3, 3 * mPickedTriangle, 0);
-
-				// restore default
-				md3dImmediateContext->OMSetDepthStencilState(0, 0);
-				}
-				*/
+				
 			}
 		}
 		mSky->Draw(md3dImmediateContext, mPlayer); // draw sky
@@ -1070,10 +1068,18 @@ void MeshViewApp::KeyHandler(float dt)
 
 void MeshViewApp::OnMouseDown(WPARAM btnState, int x, int y)
 {
-	mLastMousePos.x = x;
-	mLastMousePos.y = y;
+	if ((btnState & MK_LBUTTON) != 0 && gameState == GAME_STATE::menuState)
+	{
+		Pick(x, y);
+	}
 
-	SetCapture(mhMainWnd);
+	if (gameState != GAME_STATE::menuState)
+	{
+		mLastMousePos.x = x;
+		mLastMousePos.y = y;
+
+		SetCapture(mhMainWnd);
+	}
 }
 
 void MeshViewApp::OnMouseUp(WPARAM btnState, int x, int y)
@@ -1083,18 +1089,21 @@ void MeshViewApp::OnMouseUp(WPARAM btnState, int x, int y)
 
 void MeshViewApp::OnMouseMove(WPARAM btnState, int x, int y)
 {
-	if( (btnState & MK_LBUTTON) != 0 )
+	if (gameState != GAME_STATE::menuState)
 	{
-		// Make each pixel correspond to a quarter of a degree.
-		float dx = XMConvertToRadians(0.25f*static_cast<float>(x - mLastMousePos.x));
-		float dy = XMConvertToRadians(0.25f*static_cast<float>(y - mLastMousePos.y));
+		if ((btnState & MK_LBUTTON) != 0)
+		{
+			// Make each pixel correspond to a quarter of a degree.
+			float dx = XMConvertToRadians(0.25f*static_cast<float>(x - mLastMousePos.x));
+			float dy = XMConvertToRadians(0.25f*static_cast<float>(y - mLastMousePos.y));
 
-		mPlayer.Pitch(dy);
-		mPlayer.RotateY(dx);
+			mPlayer.Pitch(dy);
+			mPlayer.RotateY(dx);
+		}
+
+		mLastMousePos.x = x;
+		mLastMousePos.y = y;
 	}
-
-	mLastMousePos.x = x;
-	mLastMousePos.y = y;
 }
 
 void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
@@ -1466,7 +1475,7 @@ void MeshViewApp::BuildVertexLayout()
 		passDesc.IAInputSignatureSize, &mInputLayout));
 }
 
-void MeshViewApp::CreateMenu() //LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff
+void MeshViewApp::CreateMenu()
 {
 	// LOGO
 	Cube * logoButton = new Cube; //creates new block
@@ -1546,17 +1555,28 @@ void MeshViewApp::CreateMenu() //LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb,
 	scoresBanner->originPos = scoresBanner->pos;
 	scoresBanner->scale = XMVectorSet(0.00001f, 0.4f, 3.0f, 1.0f);
 	XMStoreFloat4x4(&scoresBanner->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(scoresBanner->scale), XMMatrixTranslationFromVector(scoresBanner->pos)));
-	XMStoreFloat3(&scoresBanner->mMeshBox.Center, scoresButton->pos);
-	scoresButton->halfSize = XMVectorSet(0.000005f, 0.1f, 0.3f, 1.0f);
+	XMStoreFloat3(&scoresBanner->mMeshBox.Center, scoresBanner->pos);
+	scoresBanner->halfSize = XMVectorSet(0.000005f, 0.2f, 1.5f, 1.0f);
 	XMStoreFloat3(&scoresBanner->mMeshBox.Extents, scoresBanner->halfSize);
-	scoresBanner->button = Cube::BESTRUNS;
+	scoresBanner->button = Cube::BESTRUNSB;
 	MeshViewApp::cubes.push_back(scoresBanner);
+
+	// Return button highscore screen
+	Cube * returnButton = new Cube;
+	returnButton->pos = XMVectorSet(3, -1, 1.2, 1);
+	returnButton->originPos = returnButton->pos;
+	returnButton->scale = XMVectorSet(0.00001f, 0.2f, 0.6f, 1.0f);
+	XMStoreFloat4x4(&returnButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(returnButton->scale), XMMatrixTranslationFromVector(returnButton->pos)));
+	XMStoreFloat3(&returnButton->mMeshBox.Center, returnButton->pos);
+	returnButton->halfSize = XMVectorSet(0.000005f, 0.1f, 0.3f, 1.0f);
+	XMStoreFloat3(&returnButton->mMeshBox.Extents, returnButton->halfSize);
+	returnButton->button = Cube::RETURN;
+	MeshViewApp::cubes.push_back(returnButton);
 }
 
-/*
 void MeshViewApp::Pick(int sx, int sy)
 {
-	XMMATRIX P = mCam.Proj();
+	XMMATRIX P = mPlayer.Proj();
 
 	// Compute picking ray in view space.
 	float vx = (+2.0f*sx / mClientWidth - 1.0f) / P(0, 0);
@@ -1567,7 +1587,7 @@ void MeshViewApp::Pick(int sx, int sy)
 	XMVECTOR rayDir = XMVectorSet(vx, vy, 1.0f, 0.0f);
 
 	// Tranform ray to local space of Mesh.
-	XMMATRIX V = mCam.View();
+	XMMATRIX V = mPlayer.View();
 	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(V), V);
 
 	//XMMATRIX W = XMMatrixTranslationFromVector(cubes[i]->pos);
@@ -1597,100 +1617,66 @@ void MeshViewApp::Pick(int sx, int sy)
 		{
 			// Make the ray direction unit length for the intersection tests.
 			rayDir = XMVector3Normalize(rayDir);
-			if (XNA::IntersectRayAxisAlignedBox(rayOrigin, rayDir, &Game::cubes[i]->mMeshBox, &tmin))
+			if (XNA::IntersectRayAxisAlignedBox(rayOrigin, rayDir, &MeshViewApp::cubes[i]->mMeshBox, &tmin))
 			{
-				XMVECTOR temp = XMVector3Length(mCam.GetPositionXM() - cubes[i]->pos);
+				XMVECTOR temp = XMVector3Length(mPlayer.GetPositionXM() - cubes[i]->pos);
 				cubes[i]->distanceFromCam = XMVectorGetIntX(temp);
 				cubesTouched.push_back(cubes[i]);
 			}
 		}
 	}
 
-	if (menu)
+	if (gameState == GAME_STATE::menuState)
 	{
-		if (!cubesTouched.empty())
+		for (int i = 0; i < cubesTouched.size(); i++)
 		{
-			for (int i = 0; i < cubesTouched.size(); i++)
+			if (!cubesTouched.empty())
 			{
-				if (AreSameVec(XMVector3Length(mCam.GetPositionXM() - cubesTouched[i]->pos), XMVector3Length(mCam.GetPositionXM() - cubesTouched[i]->pos)))
+				std::sort(cubesTouched.begin(), cubesTouched.end(), SortByVector);
+				int size = cubesTouched.size() - 1;
+				switch (cubesTouched[size]->button)
 				{
-					switch (cubesTouched[i]->menuTexture)
+				case Cube::PLAYb:
+					gameState = GAME_STATE::playingState;
+					LoadCurrLevel();
+					mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
+					ResetLevel();
+					break;
+				case Cube::EXITb:
+					PostQuitMessage(0);
+					break;
+				case Cube::SOUNDb:
+					for (int i = 1; i < mSound->channels.size(); ++i)
 					{
-					case LOGOb:
-
-						break;
-					case PLAYb:
-						switch (diffState)
-						{
-						case EASY:
-							MakeLevel(6, 6, 6);
-							menu = false;
-							break;
-						case MEDIUM:
-							MakeLevel(8, 8, 8);
-							menu = false;
-							break;
-						case HARD:
-							MakeLevel(10, 10, 10);
-							menu = false;
-							break;
-						case NONE:
-							MessageBox(0, L"Please Choose Your Difficulty and Try Again", L"Error", MB_OK);
-							break;
-						}
-
-						break;
-					case EASYb:
-						diffState = EASY;
-						IndentDiff(2);
-						cubes[2]->menuTexture = EASYbOn;
-						break;
-					case MEDIUMb:
-						diffState = MEDIUM;
-						IndentDiff(3);
-						cubes[3]->menuTexture = MEDIUMbOn;
-						break;
-					case HARDb:
-						diffState = HARD;
-						IndentDiff(4);
-						cubes[4]->menuTexture = HARDbOn;
-						break;
-					case EXITb:
-						PostQuitMessage(0);
-						break;
-					case SOUNDb:
-
-						break;
-					case MUSICb:
-						musicIsPlaying = !musicIsPlaying;
-						musicChannel->setMute(musicIsPlaying);
-						break;
+						mSound->channels[i]->setMute(true);
 					}
+					cubes[3]->button = Cube::SOUNDbOff;
+					break;
+				case Cube::MUSICb:
+					mSound->musicChannel->setMute(true);
+					cubes[4]->button = Cube::MUSICbOff;
+					break;
+				case Cube::SOUNDbOff:
+
+					cubes[3]->button = Cube::SOUNDb;
+					break;
+				case Cube::MUSICbOff:
+
+					cubes[4]->button = Cube::MUSICb;
+					break;
+				case Cube::BESTRUNS:
+					angleTo = 1.57;
+					angleCur = 0;
+					toRuns = true;
+					break;
+				case Cube::RETURN:
+					angleTo = 0;
+					angleCur = 1.57;
+					toMain = true;
+					break;
+				default:
+					break;
 				}
-			}
-		}
-	}
-	else //in game
-	{
-		if (!cubesTouched.empty())
-		{
-			std::sort(cubesTouched.begin(), cubesTouched.end(), SortByVector);
-			int size = cubes.size();
-			int place = cubesTouched[0]->uniqueID;
-			switch (cubes[place]->texture)
-			{
-			case Cube::GRAY:
-				SetUpLevelData(20);
-				CheckBlockSides(place);
-				//cubesChecked.clear();
-				//delete(cubes[place]);
-				cubes[place] = NULL;
-				//cubes.erase(cubes.begin() + place);
-				break;
-			case Cube::MINE:
-				CleanLevel();
-				MakeLevel(levelWidth, levelHeight, levelLength);
-				break;
 			}
 		}
 	}
@@ -1707,7 +1693,7 @@ bool MeshViewApp::AreSameVec(XMVECTOR a, XMVECTOR b)
 	else
 		return false;
 }
-*/
+
 void MeshViewApp::ResetLevel()
 {
 	mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
@@ -1719,3 +1705,17 @@ void MeshViewApp::ResetLevel()
 	mPlayer.vel.z = 0;
 }
 
+void MeshViewApp::ScreenTransition(float dt)
+{
+	if (toRuns && angleCur < angleTo)
+	{
+		angleCur += dt;
+		mPlayer.RotateY(dt);
+	}
+
+	if (toMain && angleCur > angleTo)
+	{
+		angleCur -= dt;
+		mPlayer.RotateY(-dt);
+	}
+}
