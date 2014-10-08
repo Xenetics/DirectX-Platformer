@@ -1680,46 +1680,46 @@ void MeshViewApp::InitGUI()
 	// first minute digit
 	GUICube* MinuteOne = new GUICube; //creates new block
 	MinuteOne->pos = XMVectorSet(0, 1, 3, 1); //set the position in world space for the cube
-	MinuteOne->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f); //set the scale of the button
+	MinuteOne->scale = XMVectorSet(0.1f, 0.1f, 0.001f, 1.0f); //set the scale of the button
 	XMStoreFloat4x4(&MinuteOne->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(MinuteOne->scale), XMMatrixTranslationFromVector(MinuteOne->pos)));
 	MinuteOne->currentTex = GUICube::ZERO; //sets the texture of button; 
-	MinuteOne->displacement = XMVectorSet(1.5f, -0.5f, 0.75f, 0);
+	MinuteOne->displacement = XMVectorSet(-0.75f, 0.55f, 1.5f, 0);
 	MeshViewApp::guiCubes.push_back(MinuteOne); //adds the play button to the array of cubes to draw
 
 	// second minute digit
 	GUICube * MinuteTWO = new GUICube;
 	MinuteTWO->pos = XMVectorSet(0, 1, 3, 1);
-	MinuteTWO->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f);
+	MinuteTWO->scale = XMVectorSet(0.1f, 0.1f, 0.001f, 1.0f);
 	XMStoreFloat4x4(&MinuteTWO->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(MinuteTWO->scale), XMMatrixTranslationFromVector(MinuteTWO->pos)));
 	MinuteTWO->currentTex = GUICube::ZERO;
-	MinuteTWO->displacement = XMVectorSet(1.5f, -0.5f, 0.65f, 0);
+	MinuteTWO->displacement = XMVectorSet(-0.65f, 0.55f, 1.5f, 0);
 	MeshViewApp::guiCubes.push_back(MinuteTWO);
 
 	// colon inbetween minutes and second
 	GUICube * colon = new GUICube;
 	colon->pos = XMVectorSet(0, 1, 3, 1);
-	colon->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f);
+	colon->scale = XMVectorSet(0.1f, 0.1f, 0.001f, 1.0f);
 	XMStoreFloat4x4(&colon->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(colon->scale), XMMatrixTranslationFromVector(colon->pos)));
 	colon->currentTex = GUICube::COLON;
-	colon->displacement = XMVectorSet(1.5f, -0.5f, 0.55f, 0);
+	colon->displacement = XMVectorSet(-0.55f, 0.55f, 1.5f, 0);
 	MeshViewApp::guiCubes.push_back(colon);
 
 	// first second digit
 	GUICube * secondOne = new GUICube;
 	secondOne->pos = XMVectorSet(0, 1, 3, 1);
-	secondOne->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f);
+	secondOne->scale = XMVectorSet(0.1f, 0.1f, 0.001f, 1.0f);
 	XMStoreFloat4x4(&secondOne->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(secondOne->scale), XMMatrixTranslationFromVector(secondOne->pos)));
 	secondOne->currentTex = GUICube::ZERO;
-	secondOne->displacement = XMVectorSet(1.5f, -0.5f, 0.45f, 0);
+	secondOne->displacement = XMVectorSet(-0.45f, 0.55f, 1.5f, 0);
 	MeshViewApp::guiCubes.push_back(secondOne);
 
 	// second second digit
 	GUICube * secondTwo = new GUICube;
 	secondTwo->pos = XMVectorSet(0, 1, 3, 1);
-	secondTwo->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f);
+	secondTwo->scale = XMVectorSet(0.1f, 0.1f, 0.001f, 1);
 	XMStoreFloat4x4(&secondTwo->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(secondTwo->scale), XMMatrixTranslationFromVector(secondTwo->pos)));
 	secondTwo->currentTex = GUICube::ZERO;
-	secondTwo->displacement = XMVectorSet(1.5f, -0.5f, 0.35f, 0);
+	secondTwo->displacement = XMVectorSet(-0.35f, 0.55f, 1.5f, 0);
 	MeshViewApp::guiCubes.push_back(secondTwo);
 }
 
@@ -1727,7 +1727,7 @@ void MeshViewApp::UpdateGUI(float dt)
 {
 	for (int i = 0; i < guiCubes.size(); i++)
 	{
-		guiCubes[i]->pos = (XMLoadFloat3(&HUDcam.GetPosition()) - guiCubes[i]->displacement);
+		guiCubes[i]->pos = (XMLoadFloat3(&HUDcam.GetPosition()) + guiCubes[i]->displacement);
 		XMStoreFloat4x4(&guiCubes[i]->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(guiCubes[i]->scale), XMMatrixTranslationFromVector(guiCubes[i]->pos)));
 		//set to player postion then move out from the look vector.
 	}
