@@ -1737,14 +1737,14 @@ void MeshViewApp::ScreenTransition(float dt)
 {
 	if (toRuns && angleCur < angleTo)
 	{
-		angleCur += dt;
-		mPlayer.RotateY(dt);
+		angleCur += 1.5 * dt;
+		mPlayer.RotateY(1.5 * dt);
 	}
 
 	if (toMain && angleCur > angleTo)
 	{
-		angleCur -= dt;
-		mPlayer.RotateY(-dt);
+		angleCur -= 1.5 * dt;
+		mPlayer.RotateY(1.5 * -dt);
 	}
 }
 
