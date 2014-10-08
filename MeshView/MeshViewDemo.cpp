@@ -1796,7 +1796,7 @@ void MeshViewApp::InitGUI()
 
 void MeshViewApp::UpdateGUI(float dt)
 {
-	/*for (int i = 0; i < guiCubes.size(); i++)
+	for (int i = 0; i < guiCubes.size(); i++)
 	{
 		guiCubes[i]->pos = (XMLoadFloat3(&HUDcam.GetPosition()) + guiCubes[i]->displacement);
 		XMStoreFloat4x4(&guiCubes[i]->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(guiCubes[i]->scale), XMMatrixTranslationFromVector(guiCubes[i]->pos)));
@@ -1841,7 +1841,7 @@ void MeshViewApp::UpdateGUI(float dt)
 		guiCubes[4]->currentTex = GUICube::NINE;
 		break;
 
-	}*/
+	}
 }
 
 void MeshViewApp::DrawGUI()
