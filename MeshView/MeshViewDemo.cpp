@@ -763,7 +763,7 @@ void MeshViewApp::DrawWhilePlaying()
 	//
 	// Draw opaque objects.
 	//
-	/*D3DX11_TECHNIQUE_DESC techDesc;
+	D3DX11_TECHNIQUE_DESC techDesc;
 	tech->GetDesc(&techDesc);
 	for (UINT p = 0; p < techDesc.Passes; ++p)
 	{
@@ -791,7 +791,7 @@ void MeshViewApp::DrawWhilePlaying()
 				mModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
 			}
 		}
-	}*/
+	}
 
 
 	// Turn off wireframe.
