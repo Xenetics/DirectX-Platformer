@@ -65,11 +65,10 @@ struct GUICube
 {
 	XMVECTOR pos;
 	XMVECTOR scale;
-	XMVECTOR halfSize;
-	XNA::AxisAlignedBox mMeshBox;
 	XMFLOAT4X4 localWorld;
 	enum hudTextures{ ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, COLON, HASH };
 	hudTextures currentTex;
+	XMVECTOR displacement = XMVectorZero();
 };
 
 struct BoundingSphere
@@ -239,6 +238,9 @@ private:
 	void InitGUI();
 	void UpdateGUI(float dt);
 	void DrawGUI();
+	float seconds = 0;
+	float minutes = 0;
+	Camera HUDcam;
 };
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
@@ -275,6 +277,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 	XMStoreFloat4x4(&mTexTransform, I);
 
 	mPlayer.SetPosition(0.0f, 0.0f, 0.0f);
+	HUDcam.SetPosition(0.0f, 0.0f, 0.0f);
 
 	// Mat for the general blocks
 	mBoxMat.Ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -348,10 +351,21 @@ bool MeshViewApp::Init()
 	//GUI textures
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/0Texture.png", 0, 0, &mDiffuseMapSRVGUITex[0], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/1Texture.png", 0, 0, &mDiffuseMapSRVGUITex[1], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/2Texture.png", 0, 0, &mDiffuseMapSRVGUITex[2], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/3Texture.png", 0, 0, &mDiffuseMapSRVGUITex[3], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/4Texture.png", 0, 0, &mDiffuseMapSRVGUITex[4], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/5Texture.png", 0, 0, &mDiffuseMapSRVGUITex[5], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/6Texture.png", 0, 0, &mDiffuseMapSRVGUITex[6], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/7Texture.png", 0, 0, &mDiffuseMapSRVGUITex[7], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/8Texture.png", 0, 0, &mDiffuseMapSRVGUITex[8], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/9Texture.png", 0, 0, &mDiffuseMapSRVGUITex[9], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/#Texture.png", 0, 0, &mDiffuseMapSRVGUITex[10], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/ColonTexture.png", 0, 0, &mDiffuseMapSRVGUITex[11], 0));
 
 	mSmap = new ShadowMap(md3dDevice, SMapSize, SMapSize);
 
 	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
+	HUDcam.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
 	mSsao = new Ssao(md3dDevice, md3dImmediateContext, mClientWidth, mClientHeight, mPlayer.GetFovY(), mPlayer.GetFarZ());
 
 	BuildScreenQuadGeometryBuffers();
@@ -495,6 +509,7 @@ void MeshViewApp::OnResize()
 	D3DApp::OnResize();
 
 	mPlayer.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
+	HUDcam.SetLens(0.25f*MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
 
 	if( mSsao )
 	{
@@ -1662,34 +1677,60 @@ void MeshViewApp::ScreenTransition(float dt)
 
 void MeshViewApp::InitGUI()
 {
-	// LOGO
+	// first minute digit
 	GUICube* MinuteOne = new GUICube; //creates new block
 	MinuteOne->pos = XMVectorSet(0, 1, 3, 1); //set the position in world space for the cube
-	MinuteOne->scale = XMVectorSet(3.0f, 0.4f, 2.0f, 1.0f); //set the scale of the button
+	MinuteOne->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f); //set the scale of the button
 	XMStoreFloat4x4(&MinuteOne->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(MinuteOne->scale), XMMatrixTranslationFromVector(MinuteOne->pos)));
-	XMStoreFloat3(&MinuteOne->mMeshBox.Center, MinuteOne->pos); //sets the center of the mesh box for click detection
-	MinuteOne->halfSize = XMVectorSet(1.5f, 0.2f, 1.0f, 1.0f); // sets the size of the bounding box from the center of the object
-	XMStoreFloat3(&MinuteOne->mMeshBox.Extents, MinuteOne->halfSize);
 	MinuteOne->currentTex = GUICube::ZERO; //sets the texture of button; 
+	MinuteOne->displacement = XMVectorSet(1.5f, -0.5f, 0.75f, 0);
 	MeshViewApp::guiCubes.push_back(MinuteOne); //adds the play button to the array of cubes to draw
 
-	// Play button
-	GUICube * playButton = new GUICube;
-	playButton->pos = XMVectorSet(0, 0.5, 3, 1);
-	playButton->scale = XMVectorSet(1.0f, 0.28f, 0.00001f, 1.0f);
-	XMStoreFloat4x4(&playButton->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(playButton->scale), XMMatrixTranslationFromVector(playButton->pos)));
-	XMStoreFloat3(&playButton->mMeshBox.Center, playButton->pos);
-	playButton->halfSize = XMVectorSet(0.5f, 0.14f, 0.000005f, 1.0f);
-	XMStoreFloat3(&playButton->mMeshBox.Extents, playButton->halfSize);
-	playButton->currentTex = GUICube::ONE;
-	MeshViewApp::guiCubes.push_back(playButton);
+	// second minute digit
+	GUICube * MinuteTWO = new GUICube;
+	MinuteTWO->pos = XMVectorSet(0, 1, 3, 1);
+	MinuteTWO->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f);
+	XMStoreFloat4x4(&MinuteTWO->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(MinuteTWO->scale), XMMatrixTranslationFromVector(MinuteTWO->pos)));
+	MinuteTWO->currentTex = GUICube::ZERO;
+	MinuteTWO->displacement = XMVectorSet(1.5f, -0.5f, 0.65f, 0);
+	MeshViewApp::guiCubes.push_back(MinuteTWO);
+
+	// colon inbetween minutes and second
+	GUICube * colon = new GUICube;
+	colon->pos = XMVectorSet(0, 1, 3, 1);
+	colon->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f);
+	XMStoreFloat4x4(&colon->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(colon->scale), XMMatrixTranslationFromVector(colon->pos)));
+	colon->currentTex = GUICube::COLON;
+	colon->displacement = XMVectorSet(1.5f, -0.5f, 0.55f, 0);
+	MeshViewApp::guiCubes.push_back(colon);
+
+	// first second digit
+	GUICube * secondOne = new GUICube;
+	secondOne->pos = XMVectorSet(0, 1, 3, 1);
+	secondOne->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f);
+	XMStoreFloat4x4(&secondOne->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(secondOne->scale), XMMatrixTranslationFromVector(secondOne->pos)));
+	secondOne->currentTex = GUICube::ZERO;
+	secondOne->displacement = XMVectorSet(1.5f, -0.5f, 0.45f, 0);
+	MeshViewApp::guiCubes.push_back(secondOne);
+
+	// second second digit
+	GUICube * secondTwo = new GUICube;
+	secondTwo->pos = XMVectorSet(0, 1, 3, 1);
+	secondTwo->scale = XMVectorSet(0.0001f, 0.1f, 0.1f, 1.0f);
+	XMStoreFloat4x4(&secondTwo->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(secondTwo->scale), XMMatrixTranslationFromVector(secondTwo->pos)));
+	secondTwo->currentTex = GUICube::ZERO;
+	secondTwo->displacement = XMVectorSet(1.5f, -0.5f, 0.35f, 0);
+	MeshViewApp::guiCubes.push_back(secondTwo);
 }
 
 void MeshViewApp::UpdateGUI(float dt)
 {
-	guiCubes[0]->pos = XMVectorSet(mPlayer.GetPosition().x-5, mPlayer.GetPosition().y, mPlayer.GetPosition().z, 1);
-	XMStoreFloat4x4(&guiCubes[0]->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(guiCubes[0]->scale), XMMatrixTranslationFromVector(guiCubes[0]->pos)));
-	//set to player postion then move out from the look vector.
+	for (int i = 0; i < guiCubes.size(); i++)
+	{
+		guiCubes[i]->pos = (XMLoadFloat3(&HUDcam.GetPosition()) - guiCubes[i]->displacement);
+		XMStoreFloat4x4(&guiCubes[i]->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(guiCubes[i]->scale), XMMatrixTranslationFromVector(guiCubes[i]->pos)));
+		//set to player postion then move out from the look vector.
+	}
 }
 
 void MeshViewApp::DrawGUI()
@@ -1701,14 +1742,14 @@ void MeshViewApp::DrawGUI()
 	UINT offset = 0;
 
 	// Set constants
-	mPlayer.UpdateViewMatrix();
+	HUDcam.UpdateViewMatrix();
 
-	XMMATRIX view = mPlayer.View();
-	XMMATRIX proj = mPlayer.Proj();
-	XMMATRIX viewProj = mPlayer.ViewProj();
+	XMMATRIX view = HUDcam.View();
+	XMMATRIX proj = HUDcam.Proj();
+	XMMATRIX viewProj = HUDcam.ViewProj();
 
 	Effects::BasicFX->SetDirLights(mDirLights);
-	Effects::BasicFX->SetEyePosW(mPlayer.GetPosition());
+	Effects::BasicFX->SetEyePosW(HUDcam.GetPosition());
 	Effects::BasicFX->SetCubeMap(mSky->CubeMapSRV());
 	Effects::BasicFX->SetShadowMap(mSmap->DepthMapSRV());
 
@@ -1742,6 +1783,36 @@ void MeshViewApp::DrawGUI()
 					break;
 				case GUICube::ONE:
 					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[1]);
+					break;
+				case GUICube::TWO:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[2]);
+					break;
+				case GUICube::THREE:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[3]);
+					break;
+				case GUICube::FOUR:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[4]);
+					break;
+				case GUICube::FIVE:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[5]);
+					break;
+				case GUICube::SIX:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[6]);
+					break;
+				case GUICube::SEVEN:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[7]);
+					break;
+				case GUICube::EIGHT:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[8]);
+					break;
+				case GUICube::NINE:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[9]);
+					break;
+				case GUICube::HASH:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[10]);
+					break;
+				case GUICube::COLON:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[11]);
 					break;
 				}
 				activeTexTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
