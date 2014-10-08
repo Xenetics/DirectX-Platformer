@@ -66,7 +66,7 @@ struct GUICube
 	XMVECTOR pos;
 	XMVECTOR scale;
 	XMFLOAT4X4 localWorld;
-	enum hudTextures{ ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, COLON, HASH };
+	enum hudTextures{ ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, HASH, COLON };
 	hudTextures currentTex;
 	XMVECTOR displacement = XMVectorZero();
 };
@@ -171,6 +171,7 @@ private:
 	bool toRuns = false;
 	bool toMain = false;
 	void ScreenTransition(float);
+	std::vector<GUICube*> HSCubes;
 	
 	// Picking stuff
 	UINT mPickedTriangle;
@@ -886,7 +887,6 @@ void MeshViewApp::DrawMenu()
 				XMMATRIX world = XMLoadFloat4x4(&cubes[i]->localWorld);
 				XMMATRIX worldInvTranspose = MathHelper::InverseTranspose(world);
 				XMMATRIX worldViewProj = world*view*proj;
-				//mfxWorldViewProj->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
 
 				Effects::BasicFX->SetWorld(world);
 				Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
@@ -928,6 +928,67 @@ void MeshViewApp::DrawMenu()
 				// Restore default
 				md3dImmediateContext->RSSetState(0);
 				
+			}
+		}
+
+		for (int i = 0; i < HSCubes.size(); i++)
+		{
+			if (HSCubes[i] != NULL)
+			{
+				XMMATRIX world = XMLoadFloat4x4(&HSCubes[i]->localWorld);
+				XMMATRIX worldInvTranspose = MathHelper::InverseTranspose(world);
+				XMMATRIX worldViewProj = world*view*proj;
+
+				Effects::BasicFX->SetWorld(world);
+				Effects::BasicFX->SetWorldInvTranspose(worldInvTranspose);
+				Effects::BasicFX->SetWorldViewProj(worldViewProj);
+				Effects::BasicFX->SetTexTransform(XMLoadFloat4x4(&mTexTransform));
+				Effects::BasicFX->SetMaterial(mBoxMat);
+				// ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, COLON, HASH
+				switch (HSCubes[i]->currentTex) //show texture of cube
+				{
+				case GUICube::ZERO:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[0]);
+					break;
+				case GUICube::ONE:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[1]);
+					break;
+				case GUICube::TWO:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[2]);
+					break;
+				case GUICube::THREE:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[3]);
+					break;
+				case GUICube::FOUR:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[4]);
+					break;
+				case GUICube::FIVE:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[5]);
+					break;
+				case GUICube::SIX:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[6]);
+					break;
+				case GUICube::SEVEN:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[7]);
+					break;
+				case GUICube::EIGHT:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[8]);
+					break;
+				case GUICube::NINE:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[9]);
+					break;
+				case GUICube::HASH:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[10]);
+					break;
+				case GUICube::COLON:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVGUITex[11]);
+					break;
+				}
+				activeTexTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
+				md3dImmediateContext->DrawIndexed(mBoxIndexCount, mBoxIndexOffset, mBoxVertexOffset);
+				// Restore default
+				md3dImmediateContext->RSSetState(0);
+
 			}
 		}
 		mSky->Draw(md3dImmediateContext, mPlayer); // draw sky
@@ -1533,6 +1594,16 @@ void MeshViewApp::CreateMenu()
 	MeshViewApp::cubes.push_back(returnButton);
 
 	// Pounds and Numbers
+	
+	for (int i = 1; i < 6; ++i)
+	{
+		GUICube* hash = new GUICube; //creates new block
+		hash->pos = XMVectorSet(3, 1 - (0.35 * i), 1.0, 1); //set the position in world space for the cube
+		hash->scale = XMVectorSet(0.00001f, 0.2f, 0.2f, 1.0f); //set the scale of the button
+		XMStoreFloat4x4(&hash->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(hash->scale), XMMatrixTranslationFromVector(hash->pos)));
+		hash->currentTex = GUICube::HASH; //sets the texture of button; 
+		MeshViewApp::HSCubes.push_back(hash); //adds the play button to the array of cubes to draw
+	}
 }
 
 void MeshViewApp::Pick(int sx, int sy)
