@@ -1729,7 +1729,47 @@ void MeshViewApp::UpdateGUI(float dt)
 	{
 		guiCubes[i]->pos = (XMLoadFloat3(&HUDcam.GetPosition()) + guiCubes[i]->displacement);
 		XMStoreFloat4x4(&guiCubes[i]->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(guiCubes[i]->scale), XMMatrixTranslationFromVector(guiCubes[i]->pos)));
-		//set to player postion then move out from the look vector.
+	}
+	seconds += dt;
+	if (seconds > 10)
+	{
+		seconds = 0;
+		guiCubes[3]->currentTex = (GUICube::hudTextures)(1 + (int)guiCubes[3]->currentTex);
+	}
+	int temp = seconds;
+	switch (temp)
+	{
+	case 0:
+		guiCubes[4]->currentTex = GUICube::ZERO;
+		break;
+	case 1:
+		guiCubes[4]->currentTex = GUICube::ONE;
+		break;
+	case 2:
+		guiCubes[4]->currentTex = GUICube::TWO;
+		break;
+	case 3:
+		guiCubes[4]->currentTex = GUICube::THREE;
+		break;
+	case 4:
+		guiCubes[4]->currentTex = GUICube::FOUR;
+		break;
+	case 5:
+		guiCubes[4]->currentTex = GUICube::FIVE;
+		break;
+	case 6:
+		guiCubes[4]->currentTex = GUICube::SIX;
+		break;
+	case 7:
+		guiCubes[4]->currentTex = GUICube::SEVEN;
+		break;
+	case 8:
+		guiCubes[4]->currentTex = GUICube::EIGHT;
+		break;
+	case 9:
+		guiCubes[4]->currentTex = GUICube::NINE;
+		break;
+
 	}
 }
 
