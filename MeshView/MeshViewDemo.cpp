@@ -111,7 +111,6 @@ public:
 
 private:
 	void DrawSceneToSsaoNormalDepthMap();
-	void DrawSceneToShadowMap();
 	void DrawScreenQuad(ID3D11ShaderResourceView* srv);
 	void BuildShadowTransform();
 	void BuildScreenQuadGeometryBuffers();
@@ -212,7 +211,6 @@ private:
 	Player mPlayer;
 	SoundMgr* mSound;
 	bool SFXOn = true;
-	bool MusicOn = true;
 
 	POINT mLastMousePos;
 
@@ -291,12 +289,12 @@ mScreenQuadVB(0), mScreenQuadIB(0),
 
 	mDirLights[1].Ambient  = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	mDirLights[1].Diffuse  = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
-	mDirLights[1].Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	mDirLights[1].Specular = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[1].Direction = XMFLOAT3(0.707f, -0.707f, 0.0f);
 
 	mDirLights[2].Ambient  = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[2].Diffuse  = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
-	mDirLights[2].Specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	mDirLights[2].Specular = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 	mDirLights[2].Direction = XMFLOAT3(0.0f, -1.0, 0.0f);
 
 	mOriginalLightDir[0] = mDirLights[0].Direction;
@@ -933,20 +931,17 @@ void MeshViewApp::KeyHandler(float dt)
 		{
 			if (wKey == false)
 			{
-				//key down
-
+				//on key down
 			}
 			//key pressed
 			mPlayer.Walk(1.0f);
 
-			if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+			if ((mPlayer.isCollidingFloor || mPlayer.isRunWall) && SFXOn)
 			{
 				mSound->playing[mSound->STEP_1] = true;
 				mSound->ChangeVolume(1, 0.1);
 				float random = 0.981 + (rand() * 0.000001);
 				mSound->ChangeFrequency(1, random);
-				//mSound->playing[2] = true;
-				//mSound->ChangeVolume(2, 0.1);
 			}
 
 			wKey = true;
@@ -966,11 +961,11 @@ void MeshViewApp::KeyHandler(float dt)
 		{
 			if (sKey == false)
 			{
-				//key down
+				//on key down
 			}
 			//key pressed
 
-			if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+			if ((mPlayer.isCollidingFloor || mPlayer.isRunWall) && SFXOn)
 			{
 				mSound->playing[2] = true;
 				mSound->ChangeVolume(1, 0.1);
@@ -979,7 +974,6 @@ void MeshViewApp::KeyHandler(float dt)
 				mSound->playing[mSound->STEP_2] = true;
 				mSound->ChangeVolume(2, 0.1);
 			}
-			//mSound->playing[2] = true;
 
 			mPlayer.Walk(-1.0f);
 
@@ -1008,7 +1002,7 @@ void MeshViewApp::KeyHandler(float dt)
 
 			//key pressed
 			mPlayer.Strafe(-0.4f);
-			if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+			if ((mPlayer.isCollidingFloor || mPlayer.isRunWall) && SFXOn)
 			{
 				mSound->playing[2] = true;
 				mSound->ChangeVolume(1, 0.1);
@@ -1039,7 +1033,7 @@ void MeshViewApp::KeyHandler(float dt)
 				dKey = true;
 				//key pressed
 				mPlayer.Strafe(0.4f);
-				if (mPlayer.isCollidingFloor || mPlayer.isRunWall)
+				if ((mPlayer.isCollidingFloor || mPlayer.isRunWall) && SFXOn)
 				{
 					mSound->playing[2] = true;
 					mSound->ChangeVolume(1, 0.1);
@@ -1061,10 +1055,10 @@ void MeshViewApp::KeyHandler(float dt)
 			}
 			if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 			{
-				if (space == false)
+				mPlayer.Jump();
+				if (space == false && SFXOn)
 				{
 					//key down
-					mPlayer.Jump();
 					mSound->playing[mSound->GRUNT] = true;
 				}
 				//key pressed
@@ -1200,81 +1194,6 @@ void MeshViewApp::DrawSceneToSsaoNormalDepthMap()
 			for(UINT subset = 0; subset < mAlphaClippedModelInstances[modelIndex].Model->SubsetCount; ++subset)
 			{
 				Effects::SsaoNormalDepthFX->SetDiffuseMap(mAlphaClippedModelInstances[modelIndex].Model->DiffuseMapSRV[subset]);
-				alphaClippedTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
-				mAlphaClippedModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
-			}
-		}
-    }
-	*/
-	md3dImmediateContext->RSSetState(0);
-}
-
-void MeshViewApp::DrawSceneToShadowMap()
-{
-	XMMATRIX view     = XMLoadFloat4x4(&mLightView);
-	XMMATRIX proj     = XMLoadFloat4x4(&mLightProj);
-	XMMATRIX viewProj = XMMatrixMultiply(view, proj);
-
-	Effects::BuildShadowMapFX->SetEyePosW(mPlayer.GetPosition());
-	Effects::BuildShadowMapFX->SetViewProj(viewProj);
-
-	ID3DX11EffectTechnique* tech = Effects::BuildShadowMapFX->BuildShadowMapTech;
-	ID3DX11EffectTechnique* alphaClippedTech = Effects::BuildShadowMapFX->BuildShadowMapAlphaClipTech;
-
-	md3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	XMMATRIX world;
-	XMMATRIX worldInvTranspose;
-	XMMATRIX worldViewProj;
-
-	md3dImmediateContext->IASetInputLayout(InputLayouts::Basic32);
-     
-	//if( GetAsyncKeyState('1') & 0x8000 )
-		//md3dImmediateContext->RSSetState(mWireframeRS);
-
-    D3DX11_TECHNIQUE_DESC techDesc;
-    tech->GetDesc( &techDesc );
-    for(UINT p = 0; p < techDesc.Passes; ++p)
-    {
-		for(UINT modelIndex = 0; modelIndex < mModelInstances.size(); ++modelIndex)
-		{
-			world = XMLoadFloat4x4(&mModelInstances[modelIndex].World);
-			worldInvTranspose = MathHelper::InverseTranspose(world);
-			worldViewProj = world*view*proj;
-
-			Effects::BuildShadowMapFX->SetWorld(world);
-			Effects::BuildShadowMapFX->SetWorldInvTranspose(worldInvTranspose);
-			Effects::BuildShadowMapFX->SetWorldViewProj(worldViewProj);
-			Effects::BuildShadowMapFX->SetTexTransform(XMMatrixScaling(1.0f, 1.0f, 1.0f));
-
-			tech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
-
-			for(UINT subset = 0; subset < mModelInstances[modelIndex].Model->SubsetCount; ++subset)
-			{
-				mModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
-			}
-		}
-    }
-
-	//this can be reimplemented if we ever want to have objects that are not culled and have alpha in the texture?(or whatever it does)
-	/*
-	alphaClippedTech->GetDesc( &techDesc );
-    for(UINT p = 0; p < techDesc.Passes; ++p)
-    {
-		for(UINT modelIndex = 0; modelIndex < mAlphaClippedModelInstances.size(); ++modelIndex)
-		{
-			world = XMLoadFloat4x4(&mAlphaClippedModelInstances[modelIndex].World);
-			worldInvTranspose = MathHelper::InverseTranspose(world);
-			worldViewProj = world*view*proj;
-
-			Effects::BuildShadowMapFX->SetWorld(world);
-			Effects::BuildShadowMapFX->SetWorldInvTranspose(worldInvTranspose);
-			Effects::BuildShadowMapFX->SetWorldViewProj(worldViewProj);
-			Effects::BuildShadowMapFX->SetTexTransform(XMMatrixScaling(1.0f, 1.0f, 1.0f));
-
-			for(UINT subset = 0; subset < mAlphaClippedModelInstances[modelIndex].Model->SubsetCount; ++subset)
-			{
-				Effects::BuildShadowMapFX->SetDiffuseMap(mAlphaClippedModelInstances[modelIndex].Model->DiffuseMapSRV[subset]);
 				alphaClippedTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
 				mAlphaClippedModelInstances[modelIndex].Model->ModelMesh.Draw(md3dImmediateContext, subset);
 			}
@@ -1573,6 +1492,7 @@ void MeshViewApp::CreateMenu()
 	scoresButton->button = Cube::BESTRUNS;
 	MeshViewApp::cubes.push_back(scoresButton);
 
+	//HIGHSCORE AREA------------------------------------------------------------
 	// Highscores Banner
 	Cube * scoresBanner = new Cube;
 	scoresBanner->pos = XMVectorSet(3, 1, 0, 1);
@@ -1596,6 +1516,8 @@ void MeshViewApp::CreateMenu()
 	XMStoreFloat3(&returnButton->mMeshBox.Extents, returnButton->halfSize);
 	returnButton->button = Cube::RETURN;
 	MeshViewApp::cubes.push_back(returnButton);
+
+	// Pounds and Numbers
 }
 
 void MeshViewApp::Pick(int sx, int sy)
@@ -1614,11 +1536,7 @@ void MeshViewApp::Pick(int sx, int sy)
 	XMMATRIX V = mPlayer.View();
 	XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(V), V);
 
-	//XMMATRIX W = XMMatrixTranslationFromVector(cubes[i]->pos);
-	//XMMATRIX W = XMLoadFloat4x4(&mMeshWorld);
-	//XMMATRIX invWorld = XMMatrixInverse(&XMMatrixDeterminant(W), W);
-
-	XMMATRIX toLocal = invView;// XMMatrixMultiply(invView, invWorld);
+	XMMATRIX toLocal = invView;
 
 	rayOrigin = XMVector3TransformCoord(rayOrigin, toLocal);
 	rayDir = XMVector3TransformNormal(rayDir, toLocal);
@@ -1671,10 +1589,7 @@ void MeshViewApp::Pick(int sx, int sy)
 					PostQuitMessage(0);
 					break;
 				case Cube::SOUNDb:
-					for (int i = 1; i < mSound->channels.size(); ++i)
-					{
-						mSound->channels[i]->setMute(true);
-					}
+					SFXOn = false;
 					cubes[3]->button = Cube::SOUNDbOff;
 					break;
 				case Cube::MUSICb:
@@ -1682,10 +1597,7 @@ void MeshViewApp::Pick(int sx, int sy)
 					cubes[4]->button = Cube::MUSICbOff;
 					break;
 				case Cube::SOUNDbOff:
-					for (int i = 1; i < mSound->channels.size(); ++i)
-					{
-						mSound->channels[i]->setMute(false);
-					}
+					SFXOn = true;
 					cubes[3]->button = Cube::SOUNDb;
 					break;
 				case Cube::MUSICbOff:
