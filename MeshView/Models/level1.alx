@@ -1,6 +1,6 @@
 # Blender v2.71 (sub 0) OBJ File: 'lvel1.blend'
 # www.blender.org
-mtllib lvel1.mtl
+mtllib level1.mtl
 o Cube
 v 32.646782 -1.014073 -4.696279
 v 32.646782 -1.014073 4.696279
