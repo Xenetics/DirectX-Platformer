@@ -173,6 +173,7 @@ private:
 	bool toMain = false;
 	void ScreenTransition(float);
 	std::vector<GUICube*> HSCubes;
+	GUICube::hudTextures numberChar(std::vector<std::string> vector, int score, int number);
 	
 	// Picking stuff
 	UINT mPickedTriangle;
@@ -1605,23 +1606,81 @@ void MeshViewApp::CreateMenu()
 
 	// Pounds and Numbers
 	GUICube::hudTextures numbers[5] = { GUICube::ONE, GUICube::TWO, GUICube::THREE, GUICube::FOUR, GUICube::FIVE };
+	std::vector<std::string> scoresFromFile;
+	scoresFromFile.push_back(fileManager.ReadData("first")[0]);
+	scoresFromFile.push_back(fileManager.ReadData("second")[0]);
+	scoresFromFile.push_back(fileManager.ReadData("third")[0]);
+	scoresFromFile.push_back(fileManager.ReadData("fourth")[0]);
+	scoresFromFile.push_back(fileManager.ReadData("fifth")[0]);
 
 	for (int i = 1; i < 6; ++i)
 	{
 		GUICube* hash = new GUICube; //creates new block
-		hash->pos = XMVectorSet(3, 1 - (0.35 * i), 1.0, 1); //set the position in world space for the cube
+		hash->pos = XMVectorSet(3, 1 - (0.35 * i), 0.8, 1); //set the position in world space for the cube
 		hash->scale = XMVectorSet(0.00001f, 0.2f, 0.2f, 1.0f); //set the scale of the button
 		XMStoreFloat4x4(&hash->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(hash->scale), XMMatrixTranslationFromVector(hash->pos)));
 		hash->currentTex = GUICube::HASH; //sets the texture of button; 
 		MeshViewApp::HSCubes.push_back(hash); //adds the play button to the array of cubes to draw
 
 		GUICube* number = new GUICube;
-		number->pos = XMVectorSet(3, 1 - (0.35 * i), 0.8, 1);
+		number->pos = XMVectorSet(3, 1 - (0.35 * i), 0.6, 1);
 		number->scale = XMVectorSet(0.00001f, 0.2f, 0.2f, 1.0f);
 		XMStoreFloat4x4(&number->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(number->scale), XMMatrixTranslationFromVector(number->pos)));
 		number->currentTex = numbers[i - 1];
 		MeshViewApp::HSCubes.push_back(number);
+
+		GUICube* colon = new GUICube;
+		colon->pos = XMVectorSet(3, 1 - (0.35 * i), -0.4, 1);
+		colon->scale = XMVectorSet(0.00001f, 0.2f, 0.2f, 1.0f);
+		XMStoreFloat4x4(&colon->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(colon->scale), XMMatrixTranslationFromVector(colon->pos)));
+		colon->currentTex = GUICube::COLON;
+		MeshViewApp::HSCubes.push_back(colon);
+
+		for (int j = 1; j < 5; j++)
+		{
+			GUICube* score = new GUICube;
+			if (j > 2)
+			{
+				score->pos = XMVectorSet(3, 1 - (0.35 * i), 0.0 - (0.2 * j), 1);
+			}
+			else
+			{
+				score->pos = XMVectorSet(3, 1 - (0.35 * i), 0.2 - (0.2 * j), 1);
+			}
+			score->scale = XMVectorSet(0.00001f, 0.2f, 0.2f, 1.0f);
+			XMStoreFloat4x4(&score->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(score->scale), XMMatrixTranslationFromVector(score->pos)));
+			score->currentTex = numberChar(scoresFromFile, i - 1, j - 1);
+			MeshViewApp::HSCubes.push_back(score);
+		}
 	}
+}
+
+GUICube::hudTextures MeshViewApp::numberChar(std::vector<std::string> vector, int score, int number)
+{
+	switch (vector[score][number])
+	{
+	case '0':
+		return GUICube::ZERO;
+	case '1':
+		return GUICube::ONE;
+	case '2':
+		return GUICube::TWO;
+	case '3':
+		return GUICube::THREE;
+	case '4':
+		return GUICube::FOUR;
+	case '5':
+		return GUICube::FIVE;
+	case '6':
+		return GUICube::SIX;
+	case '7':
+		return GUICube::SEVEN;
+	case '8':
+		return GUICube::EIGHT;
+	case '9':
+		return GUICube::NINE;
+	}
+	return GUICube::COLON;
 }
 
 void MeshViewApp::Pick(int sx, int sy)
