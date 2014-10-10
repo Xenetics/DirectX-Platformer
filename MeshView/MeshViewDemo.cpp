@@ -1594,7 +1594,8 @@ void MeshViewApp::CreateMenu()
 	MeshViewApp::cubes.push_back(returnButton);
 
 	// Pounds and Numbers
-	
+	GUICube::hudTextures numbers[5] = { GUICube::ONE, GUICube::TWO, GUICube::THREE, GUICube::FOUR, GUICube::FIVE };
+
 	for (int i = 1; i < 6; ++i)
 	{
 		GUICube* hash = new GUICube; //creates new block
@@ -1603,6 +1604,13 @@ void MeshViewApp::CreateMenu()
 		XMStoreFloat4x4(&hash->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(hash->scale), XMMatrixTranslationFromVector(hash->pos)));
 		hash->currentTex = GUICube::HASH; //sets the texture of button; 
 		MeshViewApp::HSCubes.push_back(hash); //adds the play button to the array of cubes to draw
+
+		GUICube* number = new GUICube;
+		number->pos = XMVectorSet(3, 1 - (0.35 * i), 0.8, 1);
+		number->scale = XMVectorSet(0.00001f, 0.2f, 0.2f, 1.0f);
+		XMStoreFloat4x4(&number->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(number->scale), XMMatrixTranslationFromVector(number->pos)));
+		number->currentTex = numbers[i - 1];
+		MeshViewApp::HSCubes.push_back(number);
 	}
 }
 
