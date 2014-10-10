@@ -96,6 +96,9 @@
     <ClCompile Include="xnacollision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicModel.h">
@@ -179,6 +182,9 @@
     <ClInclude Include="xnacollision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="FX\BuildShadowMap.fx">
@@ -219,5 +225,10 @@
     <Library Include="fmodex_vc.lib">
       <Filter>Resource Files</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ParkcoulHighScores.hst">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

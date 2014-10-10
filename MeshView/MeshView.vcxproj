@@ -87,6 +87,7 @@
     <ClCompile Include="d3dApp.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
     <ClCompile Include="Effects.cpp" />
+    <ClCompile Include="FileWriter.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="d3dx11effect.h" />
     <ClInclude Include="d3dxGlobal.h" />
     <ClInclude Include="Effects.h" />
+    <ClInclude Include="FileWriter.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="Level.h" />
@@ -223,6 +225,9 @@
     <Library Include="Effects11.lib" />
     <Library Include="Effects11d.lib" />
     <Library Include="fmodex_vc.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ParkcoulHighScores.hst" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

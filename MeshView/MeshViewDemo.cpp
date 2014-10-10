@@ -45,6 +45,7 @@
 #include "LevelModel.h"
 #include "SoundMgr.h"
 #include "Level.h"
+#include "FileWriter.h"
 
 #define EPSILON 0.00001
 
@@ -239,9 +240,14 @@ private:
 	void InitGUI();
 	void UpdateGUI(float dt);
 	void DrawGUI();
+	bool timerOn = true;
 	float seconds = 0;
 	float minutes = 0;
 	Camera HUDcam;
+	void SaveScore();
+	FileWriter fileManager;
+	//this is a cheap hack bool
+	bool newLevelHasStarted = false;
 };
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
@@ -267,7 +273,7 @@ mScreenQuadVB(0), mScreenQuadIB(0),
   mSmap(0), mSsao(0),
   mLightRotationAngle(0.0f), mBoxVB(0), mBoxIB(0), mFX(0), mTech(0),
   mfxWorldViewProj(0), mInputLayout(0),
-  mTheta(1.5f*MathHelper::Pi), mPhi(0.25f*MathHelper::Pi), mRadius(5.0f), gameState(GAME_STATE::menuState)
+  mTheta(1.5f*MathHelper::Pi), mPhi(0.25f*MathHelper::Pi), mRadius(5.0f), gameState(GAME_STATE::menuState), fileManager("ParkcoulHighScores.hst")
 {
 	mMainWndCaption = L"Platformer";
 	
@@ -372,16 +378,16 @@ bool MeshViewApp::Init()
 	BuildScreenQuadGeometryBuffers();
 
 	//set up the levels so they are ready to load when needed
-	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(127.0, -2.3, -79.0), 10.0f); //TODO change end point to proper place
+	Level* lvl = new Level(md3dDevice, &mTexMgr, "Models\\level2.alx", XMFLOAT3(-126.7, -2.3, -85.6), 10.0f); 
 	lvl->SetSpawnPoint(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	mLevels.push_back(lvl);
 
-	lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
-	// TODO add spawnpoint
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(-126.7, -2.3, -85.6), 10.0f);
+	lvl->SetSpawnPoint(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	mLevels.push_back(lvl);
 
-	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMapSmooth.alx", XMFLOAT3(11.0, 7.0, 9.0), 1.0f);
-	//TODO add spawnpoint
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(-126.7, -2.3, -85.6), 10.0f);
+	lvl->SetSpawnPoint(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	mLevels.push_back(lvl);
 
 	
@@ -503,6 +509,7 @@ void MeshViewApp::LoadCurrLevel()
 		0.5f*(maxPt.z - minPt.z));
 
 	mSceneBounds.Radius = sqrtf(extent.x*extent.x + extent.y*extent.y + extent.z*extent.z);
+	mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
 }
 
 void MeshViewApp::OnResize()
@@ -547,14 +554,17 @@ void MeshViewApp::UpdateWhilePlaying(float dt)
 	//get eh player sphere
 	XNA::Sphere pSphere= mPlayer.GetBoundingSphere();
 	//see if you win
-	if (XNA::IntersectSphereSphere(&pSphere, &mLevels[currLevel]->GetWinSphere()))
+	if (XNA::IntersectSphereSphere(&pSphere, &mLevels[currLevel]->GetWinSphere()) && !newLevelHasStarted)
 	{
 		if (currLevel + 1 < mLevels.size())
 		{
 			currLevel++;
 		}
 
+		newLevelHasStarted = true;
+		SaveScore();
 		LoadCurrLevel();
+		
 
 		return;
 	}
@@ -1675,7 +1685,6 @@ void MeshViewApp::Pick(int sx, int sy)
 				case Cube::PLAYb:
 					gameState = GAME_STATE::playingState;
 					LoadCurrLevel();
-					mPlayer.SetPosition(mLevels[currLevel]->GetSpawnPoint());
 					ResetLevel();
 					InitGUI();
 					break;
@@ -1809,46 +1818,73 @@ void MeshViewApp::UpdateGUI(float dt)
 		guiCubes[i]->pos = (XMLoadFloat3(&HUDcam.GetPosition()) + guiCubes[i]->displacement);
 		XMStoreFloat4x4(&guiCubes[i]->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(guiCubes[i]->scale), XMMatrixTranslationFromVector(guiCubes[i]->pos)));
 	}
-	seconds += dt;
-	if (seconds > 10)
+	if (timerOn)
 	{
-		seconds = 0;
-		guiCubes[3]->currentTex = (GUICube::hudTextures)(1 + (int)guiCubes[3]->currentTex);
-	}
-	int temp = seconds;
-	switch (temp)
-	{
-	case 0:
-		guiCubes[4]->currentTex = GUICube::ZERO;
-		break;
-	case 1:
-		guiCubes[4]->currentTex = GUICube::ONE;
-		break;
-	case 2:
-		guiCubes[4]->currentTex = GUICube::TWO;
-		break;
-	case 3:
-		guiCubes[4]->currentTex = GUICube::THREE;
-		break;
-	case 4:
-		guiCubes[4]->currentTex = GUICube::FOUR;
-		break;
-	case 5:
-		guiCubes[4]->currentTex = GUICube::FIVE;
-		break;
-	case 6:
-		guiCubes[4]->currentTex = GUICube::SIX;
-		break;
-	case 7:
-		guiCubes[4]->currentTex = GUICube::SEVEN;
-		break;
-	case 8:
-		guiCubes[4]->currentTex = GUICube::EIGHT;
-		break;
-	case 9:
-		guiCubes[4]->currentTex = GUICube::NINE;
-		break;
+		seconds += dt;
+		if (seconds >= 1 && newLevelHasStarted)
+		{
+			newLevelHasStarted = false;
+		}
 
+		if (seconds > 10)
+		{
+			seconds = 0;
+			guiCubes[3]->currentTex = (GUICube::hudTextures)(1 + (int)guiCubes[3]->currentTex);
+			if (guiCubes[3]->currentTex == GUICube::SIX)
+			{
+				seconds = 0;
+				guiCubes[3]->currentTex = GUICube::ZERO;
+				guiCubes[1]->currentTex = (GUICube::hudTextures)(1 + (int)guiCubes[1]->currentTex);
+				if (guiCubes[1]->currentTex == GUICube::HASH)
+				{
+					guiCubes[1]->currentTex = GUICube::ZERO;
+					guiCubes[0]->currentTex = (GUICube::hudTextures)(1 + (int)guiCubes[0]->currentTex);
+
+				}
+			}
+			if (guiCubes[0]->currentTex == GUICube::HASH)
+			{
+				guiCubes[0]->currentTex = GUICube::NINE;
+				guiCubes[1]->currentTex = GUICube::NINE;
+				guiCubes[3]->currentTex = GUICube::FIVE;
+				seconds = 9;
+				timerOn = false;
+			}
+		}
+		int temp = seconds;
+		switch (temp)
+		{
+		case 0:
+			guiCubes[4]->currentTex = GUICube::ZERO;
+			break;
+		case 1:
+			guiCubes[4]->currentTex = GUICube::ONE;
+			break;
+		case 2:
+			guiCubes[4]->currentTex = GUICube::TWO;
+			break;
+		case 3:
+			guiCubes[4]->currentTex = GUICube::THREE;
+			break;
+		case 4:
+			guiCubes[4]->currentTex = GUICube::FOUR;
+			break;
+		case 5:
+			guiCubes[4]->currentTex = GUICube::FIVE;
+			break;
+		case 6:
+			guiCubes[4]->currentTex = GUICube::SIX;
+			break;
+		case 7:
+			guiCubes[4]->currentTex = GUICube::SEVEN;
+			break;
+		case 8:
+			guiCubes[4]->currentTex = GUICube::EIGHT;
+			break;
+		case 9:
+			guiCubes[4]->currentTex = GUICube::NINE;
+			break;
+		}
 	}
 }
 
@@ -1943,4 +1979,43 @@ void MeshViewApp::DrawGUI()
 		}
 	}
 	//HR(mSwapChain->Present(0, 0));
+}
+
+void MeshViewApp::SaveScore()
+{
+	std::string score = std::to_string(guiCubes[0]->currentTex) +
+						std::to_string(guiCubes[1]->currentTex) +
+						std::to_string(guiCubes[3]->currentTex) +
+						std::to_string(guiCubes[4]->currentTex);
+	//std::stringstream temp;
+	//temp << score;
+
+	//create a temp vector and push the saved highscores into it.
+	std::vector<std::string> scoresFromFile;
+	scoresFromFile.push_back(fileManager.ReadData("first")[0]);
+	scoresFromFile.push_back(fileManager.ReadData("second")[0]);
+	scoresFromFile.push_back(fileManager.ReadData("third")[0]);
+	scoresFromFile.push_back(fileManager.ReadData("fourth")[0]);
+	scoresFromFile.push_back(fileManager.ReadData("fifth")[0]);
+	//add the new score to the vector list.
+	scoresFromFile.push_back(score);
+	//sort the vector list from smallest to biggest
+	std::sort(scoresFromFile.begin(), scoresFromFile.end());
+
+	//write the top 5 scores into the top five places in the save file.
+	fileManager.WriteData("first", scoresFromFile[0]);
+	fileManager.WriteData("second", scoresFromFile[1]);
+	fileManager.WriteData("third", scoresFromFile[2]);
+	fileManager.WriteData("fourth", scoresFromFile[3]);
+	fileManager.WriteData("fifth", scoresFromFile[4]);
+
+	//set timer vars back
+	seconds = 0;
+	guiCubes[0]->currentTex = GUICube::ZERO;
+	guiCubes[1]->currentTex = GUICube::ZERO;
+	guiCubes[3]->currentTex = GUICube::ZERO;
+	guiCubes[4]->currentTex = GUICube::ZERO;
+	seconds = 0;
+	timerOn = true;
+
 }
