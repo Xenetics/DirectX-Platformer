@@ -55,7 +55,7 @@ struct Cube
 	XMVECTOR originPos;
 	XMVECTOR scale;
 	XMVECTOR halfSize;
-	enum menuButtons { LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff, BESTRUNS, RETURN, BESTRUNSB };
+	enum menuButtons { LOGOb, PLAYb, EXITb, SOUNDb, SOUNDbOff, MUSICb, MUSICbOff, BESTRUNS, RETURN, BESTRUNSB, LEVEL01, LEVEL02 };
 	menuButtons button;
 	XNA::AxisAlignedBox mMeshBox;
 	XMFLOAT4X4 localWorld;
@@ -122,7 +122,7 @@ private:
 
 	//Menu creation and draw stuff
 	std::vector<Cube*> cubes;
-	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[10];
+	ID3D11ShaderResourceView* mDiffuseMapSRVMenuButtons[12];
 	ID3D11ShaderResourceView* mDiffuseMapSRVGUITex[12];
 	void CreateMenu();
 	Material mBoxMat;
@@ -355,6 +355,8 @@ bool MeshViewApp::Init()
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/BestRuns.png", 0, 0, &mDiffuseMapSRVMenuButtons[7], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/ReturnButton.png", 0, 0, &mDiffuseMapSRVMenuButtons[8], 0));
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/BestRuns.png", 0, 0, &mDiffuseMapSRVMenuButtons[9], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/lvl01.png", 0, 0, &mDiffuseMapSRVMenuButtons[10], 0));
+	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/lvl02.png", 0, 0, &mDiffuseMapSRVMenuButtons[11], 0));
 
 	//GUI textures
 	HR(D3DX11CreateShaderResourceViewFromFile(md3dDevice, L"Textures/0Texture.png", 0, 0, &mDiffuseMapSRVGUITex[0], 0));
@@ -383,7 +385,7 @@ bool MeshViewApp::Init()
 	lvl->SetSpawnPoint(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	mLevels.push_back(lvl);
 
-	lvl = new Level(md3dDevice, &mTexMgr, "Models\\level1.alx", XMFLOAT3(-126.7, -2.3, -85.6), 10.0f);
+	lvl = new Level(md3dDevice, &mTexMgr, "Models\\testMap.alx", XMFLOAT3(-126.7, -2.3, -85.6), 10.0f);
 	lvl->SetSpawnPoint(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	mLevels.push_back(lvl);
 
@@ -932,6 +934,12 @@ void MeshViewApp::DrawMenu()
 					break;
 				case Cube::RETURN:
 					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[8]);
+					break;
+				case Cube::LEVEL01:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[10]);
+					break;
+				case Cube::LEVEL02:
+					Effects::BasicFX->SetDiffuseMap(mDiffuseMapSRVMenuButtons[11]);
 					break;
 				}
 				activeTexTech->GetPassByIndex(p)->Apply(0, md3dImmediateContext);
@@ -1579,6 +1587,18 @@ void MeshViewApp::CreateMenu()
 	scoresButton->button = Cube::BESTRUNS;
 	MeshViewApp::cubes.push_back(scoresButton);
 
+	// which level to play block
+	Cube * levelBlock = new Cube;
+	levelBlock->pos = XMVectorSet(0, 0, 3, 1);
+	levelBlock->originPos = levelBlock->pos;
+	levelBlock->scale = XMVectorSet(0.8f, 0.28f, 0.00001f, 1.0f);
+	XMStoreFloat4x4(&levelBlock->localWorld, XMMatrixMultiply(XMMatrixScalingFromVector(levelBlock->scale), XMMatrixTranslationFromVector(levelBlock->pos)));
+	XMStoreFloat3(&levelBlock->mMeshBox.Center, levelBlock->pos);
+	levelBlock->halfSize = XMVectorSet(0.4f, 0.14f, 0.000005f, 1.0f);
+	XMStoreFloat3(&levelBlock->mMeshBox.Extents, levelBlock->halfSize);
+	levelBlock->button = Cube::LEVEL01;
+	MeshViewApp::cubes.push_back(levelBlock);
+
 	//HIGHSCORE AREA------------------------------------------------------------
 	// Highscores Banner
 	Cube * scoresBanner = new Cube;
@@ -1743,6 +1763,10 @@ void MeshViewApp::Pick(int sx, int sy)
 				{
 				case Cube::PLAYb:
 					gameState = GAME_STATE::playingState;
+					if (cubes[6]->button == Cube::LEVEL02)
+					{
+						currLevel++;
+					}
 					LoadCurrLevel();
 					ResetLevel();
 					InitGUI();
@@ -1775,6 +1799,12 @@ void MeshViewApp::Pick(int sx, int sy)
 					angleTo = 0;
 					angleCur = 1.57;
 					toMain = true;
+					break;
+				case Cube::LEVEL01:
+					cubes[6]->button = Cube::LEVEL02;
+					break;
+				case Cube::LEVEL02:
+					cubes[6]->button = Cube::LEVEL01;
 					break;
 				default:
 					break;
